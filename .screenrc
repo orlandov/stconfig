@@ -1,0 +1,10 @@
+vbell_msg             ""
+hardstatus alwayslastline "%{wk}dev-asp: %-Lw%{= Wk}%50>%n%f* %t%{-}%+Lw%< %>"
+defmonitor on
+multiuser on
+acladd rking
+acladd cdent
+acladd kaminski
+acladd autarch
+acladd mml
+acladd cwest

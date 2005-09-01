@@ -1,0 +1,34 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use FindBin;
+
+{
+    die unless $ENV{HOME};
+    chdir($ENV{HOME});
+
+    my $base = $FindBin::Bin;
+    $base =~ s/\.\///;
+
+    make_link($base, $_) for all_files();
+}
+
+# XXX glob this or such
+sub all_files {
+    qw(
+        .cvsrc
+        .screenrc
+        stbin
+    );
+}
+
+sub make_link {
+    my $base = shift;
+    my $file = shift;
+    if (-e $file) {
+        warn "$file already exists. skipping";
+        return;
+    }
+    symlink("$base/$file", "$ENV{HOME}/$file");
+}

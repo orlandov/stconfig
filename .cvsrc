@@ -1,0 +1,11 @@
+# Be quieter:
+cvs -q
+
+# Prune empty directories:
+checkout -P
+
+# Bring in new directories and prune empty directories:
+update -dP
+
+# Use the unified diff output format:
+diff -u
