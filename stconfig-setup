@@ -11,24 +11,28 @@ use FindBin;
     my $base = $FindBin::Bin;
     $base =~ s/\.\///;
 
-    make_link($base, $_) for all_files();
+    make_link($base, $_) for all_files($base);
 }
 
 # XXX glob this or such
 sub all_files {
-    qw(
-        .cvsrc
-        .screenrc
-        stbin
-    );
+    my $base = shift;
+    opendir DIR, $base or die;
+    my @files;
+    while (my $file = readdir(DIR)) {
+        next if $file =~ /^(\.|\.\.|\.svn|stconfig-setup)$/;
+        push @files, $file;
+    }
+    return sort @files;
 }
 
 sub make_link {
     my $base = shift;
     my $file = shift;
     if (-e $file) {
-        warn "$file already exists. skipping";
+        warn "    skipping $file, already exists.\n";
         return;
     }
+    warn "Linking $file\n";
     symlink("$base/$file", "$ENV{HOME}/$file");
 }
