@@ -1,0 +1,13 @@
+#!/usr/local/bin/perl
+
+use strict;
+use warnings;
+
+for my $f (@ARGV) {
+    system( 'perltidy', '-b', '-bar', '-nsfs', '-nolq', $f )
+        and die "Cannot run perltidy on $f: $!";
+}
+
+
+
+
