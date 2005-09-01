@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 for my $f (@ARGV) {
-    system( 'perltidy', '-b', '-bar', '-nsfs', '-nolq', $f )
+    system( 'perltidy', '-b', '-bar', '-nsfs', '-nolq', '-npro', $f )
         and die "Cannot run perltidy on $f: $!";
 }
 
