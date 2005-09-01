@@ -3,11 +3,18 @@
 use strict;
 use warnings;
 
-for my $f (@ARGV) {
-    system( 'perltidy', '-b', '-bar', '-nsfs', '-nolq', '-npro', $f )
-        and die "Cannot run perltidy on $f: $!";
+sub tidy {
+    my $file = shift;
+    my @cmd = ( 'perltidy', '-b', '-bar', '-nsfs', '-nolq', '-npro' );
+    push @cmd, $file
+      if $file;
+    system @cmd
+      and die "Cannot run perltidy on $file: $!";
 }
 
-
-
-
+if (@ARGV) {
+    tidy $_ for @ARGV;
+}
+else {
+    tidy;
+}
