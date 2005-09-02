@@ -1,0 +1,4 @@
+#!/bin/sh
+tail -f "$@" | \
+    ccze -A -p httpd #| \
+    #less -R

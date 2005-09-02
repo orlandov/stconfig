@@ -1,0 +1,22 @@
+#!/usr/bin/perl -w
+use strict;
+die if @ARGV != 2;
+my $enc  = shift;
+my $file = shift;
+0 == system("iconv -f$enc $file > /tmp/$file") or die $!;
+if (0 == system("colordiff -u $file /tmp/$file")) {
+    $| = 1;
+    print "You like? ";
+    my $answer = lc(<STDIN>);
+    chomp($answer);
+    if ('y' eq $answer) {
+        0 == system "sudo mv /tmp/$file $file\n" or die $!;
+    }
+    else {
+        print "Doing nothing because you answered '$answer'\n";
+    }
+}
+else {
+    print "Weird - no diffs\n";
+    unlink "/tmp/$file" or die $!;
+}

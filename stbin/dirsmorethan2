@@ -1,0 +1,3 @@
+#!/bin/sh
+# useful for finding pages that aren't just default ones
+for n in *; do ls $n | wc | grep -v '\<2\>' >/dev/null && echo $n; done

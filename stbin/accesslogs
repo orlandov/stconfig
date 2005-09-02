@@ -1,0 +1,2 @@
+#!/bin/bash
+colorizelogs /var/log/apache*/*access.log

@@ -1,0 +1,2 @@
+#!/bin/sh
+svn log --verbose "$@" | vim-pager

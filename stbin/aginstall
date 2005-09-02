@@ -1,0 +1,2 @@
+#!/bin/sh
+sudo apt-get install "$@" && (for n in "$@"; do dpkg -L $n; done)

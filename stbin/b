@@ -1,0 +1,3 @@
+#!/bin/sh
+[ -e Build ] || perl Build.PL
+./Build "$@"

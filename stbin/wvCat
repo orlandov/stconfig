@@ -1,0 +1,2 @@
+#!/bin/sh
+wvText "$1" `tty`

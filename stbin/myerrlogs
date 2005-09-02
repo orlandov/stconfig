@@ -1,0 +1,2 @@
+#!/bin/sh
+colorizelogs ~/.nlw/log/*.log 
