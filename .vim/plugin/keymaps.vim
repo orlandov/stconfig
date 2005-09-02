@@ -23,7 +23,7 @@ map \\# :s/^# //g <CR> :noh <CR>
 map \/ :s/^/\/ /g <CR> :noh <CR>
 map \\/ :s/^\/ //g <CR> :noh <CR>
 
-map \1 :up<cr>
+map \1 :w!<cr>
 map \2 :up<cr>:!perl -c -Ilib %<cr>
 map \3 :up<cr>:call RunLastT()<cr>
 map \4 :up<cr>:!make test<cr>
