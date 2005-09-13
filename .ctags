@@ -1,0 +1,3 @@
+--perl-kinds=-l
+--regex-perl=/^package +(.*);/\1/p,packages/e
+--regex-perl=/^(field|const) +'?([^' ]+)'?( |=|;)/\2/y,spiffy,spiffy fields and consts/e
