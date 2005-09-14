@@ -4,6 +4,7 @@ ulimit -c unlimited
 export \
     PATH=~/bin:~/local/bin:/usr/local/bin:~/src/social/nlw/bin:~/src/social/nlw/dev-bin:$PATH \
     NLW_TEST_FASTER=1 \
+    REMOTE_USER=devnull1@socialtext.com \
     EDITOR=vim VISUAL=vim \
 
 [ -e /usr/lib/debug ] && export LD_LIBRARY_PATH=/usr/lib/debug:$LD_LIBRARY_PATH
