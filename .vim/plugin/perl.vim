@@ -3,7 +3,7 @@ au BufRead,BufNewFile *.t set ft=perl
 au BufRead,BufNewFile *.mas set ft=mason
 
 set path+=lib
-set isfname+=: iskeyword+=:
+set isfname+=: iskeyword+=: iskeyword-=-
 setlocal keywordprg=perldoc equalprg=st-tidy
 
 " Stolen from vim.org's perl.vim:
