@@ -1,5 +1,9 @@
-vbell_msg             ""
-hardstatus alwayslastline "%{wk}dev-asp: %-Lw%{= Wk}%50>%n%f* %t%{-}%+Lw%< %>"
+defflow off # turn off stupid flow-control (also see: stty -ixon in ~/.zshrc)
+altscreen on # restore window contents after "vim", etc.
+ignorecase on # for searches
+startup_message off
+vbell_msg ""
+hardstatus alwayslastline "%{wk}%H: %-Lw%{= Wk}%50>%n%f* %t%{-}%+Lw%< %>"
 defmonitor on
 multiuser on
 acladd rking
