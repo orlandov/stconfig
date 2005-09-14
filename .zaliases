@@ -1,5 +1,5 @@
 #!/bin/zsh
-export CFGDIR=~/src/config NLWDIR=~/src/social/nlw
+export CFGDIR=~/src/social/stconfig NLWDIR=~/src/social/nlw
 showbanner() { [ -e .banner ] && cat .banner }
 svncd() {
     cd $1
