@@ -3,13 +3,14 @@
 use strict;
 use warnings;
 use FindBin;
+use Cwd;
 
 {
+    my $base = $FindBin::Bin;
+    $base = Cwd::abs_path($base);
+
     die unless $ENV{HOME};
     chdir($ENV{HOME});
-
-    my $base = $FindBin::Bin;
-    $base =~ s/\.\///;
 
     make_link($base, $_) for all_files($base);
 }
@@ -29,10 +30,13 @@ sub all_files {
 sub make_link {
     my $base = shift;
     my $file = shift;
+    my $dest = "$base/$file";
     if (-e $file) {
-        warn "    skipping $file, already exists.\n";
+        warn "    skipping $file, already exists.\n"
+            # no need to warn if it's a known symlink
+            if not(-l $file) or $dest ne readlink($file);
         return;
     }
     warn "Linking $file\n";
-    symlink("$base/$file", "$ENV{HOME}/$file");
+    symlink($dest, "$ENV{HOME}/$file");
 }
