@@ -1,5 +1,5 @@
 map ` !G perl -MText::Autoformat -eautoformat<CR>))
-map + :e #<cr>
+map + :e #<CR>
 
 imap  
  
@@ -12,25 +12,27 @@ endif
 map \] :up<UP><CR>
 map \[ :<UP><CR>
 
-map \\ :noh<cr>:set nopaste<cr>:set nolist<cr>
-map \p :set paste<cr>
-map \v :!vim .vimrc<cr>:so .vimrc<cr>
-map \V :!vim ~/.vimrc<cr>:so ~/.vimrc<cr>
-map \vf :!vim <cword><cr>:so <cword><cr>
+map \\\ :noh<CR>:set nopaste<CR>:set nolist<CR>
+map \q :q!<CR>
+map \p :set paste<CR>
+map \v :!vim .vimrc<CR>:so .vimrc<CR>
+map \V :!vim ~/.vimrc<CR>:so ~/.vimrc<CR>
+map \vf :!vim <cword><CR>:so <cword><CR>
 
-map \# :s/^/# /g <CR> :noh <CR>
-map \\# :s/^# //g <CR> :noh <CR>
-map \/ :s/^/\/ /g <CR> :noh <CR>
-map \\/ :s/^\/ //g <CR> :noh <CR>
+map \# :s/^/# / <CR> :noh <CR>
+map \\# :s/^# // <CR> :noh <CR>
+map \/ :s,^,// , <CR> :noh <CR>
+map \\/ :s,^// ,, <CR> :noh <CR>
 
-map \1 :w!<cr>
-map \2 :up<cr>:!perl -c -Ilib %<cr>
-map \3 :up<cr>:call RunLastT()<cr>
-map \4 :up<cr>:!make test<cr>
-map \5 :up<cr>:!./%<cr>
-map \6 :up<cr>:!make all install<cr>
+" map \1 :up<CR> " ingy doesn't like this (yet)
+map \1 :w<CR>
+map \2 :up<CR>:!perl -c -Ilib %<CR>
+map \3 :up<CR>:call RunLastT()<CR>
+map \4 :up<CR>:!make test<CR>
+map \5 :up<CR>:!./%<CR>
+map \6 :up<CR>:!make all install<CR>
 
-map \d :.!echo -n 'date:    '; date<cr>
-map \h :up<cr>:call TryPerlCompile()<cr>
+map \d :.!echo -n 'date:    '; date<CR>
+map \h :up<CR>:call TryPerlCompile()<CR>
 
-map \gf :sp <cword><cr>
+map \gf :sp <cword><CR>
