@@ -10,7 +10,11 @@ svncd() {
 conceive() { command conceive "$@"; rehash }
 aginstall() { ~/bin/aginstall "$@"; rehash }
 for n in mv cp man svn; do alias $n="nocorrect $n"; done
-alias ls='ls --classify --color=auto'
+
+# Check for GNU ls before aliasing.
+if ls --version > /dev/null 2>&1; then
+    alias ls='ls --classify --color=auto'
+fi
 alias ll='ls -l'
 alias la='ls -la'
 
