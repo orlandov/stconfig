@@ -8,7 +8,9 @@ bindkey -M vicmd v edit-command-line
 bindkey '^I' complete-word
 # XXX deprecated way - should be like in zshcompwid(1)
 compctl -/ -g '*~(CVS|.svn)(/)' cd
-compctl -g '*~.svn' vim
+compctl -g \
+    '(.*|*~*.class~*.o~*.a~*.tar~*.gz~*.Z~*.rpm~*.gif~*.jpg~*.png~*.zip~*.jar)~.svn'\
+    vim
 # TODO: localhost:caphusozshrc
 fignore=(.o \~ .old .bak .tmp .swp CVS .svn)
 zmodload zsh/complist
