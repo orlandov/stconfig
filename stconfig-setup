@@ -21,7 +21,7 @@ sub all_files {
     opendir DIR, $base or die;
     my @files;
     while (my $file = readdir(DIR)) {
-        next if $file =~ /^(\.|\.\.|\.svn|stconfig-setup)$/;
+        next if $file =~ /^(\.|\.\.|\.svn|stconfig-setup|socialtext\.vim)$/;
         push @files, $file;
     }
     return sort @files;
