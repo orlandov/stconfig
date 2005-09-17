@@ -28,7 +28,7 @@ map \\/ :s,^// ,, <CR> :noh <CR>
 map \1 :w<CR>
 map \2 :up<CR>:!perl -c -Ilib %<CR>
 map \3 :up<CR>:call RunLastT()<CR>
-map \4 :up<CR>:!make test<CR>
+map \4 :up<CR>:!prove -ls t<CR>
 map \5 :up<CR>:!./%<CR>
 map \6 :up<CR>:!make all install<CR>
 
