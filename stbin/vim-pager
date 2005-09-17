@@ -2,5 +2,6 @@
 vim - \
     +'map <space> <c-d>' \
     +'map <c-c> :q<enter>' \
+    +'map q :q<enter>' \
     +'set nomod iskeyword+=.  iskeyword+=/' \
     "$@"
