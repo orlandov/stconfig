@@ -14,17 +14,17 @@ function! RunLastT()
 endf
 
 function! TryPerlCompile()
-    let ext = expand('%:e')
-    if (ext == 'pm' || ext == 'pl' || ext == 't' || ext == '')
+    let s:ext = expand('%:e')
+    if (s:ext == 'pm' || s:ext == 'pl' || s:ext == 't' || s:ext == '')
         !perl -c -Ilib % && nlwctl
     endif
 endf
 
 function! QuietPerlCompile()
-    let old_sp = &sp
+    let s:old_sp = &sp
     set sp=>&
     silent make
-    let &sp=old_sp
+    let &sp = s:old_sp
 
     cwin
     if (! v:shell_error)
