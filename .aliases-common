@@ -22,7 +22,7 @@ colornlw() {
     showbanner
 }
 
-alias cdnlw="cd $ST_TRUNK; showbanner"
+alias cdnlw="cd $ST_TRUNK/nlw; showbanner"
 alias CDnlw="svncd $ST_TRUNK/nlw"
 alias cdcfg="cd $ST_TRUNK/stconfig"
 alias CDcfg="svncd $ST_TRUNK/stconfig && ./stconfig-setup"
