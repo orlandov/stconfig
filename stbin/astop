@@ -1,3 +1,0 @@
-#!/bin/sh -e
-cd ~/src/social/nlw
-./dev-bin/start_apaches.pl --stop
