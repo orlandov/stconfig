@@ -1,16 +1,25 @@
+# vi-keys, but with bindings to make it more intuitive for emacs people:
 bindkey -v
 bindkey "^P" vi-up-line-or-history
 bindkey "^N" vi-down-line-or-history
-# voodoo:
+# These work in rking's linux+xterm+ssh setup, but they're still experimental:
+bindkey "^[[1~" vi-beginning-of-line   # Home
+bindkey "^[[4~" vi-end-of-line         # End
+bindkey "^[[2~" beep                   # Insert
+bindkey "^[[3~" delete-char            # Del
+
+# Semi-voodoo, but enables <Esc>v to use vim to edit a command:
 autoload edit-command-line; zle -N edit-command-line
 autoload -U compinit; compinit
 bindkey -M vicmd v edit-command-line
+
 bindkey '^I' complete-word
+
 # XXX deprecated way - should be like in zshcompwid(1)
 compctl -/ -g '*~(CVS|.svn)(/)' cd
 compctl -g \
     '(.*|*~*.class~*.o~*.a~*.tar~*.gz~*.Z~*.rpm~*.gif~*.jpg~*.png~*.zip~*.jar)~.svn'\
     vim
-# TODO: localhost:caphusozshrc
-fignore=(.o \~ .old .bak .tmp .swp CVS .svn)
+
+fignore=(.o \~ .swp CVS)
 zmodload zsh/complist

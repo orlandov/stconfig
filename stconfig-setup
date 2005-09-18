@@ -15,14 +15,20 @@ use Cwd;
     make_link($base, $_) for all_files($base);
 }
 
-# XXX glob this or such
 sub all_files {
     my $base = shift;
+    my %ignores = map { $_ => 1 } qw(
+        .
+        ..
+        .svn
+        stconfig-setup
+        socialtext.vim
+    );
     opendir DIR, $base or die;
     my @files;
     while (my $file = readdir(DIR)) {
-        next if $file =~ /^(\.|\.\.|\.svn|stconfig-setup|socialtext\.vim)$/;
-        push @files, $file;
+        push @files, $file
+          unless $ignores{$file};
     }
     return sort @files;
 }

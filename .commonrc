@@ -1,0 +1,6 @@
+#!/bin/bash
+umask 022
+stty -ixon # get rid of ^S and ^Q
+ulimit -c unlimited # 'core' files
+eval `dircolors`
+eval `~/stbin/stdefaultenv`

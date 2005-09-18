@@ -1,0 +1,37 @@
+#!/bin/bash
+alias ll='ls -l'
+alias la='ls -la'
+
+foo() { echo 'bar'; }
+showbanner() { [ -e .banner ] && cat .banner; }
+svncd() { cd $1; showbanner; svn up; svn status; }
+kiss() { command kiss "$@"; rehash; }
+conceive() { command conceive "$@"; rehash; }
+aginstall() { ~/bin/aginstall "$@"; rehash; }
+
+# Check for GNU before aliasing:
+ls --version > /dev/null 2>&1 && alias ls='ls --classify --color=auto'
+echo x | (grep x --color >/dev/null 2>&1) && alias grep='grep --color=auto'
+
+colornlw() {
+    cd ~/src/social
+    [ -e $1-nlw ] || (echo "No such numba"; return)
+    rm nlw 2>&1 > /dev/null
+    ln -fs ${1}-nlw nlw
+    cd nlw
+    showbanner
+}
+
+alias cdnlw="cd $ST_TRUNK; showbanner"
+alias CDnlw="svncd $ST_TRUNK/nlw"
+alias cdcfg="cd $ST_TRUNK/stconfig"
+alias CDcfg="svncd $ST_TRUNK/stconfig && ./stconfig-setup"
+alias accessd="cd /var/log/apache-perl/; ls"
+alias vv='vim ~/.vimrc'
+alias tl='test-less'
+alias tlp='test-less --prove'
+alias dict='/usr/bin/dict -dall'
+alias pwdtitle='screentitle "$(basename $(pwd))/"';
+cd() { builtin cd "$@"; pwdtitle; }
+vim() { /usr/bin/vim "$@"; pwdtitle; }
+alias viml='vim !! -l'
