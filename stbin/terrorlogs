@@ -1,3 +1,3 @@
 #!/bin/sh
-cd ~/src/social/nlw/t/tmp/log
+cd $ST_TRUNK/nlw/t/tmp/log
 colorizelogs *.log
