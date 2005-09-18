@@ -17,15 +17,18 @@ setopt \
     correct_all \
     equals \
     extended_glob \
+    extended_history \
     NO_glob_dots \
     hist_ignore_dups \
     NO_hist_ignore_space \
     NO_ignore_eof \
     interactive_comments \
+    list_types \
     long_list_jobs \
     mail_warning \
     no_bad_pattern \
     notify \
+    numeric_glob_sort \
     print_exit_value \
     pushd_minus \
     pushd_silent \
