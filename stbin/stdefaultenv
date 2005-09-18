@@ -1,5 +1,7 @@
 #!/usr/bin/perl -wl
 use strict;
+# N.B.: This is a list instead of a hash because order of initialization
+# matters.
 my @default_env = (
     [ ST_TRUNK => '$HOME/src/st/trunk' ],
     [ PATH => join ':', qw(
