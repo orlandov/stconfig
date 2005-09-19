@@ -1,31 +1,32 @@
 #!/usr/bin/perl -wl
 use strict;
-# N.B.: This is a list instead of a hash because order of initialization
-# matters.
-my @default_env = (
-    [ ST_TRUNK => '$HOME/src/st/trunk' ],
-    [ PATH => join ':', qw(
-        ~/stbin
-        ~/bin
-        ~/local/bin
-        /usr/local/bin
-        $ST_TRUNK/nlw/bin
-        $ST_TRUNK/nlw/dev-bin
-        $PATH
-    ) ],
-    [ NLW_TEST_FASTER => '1' ],
-    [ REMOTE_USER => 'devnull1@socialtext.com' ],
-    [ EDITOR => 'vim' ],
-    [ VISUAL => 'vim' ],
-    [ TEST_LESS_COMMENT => '\'$d -- $u\'' ],
-    [ COLOR => '32' ],
-    [ SCREENCOLOR => 'g' ],
+my %default_env = (
+     ST_TRUNK => '$HOME/src/st/trunk',
+     NLW_TEST_FASTER => '1',
+     REMOTE_USER => 'devnull1@socialtext.com',
+     EDITOR => 'vim',
+     VISUAL => 'vim',
+     TEST_LESS_COMMENT => '\'$d -- $u\'',
+     COLOR => '32',
+     SCREENCOLOR => 'g',
 );
-push @default_env, [ 'LD_LIBRARY_PATH' => '/usr/lib/debug:$LD_LIBRARY_PATH' ]
+$default_env{LD_LIBRARY_PATH} = '/usr/lib/debug:$LD_LIBRARY_PATH'
   if -e '/usr/lib/debug';
 
-for my $pair (@default_env) {
-    my ($name, $value) = @$pair;
-    print "export $name=$value"
-      unless $ENV{$name}; # make sure to respect ~/.stconfig-before settings
+for my $name (keys %default_env) {
+    print "export $name=$default_env{$name}"
+      unless $ENV{$name} and $name ne 'PATH';
+}
+# path is special because it depends on $ST_TRUNK, and is an array, so it fits
+# better outside the above loop.
+if ($ENV{PATH} !~ /stbin/) {
+    print 'export PATH=' . join ':', qw(
+      ~/stbin
+      ~/bin
+      ~/local/bin
+      /usr/local/bin
+      $ST_TRUNK/nlw/bin
+      $ST_TRUNK/nlw/dev-bin
+      $PATH
+    );
 }
