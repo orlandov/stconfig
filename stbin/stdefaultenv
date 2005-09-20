@@ -1,4 +1,4 @@
-#!/usr/bin/perl -wl
+#!/usr/local/bin/perl -wl
 use strict;
 use IO::All;
 
