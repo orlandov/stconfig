@@ -1,8 +1,11 @@
 #!/usr/bin/perl -wl
 use strict;
+use IO::All;
+
 my %default_env = (
      ST_TRUNK => '$HOME/src/st/trunk',
      NLW_TEST_FASTER => '1',
+     ST_HAXORS => get_haxors(),
      REMOTE_USER => 'devnull1@socialtext.com',
      EDITOR => 'vim',
      VISUAL => 'vim',
@@ -10,6 +13,7 @@ my %default_env = (
      COLOR => '32',
      SCREENCOLOR => 'g',
 );
+
 $default_env{LD_LIBRARY_PATH} = '/usr/lib/debug:$LD_LIBRARY_PATH'
   if -e '/usr/lib/debug';
 
@@ -17,6 +21,7 @@ for my $name (keys %default_env) {
     print "export $name=$default_env{$name}"
       unless $ENV{$name} and $name ne 'PATH';
 }
+
 # path is special because it depends on $ST_TRUNK, and is an array, so it fits
 # better outside the above loop.
 if ($ENV{PATH} !~ /stbin/) {
@@ -29,4 +34,11 @@ if ($ENV{PATH} !~ /stbin/) {
       $ST_TRUNK/nlw/dev-bin
       $PATH
     );
+}
+
+sub get_haxors {
+    my $file = "$ENV{HOME}/.st-haxors";
+    -e $file
+        ? join ',', map { chomp; $_ } io($file)->getlines
+        : ''
 }

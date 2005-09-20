@@ -2,7 +2,5 @@
 umask 022
 stty -ixon # get rid of ^S and ^Q
 ulimit -c unlimited # 'core' files
-if which dircolors > /dev/null; then
-    eval `dircolors`
-fi
+which dircolors > /dev/null && eval `dircolors`
 eval `~/stbin/stdefaultenv`
