@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl -wl
+#!/usr/local/bin/perl -w
 use strict;
 use IO::All;
 
@@ -18,14 +18,14 @@ $default_env{LD_LIBRARY_PATH} = '/usr/lib/debug:$LD_LIBRARY_PATH'
   if -e '/usr/lib/debug';
 
 for my $name (keys %default_env) {
-    print "export $name=$default_env{$name}"
+    print "export $name=$default_env{$name};"
       unless $ENV{$name} and $name ne 'PATH';
 }
 
 # path is special because it depends on $ST_TRUNK, and is an array, so it fits
 # better outside the above loop.
 if ($ENV{PATH} !~ /stbin/) {
-    print 'export PATH=' . join ':', qw(
+    printf "export PATH=%s; ", join ':', qw(
       ~/stbin
       ~/bin
       ~/local/bin
