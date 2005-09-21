@@ -5,7 +5,7 @@ alias la='ls -la'
 svncd() { cd $1; svn up; svn status; }
 kiss() { command kiss "$@"; rehash; }
 conceive() { command conceive "$@"; rehash; }
-aginstall() { ~/bin/aginstall "$@"; rehash; }
+aginstall() { ~/stbin/aginstall "$@"; rehash; }
 
 # Check for GNU before aliasing:
 ls --version > /dev/null 2>&1 && alias ls='ls --classify --color=auto'
