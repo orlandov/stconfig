@@ -1,9 +1,10 @@
-#!/usr/bin/perl
+#!/usr/local/bin/perl
 
 use strict;
 use warnings;
 use FindBin;
 use Cwd;
+use File::chdir;
 
 {
     my $base = $FindBin::Bin;
@@ -12,7 +13,7 @@ use Cwd;
     die unless $ENV{HOME};
     chdir($ENV{HOME});
 
-    make_link($base, $_) for all_files($base);
+    link_or_descend($base, $_) for all_files($base);
 }
 
 sub all_files {
@@ -33,16 +34,22 @@ sub all_files {
     return sort @files;
 }
 
-sub make_link {
+sub link_or_descend {
     my $base = shift;
     my $file = shift;
     my $dest = "$base/$file";
-    if (-e $file) {
+    if (-d $file && ! -l $file && -d $dest) {
+        warn "Descending into directory $file\n";
+        {
+            local $CWD = $file;
+            link_or_descend($dest, $_) for all_files($dest);
+        }
+    } elsif (-e $file) {
         warn "    skipping $file, already exists.\n"
             # no need to warn if it's a known symlink
             if not(-l $file) or $dest ne readlink($file);
-        return;
+    } else {
+        warn "Linking $file\n";
+        symlink($dest, $file);
     }
-    warn "Linking $file\n";
-    symlink($dest, "$ENV{HOME}/$file");
 }
