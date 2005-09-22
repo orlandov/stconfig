@@ -1,1 +1,1 @@
-map \rt ORT-Ticket: <cr>RT-Status: resolved<cr><esc>ggA
+map <buffer> \rt ORT-Ticket: <cr>RT-Status: resolved<cr><esc>ggA
