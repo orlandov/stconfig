@@ -1,6 +1,8 @@
 #!/bin/bash
 umask 022
-stty -ixon # get rid of ^S and ^Q
+if [ -n "$TTY" ]; then
+    stty -ixon # get rid of ^S and ^Q
+fi
 ulimit -c unlimited # 'core' files
 which dircolors > /dev/null && eval `dircolors`
 eval `~/stbin/stdefaultenv`
