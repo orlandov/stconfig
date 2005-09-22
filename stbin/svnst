@@ -1,2 +1,2 @@
 #!/bin/sh
-svn status -u
+${SVN_COMMAND:-svn} status -u

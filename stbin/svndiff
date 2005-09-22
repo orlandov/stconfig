@@ -1,2 +1,2 @@
 #!/bin/sh
-svn diff "$@" | vim-pager +'set ft=diff'
+${SVN_COMMAND:-svn} diff "$@" | vim-pager +'set ft=diff'
