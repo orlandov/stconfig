@@ -1,12 +1,15 @@
 #!/usr/local/bin/perl
-
 use strict;
 use warnings;
 use FindBin;
 use Cwd;
 use File::chdir;
+use IO::All;
 
-{
+make_symlinks();
+make_rtrc();
+
+sub make_symlinks {
     my $base = $FindBin::Bin;
     $base = Cwd::abs_path($base);
 
@@ -14,6 +17,13 @@ use File::chdir;
     chdir($ENV{HOME});
 
     link_or_descend($base, $_) for all_files($base);
+}
+
+sub make_rtrc {
+    my $rc = "$ENV{HOME}/.rtrc";
+    return if -e $rc;
+    my $file = io($rc);
+    $file->print("server https://rt.socialtext.net:444\nuser $ENV{USER}\n");
 }
 
 sub all_files {

@@ -3,7 +3,7 @@ altscreen on # restore window contents after "vim", etc.
 ignorecase on # for searches
 startup_message off
 vbell_msg ""
-hardstatus alwayslastline "%{${SCREENCOLOR}k}%H: %-Lw%{= ${SCREENCOLOR}k}%50>%n%f* %t%{-}%+Lw%< %>"
+hardstatus alwayslastline "%{k${SCREENCOLOR}}%H: %-Lw%{= k${SCREENCOLOR}}%50>%n%f* %t%{-}%+Lw%< %>"
 defmonitor on
 multiuser on
 acladd $ST_HAXORS
