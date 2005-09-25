@@ -13,8 +13,11 @@ echo x | (grep x --color >/dev/null 2>&1) && alias grep='grep --color=auto'
 
 alias cdnlw="cd $ST_TRUNK/nlw"
 alias CDnlw="svncd $ST_TRUNK/nlw"
+alias cdtrunk="cd $ST_TRUNK"
+alias CDtrunk="svncd $ST_TRUNK"
 alias cdcfg="cd $ST_TRUNK/stconfig"
 alias CDcfg="svncd $ST_TRUNK/stconfig && ./stconfig-setup"
+alias stfreshen="CDtrunk; cdnlw; dev-bin/fresh-dev-env-from-scratch"
 alias accessd="cd /var/log/apache-perl/; ls"
 alias vv='vim ~/.vimrc'
 alias tl='test-less'
