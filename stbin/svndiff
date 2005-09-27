@@ -1,2 +1,14 @@
-#!/bin/sh
-${SVN_COMMAND:-svn} diff "$@" | vim-pager +'set ft=diff'
+#!/usr/bin/perl -w
+use strict;
+
+my $svn = $ENV{SVN_COMMAND} || 'svn';
+
+if (@ARGV == 1 and $ARGV[0] =~ /^\d+$/) {
+    my $r = $ARGV[0];
+    my $prev = $r-1;
+    @ARGV = ('-r', "$prev:$r");
+}
+
+my $cmd = join ' ', $svn, 'diff', map { quotemeta } @ARGV;
+$cmd .= " | vim-pager +'set ft=diff'";
+system($cmd) == 0 or die $!;
