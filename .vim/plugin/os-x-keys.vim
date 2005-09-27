@@ -6,6 +6,23 @@ map! [H   <Home>
 map  [F   <End>
 map! [F   <End>
 
+map  [A   <Up>
+map! [A   <Up>
+map  [B   <Down>
+map! [B   <Down>
+map  [C   <Right>
+map! [C   <Right>
+map  [D   <Left>
+map! [D   <Left>
+
+map  [5C  <C-Right>
+map! [5C  <C-Right>
+map  [5D  <C-Left>
+map! [5D  <C-Left>
+
+map       <Del>
+map!      <Del>
+
 map  [25~  <F13>
 map! [25~  <F13>
 map  [26~  <F14>
@@ -74,5 +91,28 @@ map! [61~  <S-F11>
 map  [62~  <S-F12>
 map! [62~  <S-F12>
 
-
+map  [71~  <C-F1>
+map! [71~  <C-F1>
+map  [72~  <C-F2>
+map! [72~  <C-F2>
+map  [73~  <C-F3>
+map! [73~  <C-F3>
+map  [74~  <C-F4>
+map! [74~  <C-F4>
+map  [75~  <C-F5>
+map! [75~  <C-F5>
+map  [76~  <C-F6>
+map! [76~  <C-F6>
+map  [77~  <C-F7>
+map! [77~  <C-F7>
+map  [78~  <C-F8>
+map! [78~  <C-F8>
+map  [79~  <C-F9>
+map! [79~  <C-F9>
+map  [80~  <C-F10>
+map! [80~  <C-F10>
+map  [81~  <C-F11>
+map! [81~  <C-F11>
+map  [82~  <C-F12>
+map! [82~  <C-F12>
 
