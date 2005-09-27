@@ -2,6 +2,8 @@
 bindkey -v
 bindkey "^P" vi-up-line-or-history
 bindkey "^N" vi-down-line-or-history
+bindkey "^K" vi-change-eol
+bindkey "^R" history-incremental-search-backward
 # These work in rking's linux+xterm+ssh setup, but they're still experimental:
 bindkey "^[[1~" vi-beginning-of-line   # Home
 bindkey "^[[4~" vi-end-of-line         # End
