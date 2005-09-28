@@ -1,7 +1,7 @@
 # vi-keys, but with bindings to make it more intuitive for emacs people:
 bindkey -v
-bindkey "^P" vi-up-line-or-history
-bindkey "^N" vi-down-line-or-history
+bindkey "^P" up-line-or-history
+bindkey "^N" down-line-or-history
 bindkey "^K" vi-change-eol
 bindkey "^R" history-incremental-search-backward
 # These work in rking's linux+xterm+ssh setup, but they're still experimental:
@@ -9,6 +9,8 @@ bindkey "^[[1~" vi-beginning-of-line   # Home
 bindkey "^[[4~" vi-end-of-line         # End
 bindkey "^[[2~" beep                   # Insert
 bindkey "^[[3~" delete-char            # Del
+bindkey "^[[A" up-line-or-history      # Up
+bindkey "^[[B" down-line-or-history    # Down
 
 # Semi-voodoo, but enables <Esc>v to use vim to edit a command:
 autoload edit-command-line; zle -N edit-command-line
