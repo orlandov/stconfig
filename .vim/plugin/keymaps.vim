@@ -1,5 +1,5 @@
 map ` !G perl -MText::Autoformat -eautoformat<CR>))
-map + :e #<CR>
+map + <C-^>
 
 imap  
  
