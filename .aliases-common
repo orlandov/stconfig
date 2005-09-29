@@ -29,3 +29,4 @@ pushd() { builtin pushd "$@"; pwdtitle; }
 popd() { builtin popd; pwdtitle; }
 vim() { /usr/bin/vim "$@"; pwdtitle; }
 alias viml='vim !! -l'
+alias tail=multitail

@@ -1,0 +1,5 @@
+#!/bin/zsh -f
+# On OS X, /usr/bin/tail can't tail multiple files.  You can get 'gtail' with
+# 'sudo port install coreutils'.
+whence -p gtail > /dev/null && tail=gtail
+exec ${tail:-tail} "$@"
