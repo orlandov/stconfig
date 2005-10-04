@@ -8,7 +8,7 @@ setopt \
     append_history \
     auto_cd \
     auto_list \
-    auto_pushd \
+    NO_auto_pushd \
     auto_resume \
     cdable_vars \
     NO_clobber \
