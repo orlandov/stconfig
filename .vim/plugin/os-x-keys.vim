@@ -20,8 +20,8 @@ map! [5C  <C-Right>
 map  [5D  <C-Left>
 map! [5D  <C-Left>
 
-map       <Del>
-map!      <Del>
+" map       <Del>
+" map!      <Del>
 
 map  [25~  <F13>
 map! [25~  <F13>

@@ -17,7 +17,7 @@ alias cdtrunk="cd $ST_TRUNK"
 alias CDtrunk="svncd $ST_TRUNK"
 alias cdcfg="cd $ST_TRUNK/stconfig"
 alias CDcfg="svncd $ST_TRUNK/stconfig && ./stconfig-setup"
-alias stfreshen="CDtrunk; cdnlw; dev-bin/fresh-dev-env-from-scratch"
+alias muckmac="echo bemucked > ~/.nlw/etc/Socialtext/MAC.secret"
 alias accessd="cd /var/log/apache-perl/; ls"
 alias vv='vim ~/.vimrc'
 alias tl='test-less'
@@ -30,3 +30,12 @@ popd() { builtin popd; pwdtitle; }
 vim() { /usr/bin/vim "$@"; pwdtitle; }
 alias viml='vim !! -l'
 alias tail=multitail
+
+stfreshen() { 
+    CDtrunk
+    cdnlw
+    ctags -R .. &
+    dev-bin/fresh-dev-env-from-scratch
+    muckmac
+    prove -lv t/page.t t/live/mega.t # TODO: make this random
+}

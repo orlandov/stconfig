@@ -33,9 +33,12 @@ map <buffer> \$ :s/^#//g<cr>:noh<cr>
 " Run the debugger on the current file (great for .t files)
 map <buffer> \pd :up<cr>:!perl -d -Ilib %<cr>
 
-" SocialTextDangerously and Safely
-map <buffer> \std :let $NLW_LIVE_DANGEROUSLY=1<cr>
-map <buffer> \sts :let $NLW_LIVE_DANGEROUSLY=0<cr>
+" SocialText - Dangerously (on) and dangerously (not so dangerously),
+" test Update (on) and update (off)
+map <buffer> \stD :let $NLW_LIVE_DANGEROUSLY=1<cr>
+map <buffer> \std :let $NLW_LIVE_DANGEROUSLY=0<cr>
+map <buffer> \stU :let $NLW_TEST_UPDATE=1<cr>
+map <buffer> \stu :let $NLW_TEST_UPDATE=0<cr>
 
 " quickfix support
 map  <buffer> <S-F7>     :wa<CR>:call QuietPerlCompile()<CR>

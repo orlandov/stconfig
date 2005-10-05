@@ -1,7 +1,11 @@
 #!/usr/bin/perl -w
 use strict;
-my @list = map { chomp; $_ } <STDIN>;
-my @shuffled;
-push @shuffled, splice @list, rand($#list)
-    while @list;
-print join ', ', @shuffled;
+
+my $joiner = ', ';
+$joiner = "\n" if $ARGV[0] and $ARGV[0] eq '-n';
+
+my @shuffled = ();
+my @old = map { chomp; $_ } <STDIN>;
+push @shuffled, splice( @old, rand @old, 1 ) while @old;
+
+print join $joiner, @shuffled;
