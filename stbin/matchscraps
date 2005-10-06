@@ -1,0 +1,35 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+# This script is useful for figuring out why a pattern isn't matching a given
+# blob of text.
+
+chdir('/tmp') or die $!;
+
+print "Input text to be matched, end with a /^\\.\$/\n";
+my $str = '';
+$str .= $_ while defined($_ = <STDIN>) and $_ !~ /^\.$/;
+$str =~ s/([\\'])/\\$1/g;
+
+print "Ok, now a regexp on one line...\n";
+chomp(my $re = <STDIN>);
+$re =~ s/([\$\@\%])/\\$1/g;
+
+my $tmp_file = "scrap-$$";
+open my $scrap, ">>$tmp_file" or die "$tmp_file: $!";
+printf $scrap <<'EOT', $str, $re or die $!;
+#!/usr/bin/perl -l
+my $str = '%s';
+my $re = qr{%s};
+print $str . "\nvs:\n", $re, "\n";
+print +($str =~ $re ? "\e[32mmatch" : "\e[31mno match"), "\e[0m";
+EOT
+close $scrap;
+
+# So you can suck the data in from a file and not confuse your text editor's
+# notion of STDIN:
+open STDIN, '/dev/tty' or die $!; 
+
+system('kiss', $tmp_file);
+unlink $tmp_file or die $!;
