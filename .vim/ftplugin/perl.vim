@@ -33,10 +33,13 @@ map <buffer> \$ :s/^#//g<cr>:noh<cr>
 " Run the debugger on the current file (great for .t files)
 map <buffer> \pd :up<cr>:!perl -d -Ilib %<cr>
 
-" SocialText - Dangerously (on) and dangerously (not so dangerously),
-" test Update (on) and update (off)
+" Mnemonics:
+" SocialText - [D]angerously (on) and [d]emure (dangerously off)
+" Server, Test: Hup
+" (s?) Test [U]pdate (on) and [u]naltered (update off)
 map <buffer> \stD :let $NLW_LIVE_DANGEROUSLY=1<cr>
 map <buffer> \std :let $NLW_LIVE_DANGEROUSLY=0<cr>
+map <buffer> \sth :!nlwctl -t<cr>
 map <buffer> \stU :let $NLW_TEST_UPDATE=1<cr>
 map <buffer> \stu :let $NLW_TEST_UPDATE=0<cr>
 
