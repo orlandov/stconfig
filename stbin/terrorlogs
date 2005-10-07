@@ -1,2 +1,2 @@
 #!/bin/sh
-colorizelogs "$ST_TRUNK/nlw/t/tmp/*.log"
+colorizelogs $ST_TRUNK/nlw/t/tmp/log/*.log
