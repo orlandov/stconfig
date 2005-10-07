@@ -16,13 +16,15 @@ endfunction
 
 map \sD :!svndiff<cr>
 
-map \sd :call ResolvedShellCmd('svndiff', '%')<cr>
-map \sld :call ResolvedShellCmd('svnlastdiff', '%')<cr>
-map \sb :call ResolvedShellCmd('svnblame ', '%')<cr>
-map \sl :call ResolvedShellCmd('svnlog ', '%')<cr>
-map \sci :call SvnCmd('ci ', '%')<cr>
-map \sREVERT :call SvnCmd('revert', '%')<cr>:e<cr>
+map \sd :call ResolvedShellCmd('svndiff', '"%"')<cr>
+map \sld :call ResolvedShellCmd('svnlastdiff', '"%"')<cr>
+map \sb :call ResolvedShellCmd('svnblame ', '"%"')<cr>
+map \sl :call ResolvedShellCmd('svnlog ', '"%"')<cr>
+map \sci :call SvnCmd('ci ', '"%"')<cr>
+map \sREVERT :call SvnCmd('revert', '"%"')<cr>:e<cr>
 
+" It would be interesting to figure out a way for files with spaces to work
+" with these.  Mayhaps we should just use the visual selection || <cword>.
 map \sfd :call SvnCmd('diff', '<cword>')<cr>
 map \sfld :call ResolvedShellCmd('svnlastdiff', '<cword>')<cr>
 map \sfb :call ResolvedShellCmd('svnblame', '<cword>')<cr>
