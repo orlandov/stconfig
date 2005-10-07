@@ -1,2 +1,2 @@
-map <buffer> \rt ORT-Ticket: <cr>RT-Status: resolved<cr><esc>ggA
+map <buffer> \rt ggO<cr>RT-Ticket: <cr>RT-Status: resolved<esc>2GA
 setlocal formatoptions+=t
