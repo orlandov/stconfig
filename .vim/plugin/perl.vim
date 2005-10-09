@@ -1,5 +1,4 @@
 " These should be vim defaults, I think:
-au BufRead,BufNewFile *.t set ft=perl
 au BufRead,BufNewFile *.mas set ft=mason
 
 function! RunLastT()
