@@ -1,3 +1,6 @@
+" No use for Ex mode; use Q for formatting.
+map Q gq
+
 map ` !G perl -MText::Autoformat -eautoformat<CR>))
 map + <C-^>
 
