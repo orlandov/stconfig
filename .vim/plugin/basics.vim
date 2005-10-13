@@ -1,4 +1,5 @@
 syntax on
+syntax sync fromstart
 
 filetype plugin on
 filetype indent on
