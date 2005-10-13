@@ -5,7 +5,28 @@ use warnings;
 
 sub tidy {
     my $file = shift;
-    my @cmd = ( 'perltidy', '-b', '-bar', '-nsfs', '-nolq', '-npro' );
+    my @cmd = (
+        'perltidy',
+        '-l=78',
+        '-i=4',
+        '-ci=4',
+        '-st',
+        '-se',
+        '-b',
+        '-bar',
+        '-boc',
+        '-vt=0',
+        '-vtc=0',
+        '-cti=0',
+        '-pt=1',
+        '-bt=1',
+        '-sbt=1',
+        '-bbt=1',
+        '-nolq',
+        '-npro',
+        '-nsfs',
+        '-wbb="% + - * / x != == >= <= =~ !~ < > | & >= < = **= += *= &= <<= &&= -= /= |= >>= ||= .= %= ^= x="',
+    );
     push @cmd, $file
       if $file;
     system @cmd
