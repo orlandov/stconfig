@@ -1,4 +1,4 @@
-imap <buffer> <C-x> var str=''; for (p in ) str+=p+"\t";alert(str);<esc>2F)i
+imap <buffer> <C-x> var a=[],str='';for(p in )a.push(p);a.sort();alert(a);<esc>4F)i
 
 " 'Alert Here'
 map <buffer> \ah :exec 'normal Oalert(' . line('.') . ');'<cr>
