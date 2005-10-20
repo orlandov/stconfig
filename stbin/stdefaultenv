@@ -12,6 +12,7 @@ my %default_env = (
      TEST_LESS_COMMENT => '\'$d -- $u\'',
      COLOR => '32',
      SCREENCOLOR => 'g',
+     WW => 'base/javascript/Wikiwyg',
 );
 
 $default_env{LD_LIBRARY_PATH} = '/usr/lib/debug:$LD_LIBRARY_PATH'
