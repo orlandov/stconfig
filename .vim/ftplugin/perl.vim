@@ -7,7 +7,7 @@ let b:did_social_ftplugin = 1
 setlocal path+=lib
 " XXX - isfname is global, so setting it here sets it everywhere
 setlocal isfname+=: iskeyword+=: iskeyword-=-
-setlocal keywordprg=perldoc equalprg=st-tidy
+setlocal keywordprg=LC_ALL=C\ perldoc equalprg=st-tidy
 
 " Stolen from vim.org's perl.vim:
 setlocal makeprg=perl\ -Ilib\ -wc\ %

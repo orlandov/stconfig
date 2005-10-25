@@ -12,5 +12,6 @@ set backspace=indent,eol,start hlsearch notimeout clipboard=
 set suffixes=.bak,~,.o,.h,.info,.swp,.obj,.class wildmode=list:longest,full
 set background=dark visualbell
 set encoding=utf-8 termencoding=utf-8
+set keywordprg=LC_ALL=C\ man
 
 au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
