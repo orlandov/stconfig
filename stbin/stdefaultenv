@@ -4,6 +4,7 @@ use IO::All;
 
 my %default_env = (
      ST_TRUNK => '$HOME/src/st/trunk',
+     SCM_BIN => 'svn', # crufty, backwards-compatible default (should be svk)
      NLW_TEST_FASTER => '1',
      ST_HAXORS => get_haxors(),
      REMOTE_USER => 'devnull1@socialtext.com',
