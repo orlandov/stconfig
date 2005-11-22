@@ -2,6 +2,8 @@
 map Q gq
 
 map ` !G perl -MText::Autoformat -eautoformat<CR>))
+map `j <C-W>j<C-w>_
+map `k <C-W>k<C-w>_
 map + <C-^>
 
 imap  
