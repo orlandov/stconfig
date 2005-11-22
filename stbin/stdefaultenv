@@ -3,18 +3,18 @@ use strict;
 use IO::All;
 
 my %default_env = (
-     ST_TRUNK => '$HOME/src/st/trunk',
-     SCM_BIN => 'svn', # crufty, backwards-compatible default (should be svk)
-     NLW_TEST_FASTER => '1',
-     ST_HAXORS => get_haxors(),
-     LC_ALL => 'en_US.utf-8',
-     REMOTE_USER => 'devnull1@socialtext.com',
-     EDITOR => 'vim',
-     VISUAL => 'vim',
-     TEST_LESS_COMMENT => '\'$d -- $u\'',
-     COLOR => '32',
-     SCREENCOLOR => 'g',
-     WW => 'base/javascript/Wikiwyg',
+    ST_TRUNK          => '$HOME/src/st/trunk',
+    SCM_BIN           => 'svn',                       # (svk soon!)
+    NLW_TEST_FASTER   => '1',
+    ST_HAXORS         => get_haxors(),
+    LANG              => 'en_US.utf-8',
+    REMOTE_USER       => 'devnull1@socialtext.com',
+    EDITOR            => 'vim',
+    VISUAL            => 'vim',
+    TEST_LESS_COMMENT => '\'$d -- $u\'',
+    COLOR             => '32',
+    SCREENCOLOR       => 'g',
+    WW                => 'base/javascript/Wikiwyg',
 );
 
 $default_env{LD_LIBRARY_PATH} = '/usr/lib/debug:$LD_LIBRARY_PATH'
