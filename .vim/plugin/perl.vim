@@ -1,5 +1,4 @@
-" These should be vim defaults, I think:
-au BufRead,BufNewFile *.mas set ft=mason
+set formatoptions-=t
 
 function! RunLastT()
     if (expand('%:e') == 't')
