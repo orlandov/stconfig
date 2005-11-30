@@ -5,8 +5,8 @@ filetype plugin on
 filetype indent on
 
 set incsearch ignorecase smartcase history=9999 ruler laststatus=2 backspace=2
-set autoindent expandtab tabstop=4 shiftwidth=4 softtabstop=4 textwidth=78
-set smartindent
+set autoindent expandtab tabstop=4 shiftwidth=4 softtabstop=4 smartindent
+set textwidth=78
 set autoread autowrite nobackup exrc ttyfast viminfo='20,\"500
 set backspace=indent,eol,start hlsearch notimeout clipboard=
 set suffixes=.bak,~,.o,.h,.info,.swp,.obj,.class wildmode=list:longest,full
