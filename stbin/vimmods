@@ -1,0 +1,8 @@
+#!/usr/bin/perl -w
+use strict;
+use IO::All;
+my @mods = map {
+    s/^.\s*//; chomp; $_
+} grep /^[MA?]/, io('svn st|')->slurp;
+die "(No modified files.)\n" unless @mods;
+system 'vim', '-o', @mods;
