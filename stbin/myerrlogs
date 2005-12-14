@@ -1,2 +1,2 @@
 #!/bin/sh
-colorizelogs ~/.nlw/log/*.log 
+colorizelogs ~/.nlw/log/*/*.log 
