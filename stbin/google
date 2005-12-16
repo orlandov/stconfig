@@ -1,2 +1,2 @@
 #!/bin/sh
-links http://www.google.com/search?q="$*"
+w3m http://www.google.com/search?q="$*"
