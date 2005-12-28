@@ -1,4 +1,4 @@
-#!/bin/bash -xe
+#!/bin/bash -e
 
 usage() {
     cat <<END_OF_USAGE
