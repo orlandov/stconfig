@@ -2,8 +2,6 @@
 use warnings;
 use strict;
 
-my $svn = $ENV{SVN_COMMAND} || 'svn';
-
 $ENV{_SVN_DIFF_ARGS} = quotemeta "@ARGV";
 
 if (@ARGV == 1 and $ARGV[0] =~ /^\d+$/) {
@@ -12,6 +10,6 @@ if (@ARGV == 1 and $ARGV[0] =~ /^\d+$/) {
     @ARGV = ('-r', "$prev:$r");
 }
 
-my @command = ($svn, 'diff', @ARGV);
+my @command = ('scm', 'diff', @ARGV);
 exec @command;
 die "exec @command: $!";

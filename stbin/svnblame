@@ -1,2 +1,2 @@
 #!/bin/sh
-${SVN_COMMAND:-svn} blame "$@" | vim-pager +'set ft=perl'
+scm blame "$@" | vim-pager +'set ft=perl'

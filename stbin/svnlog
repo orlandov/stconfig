@@ -1,2 +1,3 @@
 #!/bin/sh
-${SVN_COMMAND:-svn} log --verbose "$@" | vim-pager
+_svn_log "$@" \
+| vim-pager

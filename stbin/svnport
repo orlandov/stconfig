@@ -1,0 +1,60 @@
+#!/bin/bash -xe
+
+usage() {
+    cat <<END_OF_USAGE
+USAGE
+
+  svnport merge REV_NUMBER SOURCE
+  ...
+  svnport {commit,ci}
+
+SOURCE is relative to $ST_CODE_REPO.
+
+Each time you run a merge, the original commit message is appended to the
+file commit.txt.  When it comes time to commit, commit.txt is used as a
+starting point for your commit message.  It's removed after the commit is
+successful.
+END_OF_USAGE
+
+    exit 0
+}
+
+COMMIT_FILE=commit.txt
+EDIT_FILE=commit.edit.txt
+
+verb=$1
+
+case "$verb" in
+    (m|me|mer|merg|merge)
+        rev=$2
+        prev=$(expr $rev - 1)
+        src="$ST_CODE_REPO/$3"
+
+        scm merge -r${prev}:${rev} $src
+        scm log -r$rev $src \
+            | perl -ne 'next if /^-{70,}$/; print "  $_"' \
+            >> $COMMIT_FILE
+        ;;
+    (c|ci|co|com|comm|commi|commit)
+        cp $COMMIT_FILE $EDIT_FILE
+        cat <<END_OF_NOTE >> $EDIT_FILE
+=!=== THIS IS NOT SVN OR SVK! ===!=
+Delete all lines in this file to abort the commit.
+Nothing below this line will make it into your commit message.
+
+END_OF_NOTE
+        scm st >> $EDIT_FILE
+        ${EDITOR:-vim} $EDIT_FILE
+        if [ -s $EDIT_FILE ]; then
+            perl -i -pe 'last if /^=!=== THIS IS NOT SVN OR SVK! ===!=/' \
+                $EDIT_FILE
+            scm ci -F $EDIT_FILE
+            rm $EDIT_FILE $COMMIT_FILE
+        else
+            echo Aborting commit.  Merged log entries still in $COMMIT_FILE.
+        fi
+        ;;
+    (*)
+        usage
+        ;;
+esac
