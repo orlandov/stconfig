@@ -12,12 +12,13 @@ aginstall() { ~/stbin/aginstall "$@"; rehash; }
 ls --version > /dev/null 2>&1 && alias ls='ls --classify --color=auto'
 echo x | (grep x --color >/dev/null 2>&1) && alias grep='grep --color=auto'
 
-cdnlw() { cd $ST_TRUNK/nlw }
-CDnlw() { scmcd $ST_TRUNK/nlw }
-cdtrunk() { cd $ST_TRUNK }
-CDtrunk() { scmcd $ST_TRUNK }
-cdcfg() { cd $ST_TRUNK/stconfig }
-CDcfg() { scmcd $ST_TRUNK/stconfig && ./stconfig-setup }
+   function cdnlw() { cd $ST_TRUNK/nlw
+}; function CDnlw() { scmcd $ST_TRUNK/nlw
+}; function cdtrunk() { cd $ST_TRUNK
+}; function CDtrunk() { scmcd $ST_TRUNK
+}; function cdcfg() { cd $ST_TRUNK/stconfig
+}; function CDcfg() { scmcd $ST_TRUNK/stconfig && ./stconfig-setup
+}
 MAC_FILE="~/.nlw/etc/Socialtext/MAC.secret"
 alias muckmac="rm $MAC_FILE; echo bemucked > $MAC_FILE"
 alias accessd="cd /var/log/apache-perl/; ls"
@@ -33,7 +34,7 @@ vim() { /usr/bin/vim "$@"; pwdtitle; }
 alias viml='vim !! -l'
 alias tail=multitail
 
-stfreshen() { 
+function stfreshen() { 
     CDtrunk
     cdnlw
     ctags -R .. &
