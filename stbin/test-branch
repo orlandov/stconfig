@@ -5,6 +5,8 @@ usage() {
 USAGE:
     test-branch add stable-1.8.1
     test-branch (remove|rm) exp-ruby-rewrite
+    test-branch status trunk
+    test-branch htstatus stable-1.8.2
     test-branch (list|ls)
 END_OF_HELP
     exit 0
@@ -32,6 +34,43 @@ case "$verb" in
             mv $CHECKOUTS/$branch . \
             && rm -fr $branch
         "
+        ;;
+    (s|st|sta|stat|statu|status)
+        [ -z "$branch" ] && usage
+        sudo su - testrunner "db2lines $CHECKOUTS/$branch/test.db" \
+        | perl -F, -alne ' 
+            eval qq( \$$F[0]\{\$F[1]\} = \$F[2] );
+            END {
+                foreach $test (sort keys %lastpass) {
+                    print
+                        $status{$test} eq q(passing) ? q(+) : q(-),
+                        "$lastpass{$test} $test";
+                }
+            }
+        '
+        ;;
+    (h|ht|hts|htst|htsta|htstat|htstatu|htstatus)
+        [ -z "$branch" ] && usage
+        sudo su - testrunner "db2lines $CHECKOUTS/$branch/test.db" \
+        | perl -F, -alne ' 
+            eval qq( \$$F[0]\{\$F[1]\} = \$F[2] );
+            END {
+                print
+                    q(<TITLE>'"$branch"'</TITLE>\n),
+                    q(<TABLE>),
+                    q(<TR><TH colspan=2>'"$branch"'</TH></TR>);
+                $i = 0;
+                foreach $test (sort keys %lastpass) {
+                    ++$i;
+                    print q(<TR>) if ($i % 3 == 1);
+                    print
+                        q(<TD bgcolor=),
+                        $status{$test} eq q(passing) ? q(green) : q(red),
+                        ">$lastpass{$test}</TD><TD>$test</TD>";
+                }
+                print q(</TABLE>);
+            }
+        '
         ;;
     (l|ls|li|lis|list)
         sudo su - testrunner "cd $CHECKOUTS; ls -d */"
