@@ -1,0 +1,42 @@
+#!/bin/bash -e
+
+usage() {
+    cat <<END_OF_HELP
+USAGE:
+    test-branch add stable-1.8.1
+    test-branch (remove|rm) exp-ruby-rewrite
+    test-branch (list|ls)
+END_OF_HELP
+    exit 0
+}
+
+verb="$1"
+branch="$2"
+
+DIR=$(dirname $0)
+CHECKOUTS=checkouts
+
+case "$verb" in
+    (a|ad|add)
+        [ -z "$branch" ] && usage
+        [ ! -d ~testrunner/$branch ]
+        [ ! -d ~testrunner/$CHECKOUTS/$branch ]
+        sudo su - testrunner "
+            svn co \$ST_CODE_REPO/branches/$branch \
+            && mv $branch $CHECKOUTS
+        "
+        ;;
+    (r|rm|re|rem|remo|remov|remove)
+        [ -z "$branch" ] && usage
+        sudo su - testrunner "
+            mv $CHECKOUTS/$branch . \
+            && rm -fr $branch
+        "
+        ;;
+    (l|ls|li|lis|list)
+        sudo su - testrunner "cd $CHECKOUTS; ls -d */"
+        ;;
+    (*)
+        usage
+        ;;
+esac
