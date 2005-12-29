@@ -56,7 +56,7 @@ case "$verb" in
             eval qq( \$$F[0]\{\$F[1]\} = \$F[2] );
             END {
                 print
-                    q(<TITLE>'"$branch"'</TITLE>\n),
+                    qq(<TITLE>'"$branch"'</TITLE>\n),
                     q(<TABLE>),
                     q(<TR><TH colspan=2>'"$branch"'</TH></TR>);
                 $i = 0;
