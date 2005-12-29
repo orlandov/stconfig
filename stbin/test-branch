@@ -16,7 +16,7 @@ verb="$1"
 branch="$2"
 
 DIR=$(dirname $0)
-CHECKOUTS=checkouts
+CHECKOUTS=~testrunner/checkouts
 
 case "$verb" in
     (a|ad|add)
@@ -37,7 +37,7 @@ case "$verb" in
         ;;
     (s|st|sta|stat|statu|status)
         [ -z "$branch" ] && usage
-        sudo su - testrunner "db2lines $CHECKOUTS/$branch/test.db" \
+        db2lines $CHECKOUTS/$branch/test.db \
         | perl -F, -alne ' 
             eval qq( \$$F[0]\{\$F[1]\} = \$F[2] );
             END {
@@ -51,7 +51,7 @@ case "$verb" in
         ;;
     (h|ht|hts|htst|htsta|htstat|htstatu|htstatus)
         [ -z "$branch" ] && usage
-        sudo su - testrunner "db2lines $CHECKOUTS/$branch/test.db" \
+        db2lines $CHECKOUTS/$branch/test.db \
         | perl -F, -alne ' 
             eval qq( \$$F[0]\{\$F[1]\} = \$F[2] );
             END {
@@ -73,7 +73,8 @@ case "$verb" in
         '
         ;;
     (l|ls|li|lis|list)
-        sudo su - testrunner "cd $CHECKOUTS; ls -d */"
+        cd $CHECKOUTS
+        ls -d */
         ;;
     (*)
         usage

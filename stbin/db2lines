@@ -34,7 +34,7 @@ my %db;
 
 open L, $lock_file or die "$lock_file: $!";
 flock L, LOCK_SH or die "$lock_file: $!";
-tie %db, 'DB_File', $db_path or die "$db_path: $!";
+tie %db, 'DB_File', $db_path, O_RDONLY, or die "$db_path: $!";
 
 while (my ($k, $v) = each %db) {
     print STDOUT (join $separator, (split $;, $k), $v), "\n";
