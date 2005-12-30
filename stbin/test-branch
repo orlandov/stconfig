@@ -58,7 +58,9 @@ case "$verb" in
                 print
                     qq(<TITLE>'"$branch"'</TITLE>\n),
                     q(<TABLE>),
-                    q(<TR><TH colspan=2>'"$branch"'</TH></TR>);
+                    q(<TR><TH colspan=2>'"$branch"'</TH>),
+                    q(<TH colspan=4>'"$(date +%Y-%m-%d\ %H:%M:%S)"'),
+                    q(</TH></TR>);
                 $i = 0;
                 foreach $test (sort keys %lastpass) {
                     ++$i;
