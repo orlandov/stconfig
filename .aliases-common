@@ -42,3 +42,10 @@ function stfreshen() {
     muckmac
     prove -lv t/page.t t/live/mega.t # TODO: make this random
 }
+
+# Handy for making sense of failing data-oriented tests.
+tdiff() {
+    prove -lv "$@" \
+    | perl -ne 'print if /^not ok/ or s/^# //' \
+    | vim-pager +'set filetype=diff'
+}
