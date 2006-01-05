@@ -34,6 +34,8 @@ vim() { /usr/bin/vim "$@"; pwdtitle; }
 alias viml='vim !! -l'
 alias tail=multitail
 
+function provelog() { NLW_APPCONFIG=syslog_level=debug prove -lv "$@"; }
+
 function stfreshen() { 
     CDtrunk
     cdnlw
