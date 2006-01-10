@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+# WARNING: This blindly changes and commits, regardless of whatever other
+# changes you've made to NLW.pm.  Use only after a release.  It is a violation
+# of Federal law to use this script in a manner inconsistent with its
+# labeling.
+
+NLW_PM=lib/NLW.pm
+
+perl -i -pe 's{(^our \$VERSION = .*)(\d+)}{$1 . ($2 + 1)}e' $NLW_PM
+scm commit -m 'bump NLW version' $NLW_PM
