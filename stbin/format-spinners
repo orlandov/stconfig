@@ -1,0 +1,23 @@
+#!/bin/bash -e
+cd
+
+pids=$(
+    for file in spinner-*; do
+        echo $file | cut -d- -f2
+    done | sort -n
+)
+
+i=0
+for pid in $pids; do
+    echo "* {link $pid}"
+done
+
+echo 
+
+for pid in $pids; do
+    echo "^^^^ $pid"
+    echo
+    echo .pre
+    cat spinner-$pid
+    echo .pre
+done

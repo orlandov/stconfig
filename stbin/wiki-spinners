@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+cd
+
+ls -l spinner-*
+
+echo
+echo
+echo RETURN to proceed.  ^C to bail.
+read
+
+format-spinners \
+| mail -s "$(date +'%Y-%m-%d') $(hostname) procfs data" \
+    st-spinners+procfs@socialtext.net
