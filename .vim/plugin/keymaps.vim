@@ -41,3 +41,5 @@ map \d :.!echo -n 'date:    '; date<CR>
 map \h :up<CR>:call TryPerlCompile()<CR>
 
 map \gf :sp <cword><CR>
+
+map \K :!LC_ALL=C perldoc %<CR>
