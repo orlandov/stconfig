@@ -18,14 +18,6 @@ END_OF_HELP
     exit 0;
 }
 
-my $lockfile = shift;
-usage() unless @ARGV;
+usage() if @ARGV < 2;
 
-open L, $lockfile or die "$lockfile: $!";
-flock L, LOCK_EX|LOCK_NB or exit 0;
-
-# Perl must be doing something before calling execve(2) that invalidates our
-# flocks.  Thus, we have to use system instead of exec here to make sure the
-# called program inherits our lock.
-system @ARGV;
-exit $?;
+exec 'flock-cmd', LOCK_EX|LOCK_NB, @ARGV;
