@@ -7,7 +7,7 @@ use Fcntl ':flock';
 sub usage {
     print <<'END_OF_HELP';
     USAGE:
-        with-lock LOCKFILE COMMAND [ARGS ...]
+        if-can-lock LOCKFILE COMMAND [ARGS ...]
 
         Tries to acquire an exclusive lock on LOCKFILE.  Exits nonzero
         immediately if LOCKFILE does not exist.  Exits 0 immediately if it is
