@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# USAGE: show-spinners
+#
+# This script searches /proc for evidence of spinners and deposits a file
+# spinner-PID for each in your home directory.  It lists all the files it
+# created on stdout.
+
 # heuristic in the awk below is:
 # niceness is 18 ($4==18) AND
 # accumulated time is at least double digit minutes
@@ -13,4 +19,5 @@ do
         echo ls -lart $procdir/fd
         sudo ls -lart $procdir/fd
         ) > ~/spinner-$pid
+        ls -l ~/spinner-$pid
 done

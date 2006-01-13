@@ -1,5 +1,11 @@
 #!/bin/bash -e
 
+# USAGE: wiki-spinners
+#
+# This script shows you all the spinner-PID files in your home directory,
+# gives you the option to bail out first, and then emails a wikitext formatted
+# version of their contents to the st-spinners workspace.
+
 cd
 
 ls -l spinner-*
