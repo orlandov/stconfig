@@ -1,2 +1,21 @@
-#!/bin/sh
-colorizelogs ~/.nlw/log/*/*.log 
+#!/bin/zsh -ef
+
+# USAGE myerrlogs [-1|-2]
+#
+#   -1      Only apache-perl logs
+#   -2      Only apache2 logs
+#   DEFAULT Everything
+
+case "$1" in
+    (-1)
+        dir='apache-perl'
+        ;;
+    (-2)
+        dir='apache2'
+        ;;
+    (*)
+        dir='*'
+        ;;
+esac
+
+eval exec colorizelogs "~/.nlw/log/$dir/*.log"
