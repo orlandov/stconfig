@@ -14,7 +14,7 @@ endf
 function! TryPerlCompile()
     let s:ext = expand('%:e')
     if (s:ext == 'pm' || s:ext == 'pl' || s:ext == 't' || s:ext == '')
-        !perl -c -Ilib % && nlwctl
+        !perl -c -Ilib % && nlwctl -1
     endif
 endf
 
