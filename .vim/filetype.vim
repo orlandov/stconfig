@@ -8,4 +8,5 @@ augroup filetypedetect
     au BufRead,BufNewFile *.mas set ft=mason
 
     au! BufNewFile,BufRead *.t                  setf perltest
+    au! BufNewFile,BufRead *.hwd                setf hwd
 augroup END
