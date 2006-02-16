@@ -1,0 +1,37 @@
+#!/bin/zsh -ef
+#
+# This provides a wrapper around prove(1) that does some smart defaulting
+# things for you.
+#
+# 0) adds -l and -s by default
+# 1) you can turn off -s with -S
+# 2) if you don't specify any tests, finds all the non-live tests under 't'
+
+# Init.
+shuffle=1
+switches=()
+
+# Save switches, looking especially for -S.
+while [[ "$1" == -* ]] {
+    if [[ "$1" == -S ]] {
+        shuffle=0
+    } else {
+        switches+="$1"
+    }
+    shift
+}
+
+# Should we shuffle?
+if [[ $shuffle == 1 ]] {
+    switches+=-s
+}
+
+# Find some tests to run if the user didn't give us any.
+if [[ -z "$*" ]] {
+    tests=${(f)$(find t -name \*.t -not -regex '^t/live')}
+} else {
+    tests="$*"
+}
+
+# Do it.
+exec prove -l $switches $tests
