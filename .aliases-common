@@ -3,7 +3,7 @@ alias ll='ls -l'
 alias la='ls -la'
 alias RM='rm -rf' # for Mr. dot Net
 
-scmcd() { cd $1; $SCM_BIN up; $SCM_BIN status; }
+scmcd() { cd $1; scm up; scm status; }
 kiss() { command kiss "$@"; rehash; }
 conceive() { command conceive "$@"; rehash; }
 aginstall() { ~/stbin/aginstall "$@"; rehash; }

@@ -4,7 +4,7 @@ use IO::All;
 
 my %default_env = (
     ST_TRUNK          => '$HOME/src/st/trunk',
-    SCM_BIN           => 'svn',                       # (svk soon!)
+    SVN_COMMAND       => 'svk',
     NLW_TEST_FASTER   => '1',
     ST_HAXORS         => get_haxors(),
     LANG              => 'en_US.utf-8',
