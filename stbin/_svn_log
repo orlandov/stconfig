@@ -3,7 +3,7 @@ use warnings;
 use strict;
 
 $ARGV[0] = "-r$ARGV[0]"
-    if $ARGV[0] =~ /^\d+$/;
+    if @ARGV and $ARGV[0] =~ /^\d+$/;
 
 my @command = ('scm', 'log', @ARGV, '--verbose');
 exec @command;
