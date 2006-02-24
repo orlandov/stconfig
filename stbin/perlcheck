@@ -1,0 +1,71 @@
+#!/usr/local/bin/perl
+use warnings;
+use strict;
+
+use Error ':try';
+
+sub usage {
+    print <<END_OF_USAGE; exit 0;
+Usage: perlcheck [PERL OPTIONS] FILE [...]
+
+    This will run 'perl -c' on each file given, and will also ensure that any
+    options (such as '-T') appearing on the #! line in each file are also
+    passed on the command line.
+END_OF_USAGE
+}
+
+usage() unless @ARGV;
+
+my ( @switches, @paths );
+
+# EXTRACT: see below
+sub partition_2(&\@\@@);
+
+partition_2 { /^-/ } @switches, @paths, @ARGV;
+
+foreach my $path (@paths) {
+    try {
+        check($path, @switches);
+    }
+    catch Error::Simple with {
+        my $e = shift;
+        warn "$e\n";
+    }
+}
+
+# Given a path and a set of extra switches, run 'perl -c' appropriately on
+# $path.
+sub check {
+    my ( $path, @switches ) = @_;
+
+    my $options = get_options($path);
+
+    if (-1 == system "$^X -c $options @switches $path") {
+        throw Error::Simple("$^X: $!");
+    }
+}
+
+# Returns any options in a '#!' line in the given file.
+sub get_options {
+    my ( $path ) = @_;
+
+    open F, $path or throw Error::Simple("$path: $!");
+    my $line = <F>;
+    close F;
+
+    return ( $line =~ /#!.*perl (.*)/ ? $1 : '' );
+}
+
+# EXTRACT: This belongs in something like List::Util.
+#
+# Given a predicate and a list, partition the list into two parts:  those
+# which satisfy the predicate, and those which don't.
+sub partition_2(&\@\@@) {
+    my ( $sub, $true, $false, @source ) = @_;
+
+    @$true = @$false = ();
+
+    foreach (@source) {
+        push( @{ &$sub ? $true : $false }, $_ );
+    }
+}

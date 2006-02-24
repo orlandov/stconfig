@@ -31,7 +31,7 @@ map \\/ :s,^// ,, <CR> :noh <CR>
 
 " map \1 :up<CR> " ingy doesn't like this (yet)
 map \1 :w<CR>
-map \2 :up<CR>:!perl -c -Ilib %<CR>
+map \2 :up<CR>:!perlcheck -Ilib %<CR>
 map \3 :up<CR>:call RunLastT()<CR>
 map \4 :up<CR>:!prove -ls t<CR>
 map \5 :up<CR>:!./%<CR>
