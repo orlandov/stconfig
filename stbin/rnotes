@@ -1,0 +1,33 @@
+#!/bin/sh
+# Handy tool for making up release notes.
+#
+# 1) Set the variables below as appropriate.
+# 2) Open up the release notes file in some editor.
+# 3) Make yourself a nice 160+ column terminal.
+#       cd SOME_TRUNK_CHECKOUT
+#       svk up -s
+# 4) Pick some not-yet-documented file from the release notes file.
+# 5) Switch to your PHAT 160 column terminal and say
+#       rnotes nlw/bin/nlwsearch # or whatever file
+#       # marvel at the side-by-side diff and log outputs
+#       # ^Wh and ^Wl will move you left and right, respectively
+#       # q will get you out
+#       # you can page down with space bar
+#       # otherwise, normal vim
+# 6) When enlightened, switch back to the release notes file and write.
+
+START=6792
+END=HEAD
+
+ROOT=//mirror/social
+BRANCH=${ROOT}/branches/1.8.6
+TRUNK=${ROOT}/trunk
+
+path=$1
+
+scm log -v -r ${START}:${END} $path \
+| vim-pager \
+    +"vne /tmp/diff" \
+    +"set nomod bt=nofile" \
+    +"%!scm diff ${BRANCH}/$path ${TRUNK}/$path" \
+    +"set ft=diff"
