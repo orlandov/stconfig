@@ -30,7 +30,7 @@ if [[ $shuffle == 1 ]] {
 if [[ -z "$*" ]] {
     tests=${(z)$(find t -name \*.t -not -regex '^t/live.*')}
 } else {
-    tests="$*"
+    tests=${(z)@}
 }
 
 # Do it.
