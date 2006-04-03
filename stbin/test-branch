@@ -24,7 +24,8 @@ case "$verb" in
         [ ! -d ~testrunner/$branch ]
         [ ! -d ~testrunner/$CHECKOUTS/$branch ]
         sudo su - testrunner "
-            svn co \$ST_CODE_REPO/branches/$branch \
+            LANG=en_US.UTF-8 \
+            svn co $ST_CODE_REPO/branches/$branch \
             && mv $branch $CHECKOUTS
         "
         ;;
