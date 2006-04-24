@@ -15,7 +15,7 @@ my %default_env = (
     COLOR             => '32',
     SCREENCOLOR       => 'g',
     WW                => 'base/javascript/Wikiwyg',
-    ST_CODE_REPO      => 'https://repo.socialtext.net:8999/code',
+    ST_CODE_REPO      => 'https://repo.socialtext.net:8999/svn/code',
 );
 
 $default_env{LD_LIBRARY_PATH} = '/usr/lib/debug:$LD_LIBRARY_PATH'
