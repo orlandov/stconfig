@@ -42,7 +42,8 @@ case "$verb" in
         | perl -F, -alne ' 
             eval qq( \$$F[0]\{\$F[1]\} = \$F[2] );
             END {
-                foreach $test (sort keys %lastpass) {
+                foreach $test (sort keys %status) {
+                    $lastpass{$test} ||= "NEVER";
                     print
                         $status{$test} eq q(passing) ? q(+) : q(-),
                         "$lastpass{$test} $test";
@@ -63,7 +64,8 @@ case "$verb" in
                     q(<TH colspan=4>'"$(date +%Y-%m-%d\ %H:%M:%S)"'),
                     q(</TH></TR>);
                 $i = 0;
-                foreach $test (sort keys %lastpass) {
+                foreach $test (sort keys %status) {
+                    $lastpass{$test} ||= "NEVER";
                     ++$i;
                     print q(<TR>) if ($i % 3 == 1);
                     print
