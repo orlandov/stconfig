@@ -2,6 +2,7 @@
 use warnings;
 use strict;
 
+use Getopt::Long;
 use File::Path;
 use File::Basename;
 
@@ -15,6 +16,9 @@ test.
 Usage
     stub PACKAGE
     stub PATH
+
+Options
+    -v      fire up 'vim -o PM_FILE T_FILE' when done
 
 If PATH ends in .pm, it is removed.  If not, it is added.
 
@@ -30,6 +34,10 @@ Examples
 END_OF_USAGE
 }
 
+my $want_vim = 0;
+
+GetOptions('v' => \$want_vim);
+
 my $package = shift or usage();
 $package =~ s[^lib/][];
 $package =~ s/\.pm$//;
@@ -44,9 +52,10 @@ else {
 
 write_pm();
 write_t();
+exec('vim', '-o', pm_file(), t_file()) if $want_vim;
 
 sub write_pm {
-    write_file("lib/$path.pm", <<"END_OF_CODE");
+    write_file(pm_file(), <<"END_OF_CODE");
 use warnings;
 use strict;
 
@@ -57,6 +66,8 @@ $package -
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
+
+=cut
 
 package $package;
 
@@ -82,7 +93,7 @@ END_OF_CODE
 }
 
 sub write_t {
-    write_file("t/$path.t", <<"END_OF_CODE");
+    write_file(t_file(), <<"END_OF_CODE");
 use warnings;
 use strict;
 
@@ -106,3 +117,6 @@ sub write_file {
     (0 == system("scm add $path"))
         or die "scm add $path exited nonzero: ", ($? << 8);
 }
+
+sub pm_file {"lib/$path.pm"}
+sub t_file  {"t/$path.t"}
