@@ -1,0 +1,108 @@
+#!/usr/local/bin/perl
+use warnings;
+use strict;
+
+use File::Path;
+use File::Basename;
+
+sub usage {
+    die <<'END_OF_USAGE';
+stub - SocialText Uber Blipper
+
+A better blipper than most, this uber blipper blips out, code, POD, and a
+test.
+
+Usage
+    stub PACKAGE
+    stub PATH
+
+If PATH ends in .pm, it is removed.  If not, it is added.
+
+This will create a Perl module with POD skeleton, AND a basic (use_ok) test,
+any necessary parent directories, and add them all to source control.
+
+Examples
+
+    stub NLW::Foo
+    stub NLW/Foo
+    stub lib/NLW/Foo
+    stub lib/NLW/Foo.pm
+END_OF_USAGE
+}
+
+my $package = shift or usage();
+$package =~ s[^lib/][];
+$package =~ s/\.pm$//;
+my $path = $package;
+
+if ($package =~ m[/]) {
+    $package =~ s[/][::]g;
+}
+else {
+    $path =~ s[::][/]g;
+}
+
+write_pm();
+write_t();
+
+sub write_pm {
+    write_file("lib/$path.pm", <<"END_OF_CODE");
+use warnings;
+use strict;
+
+=head1 NAME
+
+$package -
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+package $package;
+
+=head1 BUGS
+
+=head1 SEE ALSO
+
+=head1 AUTHOR
+
+Socialtext, Inc. C<< <code\@socialtext.com> >>
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2006 Socialtext, Inc., all rights reserved.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=cut
+
+1;
+END_OF_CODE
+}
+
+sub write_t {
+    write_file("t/$path.t", <<"END_OF_CODE");
+use warnings;
+use strict;
+
+use Test::More tests => 1;
+
+BEGIN {
+    use_ok( "$package" );
+}
+END_OF_CODE
+}
+
+sub write_file {
+    my ( $path, $contents ) = @_;
+
+    die "Not clobbering existing $path.\n" if -e $path;
+    mkpath([dirname($path)]);
+    open F, '>', $path or die "create $path: $!";
+    print F $contents or die "write $path: $!";
+    close F or die "close $path: $!";
+
+    (0 == system("scm add $path"))
+        or die "scm add $path exited nonzero: ", ($? << 8);
+}
