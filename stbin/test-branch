@@ -51,7 +51,26 @@ case "$verb" in
             }
         '
         ;;
-    (h|ht|hts|htst|htsta|htstat|htstatu|htstatus)
+    (hti|htin|htind|htinde|htindex)
+        echo '<TITLE>testrunner report index</TITLE>'
+        echo '<TABLE>'
+        for branch in $($0 ls); do
+            branch=$(echo $branch | perl -pe 's,/$,,')
+            html_file="${branch}.html"
+            echo "<TR><TD><A href="$html_file">$branch</A></TD>"
+            echo -n '<TD bgcolor='
+            if $0 status $branch | egrep '^-'; then
+                echo -n red
+            else
+                echo -n green
+            fi
+            echo -n '>'
+            ls -l $html_file | awk '{print $6 " " $7}'
+            echo '</TD></TR>'
+        done
+        echo '</TABLE>'
+        ;;
+    (hts|htst|htsta|htstat|htstatu|htstatus)
         [ -z "$branch" ] && usage
         db2lines $CHECKOUTS/$branch/test.db \
         | perl -F, -alne ' 
@@ -79,7 +98,7 @@ case "$verb" in
         ;;
     (l|ls|li|lis|list)
         cd $CHECKOUTS
-        ls -d */
+        ls -1d */
         ;;
     (*)
         usage
