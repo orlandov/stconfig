@@ -58,13 +58,13 @@ case "$verb" in
             branch=$(echo $branch | perl -pe 's,/$,,')
             html_file="${branch}.html"
             echo "<TR><TD><A href="$html_file">$branch</A></TD>"
-            echo -n '<TD bgcolor='
+            echo -n '<TD STYLE="color: white; background-color: '
             if $0 status $branch | egrep '^-'; then
                 echo -n red
             else
                 echo -n green
             fi
-            echo -n '>'
+            echo -n '">'
             ls -l $html_file | awk '{print $6 " " $7}'
             echo '</TD></TR>'
         done
@@ -88,9 +88,9 @@ case "$verb" in
                     ++$i;
                     print q(<TR>) if ($i % 3 == 1);
                     print
-                        q(<TD bgcolor=),
+                        q(<TD STYLE="color: white; background-color: ),
                         $status{$test} eq q(passing) ? q(green) : q(red),
-                        ">$lastpass{$test}</TD><TD>$test</TD>";
+                        qq(">$lastpass{$test}</TD><TD>$test</TD>);
                 }
                 print q(</TABLE>);
             }
