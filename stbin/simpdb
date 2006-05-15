@@ -10,6 +10,7 @@ sub usage {
       USAGE:
           simpdb db_path update KEY1 [KEY2 ... KEYn] VALUE
           simpdb db_path select KEY1 [KEY2 ... KEYn]
+          simpdb db_path delete KEY1 [KEY2 ... KEYn]
 END_OF_HELP
 }
 
@@ -28,6 +29,11 @@ elsif ( $verb eq 'select' ) {
     assert_argcount(1);
     lock_and_tie(LOCK_SH);
     print STDOUT $db{ join $;, @ARGV }, "\n";
+}
+elsif ( $verb eq 'delete' ) {
+    assert_argcount(1);
+    lock_and_tie(LOCK_EX);
+    delete $db{ join $;, @ARGV };
 }
 else {
     usage();
