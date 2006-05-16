@@ -51,3 +51,86 @@ tdiff() {
     | perl -ne 'print if /^not ok/ or s/^# //' \
     | vim-pager +'set filetype=diff'
 }
+
+ppout() {
+    prefix=/tmp/nlw-postprocess-
+    if [ -d "$prefix$(id -u www-data)" ]; then
+        dir="$prefix$(id -u www-data)"
+    elif [ -d "$prefix$(id -u)" ]; then
+        dir="$prefix$(id -u)"
+    else
+        echo "Can't find any postprocess output."
+        return
+    fi
+
+    if [ "$2" = 'last' ]; then
+        builtin pushd $dir
+        2="$(ls -t | head -1)"
+        builtin popd
+        if [ "$2" = '' ]; then
+            echo "No entries; hence no last entry."
+            return
+        fi
+    fi
+
+    case "$1" in
+        (cd)
+            cd "$dir"
+            ;;
+        (ls)
+            ls -rt "$dir/$2"
+            ;;
+        (echo)
+            echo "$dir/$2"
+            ;;
+        (cat)
+            if [ "$2" = '' ]; then
+                _ppout_usage
+            else
+                cat "$dir/$2"
+            fi
+            ;;
+        (page)
+            if [ "$2" = '' ]; then
+                _ppout_usage
+            else
+                ${PAGER:-less} "$dir/$2"
+            fi
+            ;;
+        (edit)
+            if [ "$2" = '' ]; then
+                _ppout_usage
+            else
+                ${EDITOR:-vi} "$dir/$2"
+            fi
+            ;;
+        (rm)
+            if [ "$2" = '' ]; then
+                rm -f "$dir/"*
+            else
+                rm -f "$dir/$2"
+            fi
+            ;;
+         (*)
+             _ppout_usage
+             ;;
+    esac
+}
+
+_ppout_usage() {
+    cat <<'EOT'
+ppout - Examine postprocess output.
+
+USAGE
+
+    ppout cd
+    ppout ls [OUTFILE]
+    ppout cat OUTFILE
+    ppout page OUTFILE
+    ppout edit OUTFILE
+    ppout rm [OUTFILE]    - if OUTFILE is omitted, removes all output
+
+OUTFILE can be 'last' which will manipulate the most recent file in the
+directory instead.
+EOT
+}
