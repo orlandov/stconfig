@@ -59,7 +59,7 @@ case "$verb" in
             html_file="${branch}.html"
             echo "<TR><TD><A href="$html_file">$branch</A></TD>"
             echo -n '<TD STYLE="color: white; background-color: '
-            if $0 status $branch | egrep '^-'; then
+            if $0 status $branch | egrep -q '^-' ; then
                 echo -n red
             else
                 echo -n green
