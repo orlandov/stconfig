@@ -45,4 +45,4 @@ map \gf :sp <cword><CR>
 map \K :!LC_ALL=C perldoc %<CR>
 
 noremap <C-l> :nohls<CR><C-l>
-noremap! <C-l> <Esc>:Nohls<CR><C-l>a
+noremap! <C-l> <Esc>:nohls<CR><C-l>a
