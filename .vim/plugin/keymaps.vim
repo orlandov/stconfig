@@ -43,3 +43,6 @@ map \h :up<CR>:call TryPerlCompile()<CR>
 map \gf :sp <cword><CR>
 
 map \K :!LC_ALL=C perldoc %<CR>
+
+noremap <C-l> :nohls<CR><C-l>
+noremap! <C-l> <Esc>:Nohls<CR><C-l>a
