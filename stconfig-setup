@@ -4,7 +4,6 @@ use warnings;
 use FindBin;
 use Cwd;
 use File::chdir;
-use IO::All;
 
 make_symlinks();
 make_rtrc();
@@ -22,8 +21,10 @@ sub make_symlinks {
 sub make_rtrc {
     my $rc = "$ENV{HOME}/.rtrc";
     return if -e $rc;
-    my $file = io($rc);
-    $file->print("server https://rt.socialtext.net:444\nuser $ENV{USER}\n");
+    if (open(my $fh, ">$rc")) {
+        print $fh "server https://rt.socialtext.net:444\nuser $ENV{USER}\n";
+        close($fh);
+    }
 }
 
 sub all_files {
