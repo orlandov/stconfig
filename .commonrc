@@ -5,4 +5,7 @@ if [ -n "$TTY" ]; then
 fi
 ulimit -c unlimited # 'core' files
 d=`which dircolors` && [ -x "$d" ] && eval `dircolors`
-eval `~/stbin/stdefaultenv`
+
+if [ -r ~/stbin/stdefaultenv ]; then
+    eval `~/stbin/stdefaultenv`
+fi
