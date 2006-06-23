@@ -1,7 +1,6 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use IO::All;
 
 my %default_env = (
     ST_TRUNK          => '$HOME/src/st/trunk',
@@ -17,6 +16,7 @@ my %default_env = (
     SCREENCOLOR       => 'g',
     WW                => 'base/javascript/Wikiwyg',
     ST_CODE_REPO      => 'https://repo.socialtext.net:8999/svn/code',
+    WCNP_SERVER       => "http://panacea.canonical.org/~matthew/cgi-bin/wcnp_server.cgi?who=$ENV{USER}"
 );
 
 $default_env{LD_LIBRARY_PATH} = '/usr/lib/debug:$LD_LIBRARY_PATH'
@@ -44,6 +44,12 @@ if ($ENV{PATH} !~ /stbin/) {
 sub get_haxors {
     my $file = "$ENV{HOME}/.st-haxors";
     -e $file
-        ? join ',', map { chomp; $_ } io($file)->getlines
+        ? join ',', map { chomp; $_ } slurp($file)
         : ''
+}
+
+sub slurp {
+    my $file = shift;
+    open my $fh, $file or die "Could not open $file: $!\n";
+    return <$fh>;
 }
