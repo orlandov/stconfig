@@ -27,7 +27,7 @@ any necessary parent directories, and add them all to source control.
 
 Examples
 
-    stub NLW::Foo
+    stub Socialtext::Foo
     stub NLW/Foo
     stub lib/NLW/Foo
     stub lib/NLW/Foo.pm
