@@ -38,7 +38,9 @@ case "$verb" in
         ;;
     (s|st|sta|stat|statu|status)
         [ -z "$branch" ] && usage
-        db2lines $CHECKOUTS/$branch/test.db \
+        DB="$CHECKOUTS/$branch/test.db"
+        [ -f "$DB" -a -f "$DB.lock" ] || exit 1;
+        db2lines "$DB" \
         | perl -F, -alne ' 
             eval qq( \$$F[0]\{\$F[1]\} = \$F[2] );
             END {
@@ -57,16 +59,18 @@ case "$verb" in
         for branch in $($0 ls); do
             branch=$(echo $branch | perl -pe 's,/$,,')
             html_file="${branch}.html"
-            echo "<TR><TD><A href="$html_file">$branch</A></TD>"
-            echo -n '<TD STYLE="color: white; background-color: '
-            if $0 status $branch | egrep -q '^-' ; then
-                echo -n red
-            else
-                echo -n green
+            if [ -f "$html_file" ]; then
+                echo "<TR><TD><A href="$html_file">$branch</A></TD>"
+                echo -n '<TD STYLE="color: white; background-color: '
+                if $0 status $branch | egrep -q '^-' ; then
+                    echo -n red
+                else
+                    echo -n green
+                fi
+                echo -n '">'
+                ls -l $html_file | awk '{print $6 " " $7}'
+                echo '</TD></TR>'
             fi
-            echo -n '">'
-            ls -l $html_file | awk '{print $6 " " $7}'
-            echo '</TD></TR>'
         done
         echo '</TABLE>'
         ;;
