@@ -4,6 +4,7 @@ function ResolvedShellCmd(cmd, path)
     exe '! ' . a:cmd . ' ' . resolve(expand(a:path))
 endfunction
 
+map \sCI :!scm ci<CR>
 map \sD :!svndiff<cr>
 
 map \sd :call ResolvedShellCmd('svndiff', '"%"')<cr>
