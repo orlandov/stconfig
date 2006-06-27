@@ -16,7 +16,7 @@ my %default_env = (
     SCREENCOLOR       => 'g',
     WW                => 'base/javascript/Wikiwyg',
     ST_CODE_REPO      => 'https://repo.socialtext.net:8999/svn/code',
-    WCNP_SERVER       => "http://panacea.canonical.org/~matthew/cgi-bin/wcnp_server.cgi?who=$ENV{USER}"
+    WCNP_SERVER       => "'http://panacea.canonical.org/~matthew/cgi-bin/wcnp_server.cgi?who=$ENV{USER}'"
 );
 
 $default_env{LD_LIBRARY_PATH} = '/usr/lib/debug:$LD_LIBRARY_PATH'
