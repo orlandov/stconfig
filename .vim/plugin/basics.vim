@@ -15,4 +15,8 @@ set encoding=utf-8 termencoding=utf-8
 set keywordprg=LC_ALL=C\ man
 set foldmethod=marker
 
+" Ubuntu Dapper changed this to link to perlInclude, which sux0rs since it's
+" *is* a statement and making it an include makes it a really ugly color.
+highlight link perlStatementInclude perlStatement
+
 au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
