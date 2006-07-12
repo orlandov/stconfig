@@ -2,7 +2,22 @@
 alias ll='ls -l'
 alias la='ls -la'
 alias RM='rm -rf' # for Mr. dot Net
+alias perlsw='perl -Mstrict -Mwarnings'
+alias perldd='perl -MData::Dumper'
+alias GETf='GET -UseS'
+alias POSTf='POST -UseS'
+alias HEADf='HEAD -UseS'
 
+# TODO: Probably autogenerate these aliases
+alias svkblame='svnblame'
+alias svkdiff='svndiff'
+alias svklastdiff='svnlastdiff'
+alias svklog='svnlog'
+alias svkport='svnport'
+alias svkrgrep='svnrgrep'
+alias svkst='svnst'
+
+abs_path() { perl -MCwd -le "print Cwd::abs_path(shift)" $1; }
 scmcd() { cd $1; scm up; scm status; }
 kiss() { command kiss "$@"; rehash; }
 conceive() { command conceive "$@"; rehash; }
@@ -12,12 +27,14 @@ aginstall() { ~/stbin/aginstall "$@"; rehash; }
 ls --version > /dev/null 2>&1 && alias ls='ls --classify --color=auto'
 echo x | (grep x --color >/dev/null 2>&1) && alias grep='grep --color=auto'
 
-   function cdnlw() { cd $ST_TRUNK/nlw
-}; function CDnlw() { scmcd $ST_TRUNK/nlw
+   function cdnlw() { cd `abs_path $ST_CURRENT/nlw`
+}; function CDnlw() { scmcd `abs_path $ST_CURRENT/nlw`
 }; function cdtrunk() { cd $ST_TRUNK
 }; function CDtrunk() { scmcd $ST_TRUNK
-}; function cdcfg() { cd $ST_TRUNK/stconfig
-}; function CDcfg() { scmcd $ST_TRUNK/stconfig && ./stconfig-setup
+}; function cdcur() { cd `abs_path $ST_CURRENT`
+}; function CDcur() { scmcd `abs_path $ST_CURRENT`
+}; function cdcfg() { cd `abs_path $ST_CURRENT/stconfig`
+}; function CDcfg() { scmcd `abs_path $ST_CURRENT/stconfig` && ./stconfig-setup
 }
 MAC_FILE="~/.nlw/etc/Socialtext/MAC.secret"
 alias muckmac="rm $MAC_FILE; echo bemucked > $MAC_FILE"
@@ -36,13 +53,14 @@ alias tail=multitail
 
 function provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
-function stfreshen() { 
-    CDtrunk
+function stfreshen() {
+    CDcur
     cdnlw
     ctags -R .. &
     dev-bin/fresh-dev-env-from-scratch
     muckmac
-    prove -lv t/page.t t/live/mega.t # TODO: make this random
+    prove -lv `find t/ -name '*.t' | perl -le '@x=<>; chomp(@x); print "$x[int(rand(@x))] $x[int(rand(@x))]"'`
+    #t/page.t t/live/mega.t # TODO: make this random
 }
 
 # Handy for making sense of failing data-oriented tests.
