@@ -23,9 +23,14 @@ case "$verb" in
         [ -z "$branch" ] && usage
         [ ! -d ~testrunner/$branch ]
         [ ! -d ~testrunner/$CHECKOUTS/$branch ]
+        if [ "$branch" = "trunk" ]; then
+            branch_path="trunk"
+        else
+            branch_path="branches/$branch"
+        fi
         sudo su - testrunner "
             LANG=en_US.UTF-8 \
-            svn co $ST_CODE_REPO/branches/$branch \
+            svn co $ST_CODE_REPO/$branch_path \
             && mv $branch $CHECKOUTS
         "
         ;;
