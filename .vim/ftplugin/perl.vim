@@ -31,6 +31,9 @@ map <buffer> \gs :!grepsubs %<cr>
 map <buffer> \# :s/^/#/g<cr>:noh<cr>
 map <buffer> \$ :s/^#//g<cr>:noh<cr>
 
+" Go to the test for this module, or module for this test.
+map <buffer> \t :e <C-r>=AlternateTestFile(expand('%'))<CR><CR>
+
 " Run the debugger on the current file (great for .t files)
 map <buffer> \pd :up<cr>:!perl -d -Ilib %<cr>
 

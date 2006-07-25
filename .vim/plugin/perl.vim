@@ -29,3 +29,15 @@ function! QuietPerlCompile()
         echo 'syntax ok'
     endif
 endf
+
+" Return the module file corresponding to this test file, or the primary test
+" corresponding to this module.  Note that this will find Foo.pm from
+" Foo-bar.t, but not the other way round.
+function! AlternateTestFile(file)
+    if (match(a:file, '\.t$') != -1)
+        return substitute(substitute(a:file, '^t/', 'lib/', ''), '\(-[^.]\+\)\?\.t$', '.pm', 'm')
+    else
+        return substitute(substitute(a:file, '^lib/', 't/', ''), '\.pm$', '.t', '')
+    endif
+endf
+
