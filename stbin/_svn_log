@@ -2,8 +2,8 @@
 use warnings;
 use strict;
 
-$ARGV[0] = "-r$ARGV[0]"
-    if @ARGV and $ARGV[0] =~ /^\d+$/;
+$ARGV[0] = "-r$1"
+    if @ARGV and $ARGV[0] =~ /^r?(\d+)$/;
 
 my @command = ('scm', 'log', @ARGV, '--verbose');
 exec @command;

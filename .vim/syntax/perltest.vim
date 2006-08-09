@@ -1,5 +1,22 @@
 runtime! syntax/perl.vim
 
+" test_http
+" The entire test_http block.  We use indentation of the left margin to
+" find the matching curly brace.  Icky, but expeditious.
+syn region testHttpBlock start=/^\z\(\s*\)test_http.*{/ end=/^\z1}/ contains=testHttpKeyword,testHttpRequestBlock
+syntax keyword testHttpKeyword test_http contained skipwhite nextgroup=@perlExpr
+
+" Request block.
+syntax region testHttpRequestBlock start=/^\s*>> .*/ skip=/^\s*>>.*/ end=/\ze\(.\)/ contains=testHttpRequestHeaderLine,testHttpRequestStart,testHttpRequestBlank
+syntax region testHttpRequestHeaderLine start=/^\s*>> [A-Za-z\-]\+:/ end=/$/ contained contains=testHttpRequestFleche,testHttpHeader,@perlInterpDQ
+syntax region testHttpRequestStart start=/^\s*>> [^:]\+ .*/ end=/$/ contains=testHttpRequestFleche,testHttpMethod,@perlInterpDQ
+"syntax match testHttpHeader /[A-Za-z-]: /he=e-2 contained
+syntax match testHttpRequestFleche /^\s*>>/ contained
+syntax keyword testHttpMethod GET PUT POST DELETE HEAD contained
+
+" Common elements
+syntax match testHttpHeader /[A-Za-z\-]\+:/he=e-1 contained
+
 " __END__ and __DATA__ clauses
 if exists("perl_fold")
   syntax region perlDATA		start="^__\(DATA\|END\)__$" skip="." end="." contains=TestLiveBlock fold
@@ -39,6 +56,14 @@ if version >= 508 || !exists("did_perl_syn_inits")
   HiLink TestLiveDataName       ModeMsg
   HiLink TestLiveDataFilter     perlIdentifier
   HiLink TestLiveMatchSection   perlQQ
+
+  HiLink testHttpKeyword        perlRepeat
+  HiLink testHttpRequestFleche  perlOperator
+  HiLink testHttpHeader         perlString
+
+  "HiLink testHttpBlock          ErrorMsg
+  "HiLink testHttpRequestBlock ErrorMsg
+  "HiLink testHttpRequestHeaderLine ErrorMsg
 
   delcommand HiLink
 endif
