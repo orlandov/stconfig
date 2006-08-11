@@ -61,6 +61,7 @@ sub link_or_descend {
             if not(-l $file) or $dest ne readlink($file);
     } else {
         warn "Linking $file\n";
-        symlink($dest, $file);
+        unlink $file; # This removes stale symlinks.
+        symlink($dest, $file) or die "link $file -> $dest: $!\n";
     }
 }
