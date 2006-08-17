@@ -9,4 +9,11 @@ augroup filetypedetect
 
     au! BufNewFile,BufRead *.t                  setf perltest
     au! BufNewFile,BufRead *.hwd                setf hwd
+
+    au! BufNewFile,BufRead *.html
+        \ if ( getline(1) . getline(2) . getline(3) =~ '\[%' ) |
+        \   setf tt2html |
+        \ else |
+        \   setf html |
+        \ endif
 augroup END
