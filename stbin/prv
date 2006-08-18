@@ -3,18 +3,21 @@
 # This provides a wrapper around prove(1) that does some smart defaulting
 # things for you.
 #
-# 0) adds -l and -s by default
-# 1) you can turn off -s with -S
+# 0) adds -l, -r and -s by default
+# 1) you can turn off -s with -S, and -r with -R
 # 2) if you don't specify any tests, finds all the non-live tests under 't'
 
 # Init.
 shuffle=1
+recurse=1
 switches=()
 
-# Save switches, looking especially for -S.
+# Save switches, looking especially for -S and -R.
 while [[ "$1" == -* ]] {
     if [[ "$1" == -S ]] {
         shuffle=0
+    } elif [[ "$1" == -R ]] {
+        recurse=0
     } else {
         switches+="$1"
     }
@@ -30,6 +33,9 @@ if [[ $shuffle == 1 ]] {
 if [[ -z "$*" ]] {
     tests=${(z)$(find t -name \*.t -not -regex '^t/live.*')}
 } else {
+    if [[ $recurse == 1 ]] {
+        switches+=-r
+    }
     tests=${(z)@}
 }
 
