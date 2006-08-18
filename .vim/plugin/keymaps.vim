@@ -40,6 +40,10 @@ map \6 :up<CR>:!make all install<CR>
 map \d :.!echo -n 'date:    '; date<CR>
 map \h :up<CR>:call TryPerlCompile()<CR>
 
+" Like ^] (tag lookup), but only in this file.  Sort of.  It looks for
+" 'sub <cword>'.
+map \<C-]> /<C-r>='\<sub ' . expand('<cword>') . '\>'<CR><CR>
+
 map \gf :sp <cword><CR>
 
 map \K :!LC_ALL=C perldoc %<CR>
