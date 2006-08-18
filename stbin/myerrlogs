@@ -1,21 +1,27 @@
 #!/bin/zsh -ef
 
-# USAGE myerrlogs [-1|-2]
+# USAGE myerrlogs [-1|-2] [DIRECTORY]
 #
 #   -1      Only apache-perl logs
 #   -2      Only apache2 logs
 #   DEFAULT Everything
+#
+#   DIRECTORY defaults to ~/.nlw/log
 
 case "$1" in
     (-1)
-        dir='apache-perl'
+        subdir='apache-perl'
+        shift
         ;;
     (-2)
-        dir='apache2'
+        subdir='apache2'
+        shift
         ;;
     (*)
-        dir='*'
+        subdir='*'
         ;;
 esac
 
-eval exec colorizelogs "~/.nlw/log/$dir/*.log"
+dir=${1:-~/.nlw/log}
+
+eval exec colorizelogs "$dir/$subdir/*.log"
