@@ -1,0 +1,23 @@
+stconfig (20060818-4) socialtext; urgency=low
+
+   * New package to get stuff mml recently added.
+
+ -- Matthew O'Connor <matthew.oconnor@socialtext.com>  Fri, 18 Aug 2006 11:12:08 -0700
+
+stconfig (20060818-3) socialtext; urgency=low
+
+   * Fixed some typos, added some missing dependencies.
+
+ -- Matthew O'Connor <matthew.oconnor@socialtext.com>  Fri, 18 Aug 2006 11:08:18 -0700
+
+stconfig (20060818-2) socialtext; urgency=low
+
+   * New upstream version
+
+ -- Matthew O'Connor <matthew.oconnor@socialtext.com>  Fri, 18 Aug 2006 10:47:41 -0700
+
+stconfig (20060818-1) socialtext; urgency=low
+
+  * Initial release.
+
+ -- Matthew O'Connor <matthew.oconnor@socialtext.com>  Fri, 18 Aug 2006 10:02:14 -0700

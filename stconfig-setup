@@ -12,6 +12,11 @@ sub make_symlinks {
     my $base = $FindBin::Bin;
     $base = Cwd::abs_path($base);
 
+    # A hack so this stuff works when packaged
+    if ($base eq '/usr/bin') {
+        $base = "/usr/share/stconfig";
+    }
+
     die unless $ENV{HOME};
     chdir($ENV{HOME});
 
@@ -35,6 +40,8 @@ sub all_files {
         .svn
         stconfig-setup
         socialtext.vim
+        Makefile
+        debian
     );
     opendir DIR, $base or die;
     my @files;
