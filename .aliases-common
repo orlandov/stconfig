@@ -14,6 +14,13 @@ for cmd in `find $HOME/stbin/ -name 'svn*'`; do
     alias $svk_cmd=$svn_cmd
 done
 
+# Extract fields from output
+f() {
+    N=$1
+    shift;
+    awk $@ "{print \$${N:-1}}";
+}
+
 abs_path() { perl -MCwd -le "print Cwd::abs_path(shift)" $1; }
 scmcd() { cd $1; scm up; scm status; }
 kiss() { command kiss "$@"; rehash; }

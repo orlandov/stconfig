@@ -1,3 +1,10 @@
+stconfig (20060822-1) socialtext; urgency=low
+
+  * Added f() command which extracts fields from output, using awk.  f N
+    extracts the Nth field.  I always do this.
+
+ -- Matthew O'Connor <matthew@canyon>  Tue, 22 Aug 2006 15:04:39 -0700
+
 stconfig (20060818-4) socialtext; urgency=low
 
    * New package to get stuff mml recently added.
