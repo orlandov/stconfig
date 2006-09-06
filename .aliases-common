@@ -8,6 +8,12 @@ alias GETf='GET -UseS'
 alias POSTf='POST -UseS'
 alias HEADf='HEAD -UseS'
 
+alias agu='sudo apt-get update'
+alias agdu='sudo apt-get update; sudo apt-get dist-upgrade'
+alias agi='sudo apt-get install'
+alias acs='apt-cache search'
+alias acsh='apt-cache show'
+
 for cmd in `find $HOME/stbin/ -name 'svn*'`; do
     svn_cmd=`basename $cmd`
     svk_cmd=`echo $svn_cmd | sed s/svn/svk/`

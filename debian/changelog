@@ -1,3 +1,9 @@
+stconfig (20060906-1) socialtext; urgency=low
+
+  * Added aliases for apt things
+
+ -- Matthew O'Connor <matthew@canyon>  Wed,  6 Sep 2006 15:34:32 -0700
+
 stconfig (20060822-1) socialtext; urgency=low
 
   * Added f() command which extracts fields from output, using awk.  f N
