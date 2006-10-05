@@ -1,5 +1,5 @@
 Source: stconfig
-Section: socialtext
+Section: misc
 Priority: optional
 Maintainer: Matthew O'Connor <matthew.oconnor@socialtext.com>
 Build-Depends: debhelper (>= 4.0.0)
@@ -7,9 +7,15 @@ Standards-Version: 3.6.1
 
 Package: stconfig
 Architecture: all
-Depends: perl, perl-modules, perl-doc, libfile-chdir-perl, vim, emacs-nox, zsh, screen, libwww-perl, subversion, svk, exuberant-ctags, perltidy, liberror-perl
+Suggests: st-dev
+Depends: ${perl:Depends}, libfile-chdir-perl, liberror-perl
 Conflicts:
 Description: Socialtext Developer Config. Files
     This package contains a number of developer config files used by
     Socialtext devlopers.  The config files are optional and are only
     installed in your home directory if you run stconfig-setup.
+
+Package: st-dev
+Architecture: all
+Depends: st-all-deps, stconfig, perl-doc, zsh, screen, emacs-nox, vim, zsh, screen, libwww-perl, subversion, svk, exuberant-ctags, perltidy, liberror-perl, brett, cowsay
+Description: Socialtext Developer Environment

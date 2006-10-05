@@ -1,3 +1,10 @@
+stconfig (20061005-1) socialtext; urgency=low
+
+  * Rebuild of stconfig/st-dev after pkgs were merged to one control
+    file.
+
+ -- Matthew O'Connor <matthew@canyon.socialtext.net>  Thu,  5 Oct 2006 10:45:33 -0700
+
 stconfig (20060906-1) socialtext; urgency=low
 
   * Added aliases for apt things
