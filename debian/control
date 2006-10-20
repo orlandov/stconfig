@@ -17,5 +17,5 @@ Description: Socialtext Developer Config. Files
 
 Package: st-dev
 Architecture: all
-Depends: st-all-deps, stconfig, perl-doc, zsh, screen, emacs-nox, vim, zsh, screen, libwww-perl, subversion, svk, exuberant-ctags, perltidy, liberror-perl, brett, cowsay
+Depends: st-all-deps, stconfig, perl-doc, zsh, screen, emacs-nox, vim, zsh, screen, libwww-perl, subversion, svk, exuberant-ctags, perltidy, liberror-perl, brett, cowsay, apache
 Description: Socialtext Developer Environment

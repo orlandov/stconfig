@@ -4,7 +4,7 @@ set -e
 case "$1" in
     configure)
         echo "Making screen SUID root, so pairing works."
-        chmod 2775 /usr/bin/screen
+        chmod 4755 /usr/bin/screen
 esac
 
 exit 0;
