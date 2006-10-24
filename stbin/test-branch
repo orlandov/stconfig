@@ -64,16 +64,25 @@ case "$verb" in
         for branch in $($0 ls); do
             branch=$(echo $branch | perl -pe 's,/$,,')
             html_file="${branch}.html"
+            trouble_file="$CHECKOUTS/$branch/TROUBLE"
+            output_file="${branch}-output.txt"
             if [ -f "$html_file" ]; then
                 echo "<TR><TD><A href="$html_file">$branch</A></TD>"
-                echo -n '<TD STYLE="color: white; background-color: '
-                if $0 status $branch | egrep -q '^-' ; then
-                    echo -n red
+                if [ -e "$trouble_file" ]; then
+                    color='goldenrod'
+                    stamp_file="$trouble_file"
                 else
-                    echo -n green
+                    stamp_file="$html_file"
+                    if $0 status $branch | egrep -q '^-' ; then
+                        color='red'
+                    else
+                        color='green'
+                    fi
                 fi
-                echo -n '">'
-                ls -l $html_file | awk '{print $6 " " $7}'
+                echo "<TD STYLE='background-color: $color'>"
+                echo -n "<A href='$output_file'"
+                echo -n " STYLE='color: white; background-color: $color'>"
+                ls -l $stamp_file | awk '{print $6 " " $7}'
                 echo '</TD></TR>'
             fi
         done
@@ -81,6 +90,12 @@ case "$verb" in
         ;;
     (hts|htst|htsta|htstat|htstatu|htstatus)
         [ -z "$branch" ] && usage
+        trouble_file="$CHECKOUTS/$branch/TROUBLE"
+        if [ -e "$trouble_file" ]; then
+            trouble_message="<SPAN STYLE='background-color: goldenrod; color: white'>&nbsp;IN TROUBLE&nbsp;</SPAN>"
+        else
+            trouble_message=''
+        fi
         db2lines $CHECKOUTS/$branch/test.db \
         | perl -F, -alne ' 
             eval qq( \$$F[0]\{\$F[1]\} = \$F[2] );
@@ -88,7 +103,7 @@ case "$verb" in
                 print
                     qq(<TITLE>'"$branch"'</TITLE>\n),
                     q(<TABLE>),
-                    q(<TR><TH colspan=2>'"$branch"'</TH>),
+                    q(<TR><TH colspan=2>'"$branch$trouble_message"'</TH>),
                     q(<TH colspan=4>'"$(date +%Y-%m-%d\ %H:%M:%S)"'),
                     q(</TH></TR>);
                 $i = 0;
