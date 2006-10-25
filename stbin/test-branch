@@ -114,7 +114,8 @@ case "$verb" in
                     print
                         q(<TD STYLE="color: white; background-color: ),
                         $status{$test} eq q(passing) ? q(green) : q(red),
-                        qq(">$lastpass{$test}</TD><TD>$test</TD>);
+                        qq(">$lastpass{$test}</TD><TD>),
+                        qq(<A HREF="'"$branch"'/$test-out.txt">$test</A></TD>);
                 }
                 print q(</TABLE>);
             }
