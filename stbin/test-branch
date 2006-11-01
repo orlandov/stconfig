@@ -87,6 +87,17 @@ case "$verb" in
             fi
         done
         echo '</TABLE>'
+	cat <<EOF
+<p>If you want to add a new branch for testing log in to testrunner.socialtext.net and use
+the <code>test-branch</code> command.</p>
+<p>You should add your branch to the testrunner if you think this is a branch that will be used
+for active development for more than a few days.  If you're just doing a quick fix, you don't need
+to add it to testrunner, the Release Gang will run your tests before merging your branch to trunk.  
+Please don't use that as an excuse to not run the tests yourself.</p>
+<p>After your <em>Work Is Done</em> you might want to remove your branch from the testrunner loop.
+Again, you use test-branch to do that.  If you're lazy, you can mention on the Release Contract that
+you'd like the Release Gang to clean up for you.</p>
+EOF
         ;;
     (hts|htst|htsta|htstat|htstatu|htstatus)
         [ -z "$branch" ] && usage
