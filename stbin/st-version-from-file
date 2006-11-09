@@ -1,0 +1,2 @@
+#!/bin/sh
+cat ${1:-"./lib/Socialtext.pm"} | grep 'our.*$VERSION' | sed -e 's/[^\.0-9]//g'
