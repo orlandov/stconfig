@@ -1,3 +1,9 @@
+stconfig (20061108-1) socialtext; urgency=low
+
+  * New upstream
+
+ -- Matthew O'Connor <matthew@canyon.socialtext.net>  Wed,  8 Nov 2006 17:31:20 -0800
+
 stconfig (20061020-1) socialtext; urgency=low
 
   * Made screen 4755 and commiting some some old changes that add apache
