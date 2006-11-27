@@ -1,3 +1,9 @@
+stconfig (20061127-1) socialtext; urgency=low
+
+  * new upstream version
+
+ -- Matthew O'Connor <matthew@canyon.socialtext.net>  Mon, 27 Nov 2006 10:45:18 -0800
+
 stconfig (20061108-1) socialtext; urgency=low
 
   * New upstream
