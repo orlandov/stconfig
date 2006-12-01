@@ -89,7 +89,7 @@ case "$verb" in
             fi
         done
         echo '</TABLE>'
-        if [ focused ]
+        if [ -e ~testrunner/FOCUS ]
         then
             FOCUS=`cat ~testrunner/FOCUS`
             cat<<EOF
