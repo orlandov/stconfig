@@ -17,6 +17,8 @@ branch="$2"
 
 DIR=$(dirname $0)
 CHECKOUTS=~testrunner/checkouts
+PATH=$PATH:~testrunner/testrunner-bin
+export PATH
 
 case "$verb" in
     (a|ad|add)
@@ -87,6 +89,13 @@ case "$verb" in
             fi
         done
         echo '</TABLE>'
+        if [ focused ]
+        then
+            FOCUS=`cat ~testrunner/FOCUS`
+            cat<<EOF
+<p><b>The testrunner is currently focused on $FOCUS.</b></p>
+EOF
+        fi
 	cat <<EOF
 <p>If you want to add a new branch for testing log in to testrunner.socialtext.net and use
 the <code>test-branch</code> command.</p>
