@@ -95,6 +95,10 @@ case "$verb" in
             cat<<EOF
 <p><b>The testrunner is currently focused on $FOCUS.</b></p>
 EOF
+        else
+        cat<<EOF
+<p><b>The testrunner is not currently focused on any one branch.</b></p>
+EOF
         fi
 	cat <<EOF
 <p>If you want to add a new branch for testing log in to testrunner.socialtext.net and use
