@@ -15,8 +15,14 @@ set encoding=utf-8 termencoding=utf-8
 set keywordprg=LC_ALL=C\ man
 set foldmethod=marker
 
+" For :vsp - vertically split windows
+set splitright
+
 " Ubuntu Dapper changed this to link to perlInclude, which sux0rs since it's
 " *is* a statement and making it an include makes it a really ugly color.
 highlight link perlStatementInclude perlStatement
 
 au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
+
+" Set :grep to use Andy's ack instead - http://perladvent.pm.org/2006/5/
+set grepprg=ack
