@@ -26,4 +26,4 @@ GetOptions(
 my $server = 'https://www2.socialtext.net';
 $server =~ s/2// if $prod;
 
-system("wikedit --server $server @ARGV");
+system(qw(wikedit --server), $server, @ARGV);
