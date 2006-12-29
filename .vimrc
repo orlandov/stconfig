@@ -11,3 +11,4 @@
 " ~/.vim/plugin/svn.vim
 
 au FileType vim set iskeyword+=. iskeyword+=/ iskeyword+=~
+set splitright
