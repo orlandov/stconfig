@@ -1,0 +1,72 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Socialtext::Resting;
+use Sys::Hostname qw/hostname/;
+
+# Wrapper script around run-wiki-tests that uploads it's output
+# to a _results wiki page
+# 
+# Args are passed through to run-wiki-tests
+
+my $test_runner = 'run-wiki-tests';
+my @argv = @ARGV;
+my $test_plan = $argv[$#argv];
+
+my $results = run_tests();
+
+my $plan_server = 'http://www2.socialtext.net',
+my $plan_workspace = 'regression-test';
+my $rester = Socialtext::Resting->new(
+    server => $plan_server,
+    username => 'tester@ken.socialtext.net',
+    password => 'wikitest',
+    workspace => $plan_workspace,
+);
+
+my $result_page = "${test_plan}_results";
+$rester->put_page($result_page, page_summary());
+print "\nUpdated $result_page\n";
+exit;
+
+sub page_summary {
+    my $summary = "[$test_plan]\n^ Status\n";
+    my $branch = development_branch();
+    if ($results =~ m/Looks like you failed (\d+) test of (\d+)/) {
+        $summary .= "$branch - Failed $1 test of $2\n";
+    }
+    elsif ($results =~ m/^1\.\.(\d+)$/m) {
+        $summary .= "$branch - Passed $1 tests\n";
+    }
+
+    return $summary
+           . "^ Running Conditions\n"
+           . "*user*: " . qx(whoami 2>&1)
+           . "*date*: " . localtime() . "\n"
+           . "*uname*: " . qx(uname -a 2>&1)
+           . "*hostname*: " . hostname() . "\n"
+           . "-----\n"
+           . ".pre\n$results\n.pre\n";
+}
+
+sub run_tests {
+    my $cmd = qq($^X $test_runner @ARGV 2>&1);
+    open(my $fh, "$cmd |") or die qq{Can't run "$cmd": $!};
+    my $result = '';
+    while(<$fh>) {
+        print;
+        $result .= $_;
+    }
+    close $fh or die "Can't close command: $!";
+    return $result;
+}
+
+sub development_branch {
+    # Find which branch we're testing
+    my $st_admin = qx(which st-admin);
+    chomp $st_admin;
+    (my $current_link = $st_admin) =~ s#(current)/nlw.+#$1#;
+    my $branch = readlink $current_link or die "Can't readlink $current_link: $!";
+    $branch =~ s#.+/##;
+    return $branch;
+}

@@ -1,0 +1,85 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Socialtext::Resting;
+use Socialtext::Resting::Mock;
+use Socialtext::WikiObject::TestPlan;
+use Getopt::Long;
+use Test::More qw/no_plan/;
+
+# Script to run wiki tests outside of `make test` harness.
+
+my $plan_server     = 'http://www2.socialtext.net',
+my $plan_workspace  = 'regression-test';
+my $plan_page       = 'Test Plan';
+
+my $test_server     = 'http://talc.socialtext.net:21029';
+my $test_workspace  = 'test-data';
+
+my $fake_content_file;
+GetOptions(
+    'plan-server=s'     => \$plan_server,
+    'plan-workspace=s'  => \$plan_workspace,
+    'plan-page=s'       => \$plan_page,
+    'test-server=s'     => \$test_server,
+    'test-workspace=s'  => \$test_workspace,
+    'f|fake-content-file=s' => \$fake_content_file,
+) or usage();
+
+my $rester;
+if (!defined $fake_content_file) {
+    $rester = Socialtext::Resting->new(
+        server => $plan_server,
+        username => 'tester@ken.socialtext.net',
+        password => 'wikitest',
+        workspace => $plan_workspace,
+    );
+}
+else {
+    $rester = Socialtext::Resting::Mock->new(file => $fake_content_file);
+}
+
+# Add current branch's lib to our include path
+my $st_admin = qx(which st-admin);
+(my $nlw_path = $st_admin) =~ s#/bin/st-admin.+##s;
+push @INC, "$nlw_path/lib";
+diag "Added $nlw_path/lib to \@INC...";
+
+my $test_plan = Socialtext::WikiObject::TestPlan->new(
+    rester => $rester,
+    page => $plan_page,
+    default_fixture => 'Socialtext',
+    fixture_args => {
+        host => 'galena.socialtext.net',
+        port => 4444,
+        browser_url => $test_server,
+        workspace => $test_workspace,
+        username => 'devnull1@socialtext.com',
+        password => 'password',
+    },
+);
+$test_plan->run_tests;
+exit;
+
+
+sub usage {
+    print <<EOT;
+USAGE: $0 [options]
+
+This script executes testcases as defined on a wiki page.
+
+Options:
+ --plan-server [server] Specify which server has Test cases
+                        Default '$plan_server'
+ --plan-workspace [ws]  Specify which workspace contains the test plans
+                        Default: '$plan_workspace'
+ --plan-page [page]     Specify which page contains the test plan
+                        Default: '$plan_page'
+ --test-server [server] Specify which server the testing should occur on
+                        Default '$test_server'
+ --test-workspace [ws]  Specify which workspace the testing should occur on
+                        Default: '$test_workspace'
+ --fake-content-file [file] Specify a file to read from instead of the wiki.
+EOT
+    exit -1;
+}
