@@ -10,5 +10,6 @@
 " ~/.vim/plugin/perl.vim
 " ~/.vim/plugin/svn.vim
 
+autocmd BufRead *.wiki set ft=wiki
 au FileType vim set iskeyword+=. iskeyword+=/ iskeyword+=~
 set splitright
