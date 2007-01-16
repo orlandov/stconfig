@@ -1,0 +1,113 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use File::Path qw(rmtree);
+use Getopt::Long;
+
+my $SVN_REPO = 'https://repo.socialtext.net:8999/svn';
+
+my %opts;
+GetOptions(
+    'type:s'    => \$opts{type},
+    'source:s'  => \$opts{source},
+    'message:s' => \$opts{message},
+    'version:s' => \$opts{version},
+    'help'      => \$opts{help},
+) or die "\n";
+
+show_help() if $opts{help};
+show_help() unless $opts{type};
+
+die "Do not run this script via sudo"
+    unless $>;
+
+$opts{message} = "\n$opts{message}" if $opts{message};
+$opts{message} ||= '';
+
+my $socialtext_version = $opts{version} if $opts{version};
+$socialtext_version ||= parse_socialtext_version('.');
+
+my $copy_name;
+my $svn_copy_path;
+
+my $x = 1;
+
+do {
+    $copy_name = "$opts{type}-$socialtext_version-$x";
+    $svn_copy_path = "$SVN_REPO/code/tags/$copy_name";
+
+    $x++;
+} while ( `svn log --stop-on-copy $svn_copy_path` );
+
+print "Creating new tag $copy_name\n";
+
+die "Must specify --source\n" unless $opts{source};
+my $source = $opts{source} eq 'trunk' ? '/code/trunk' : "/code/branches/$opts{source}";
+system( 'svn', '-q', 'cp',
+        "$SVN_REPO$source",
+        $svn_copy_path,
+        '-m', "copying $source to $svn_copy_path$opts{message}" )
+    and die $!;
+
+my $export_path = "/tmp/$$";
+
+print "Exporting $svn_copy_path to $export_path\n";
+
+system( 'svn', '-q', 'export', $svn_copy_path, $export_path );
+
+chdir $export_path . '/nlw';
+
+print "Running 'sudo make release', which may ask for your password.\n";
+(system(qw(sudo build/bin/st-install))
+    or
+ system(qw(sudo make realclean))
+    or
+ system(qw(sudo rm -r), $export_path)
+) and print "\n\nRelease appears to have failed.  See $export_path\n";
+
+sub parse_socialtext_version {
+    my $base = shift;
+
+    my $socialtext_mod = $base . '/lib/Socialtext.pm';
+
+    open my $fh, '<', $socialtext_mod
+        or die "Cannot read $socialtext_mod $!";
+
+    while (<$fh>) {
+        if ( /^our\s+\$VERSION\s*=\s*(['"])([^'"]+)\1/ ) {
+            return $2;
+        }
+    }
+
+    die "Could not find version in $socialtext_mod\n";
+}
+
+sub show_help {
+    print <<"EOF";
+
+make-release --type=alpha --source=trunk
+
+ This script accepts the following options:
+
+  --type     The type of tag or branch in the SVN repository which is
+             being created or updated.
+             This should be one of "alpha", "beta", "release".
+             This script will create a tag for the release.
+
+  --source   The name (not path) of the "source" branch.
+             If you specify "trunk", it will use trunk.  Otherwise,
+             if you give something like "release-1.7.2" it will use
+             /branches/release-1.7.2
+
+  --message  Append the provided string to the svn log messages.
+
+  --version  Use this version for the created tag, rather than
+             the VERSION in the local checkout.
+
+EOF
+
+    exit;
+}
