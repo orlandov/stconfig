@@ -47,6 +47,9 @@ map <buffer> \sth :!nlwctl -t<cr>
 map <buffer> \stU :let $NLW_TEST_UPDATE=1<cr>
 map <buffer> \stu :let $NLW_TEST_UPDATE=0<cr>
 
+" Install quickly from vim
+map <buffer> \cpan :!sudo cpan <cword><cr>
+
 " quickfix support
 map  <buffer> <S-F7>     :wa<CR>:call QuietPerlCompile()<CR>
 imap <buffer> <S-F7>     <Esc><S-F7>
