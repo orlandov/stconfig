@@ -2,13 +2,16 @@
 
 BRANCH=$1
 KIND=${2:-"release"}
+MSG=$3
+VERSION=$4
 if [ -z "$BRANCH" ]; then
-    echo "Usage: $0 branch [tag_prefix=\"release\"] [message=\"\"]"
+    echo "Usage: $0 branch [type] [message] [version]"
     exit 1
 fi
 
-TAG=`get-next-release-tag $KIND`
-MESSAGE="Copying /code/branches/$BRANCH to /code/tags/$TAG. $3"
+cd "$HOME/src/st/$BRANCH/nlw"
+TAG=`get-next-release-tag $KIND $VERSION`
+MESSAGE="Copying /code/branches/$BRANCH to /code/tags/$TAG. $MSG"
 
 SVN_BASE=${ST_SVN:-"https://repo.socialtext.net:8999/svn"}
 TAG_URL="$SVN_BASE/code/tags/$TAG"

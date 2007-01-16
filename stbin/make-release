@@ -27,30 +27,18 @@ die "Do not run this script via sudo"
 $opts{message} = "\n$opts{message}" if $opts{message};
 $opts{message} ||= '';
 
-my $socialtext_version = $opts{version} if $opts{version};
-$socialtext_version ||= parse_socialtext_version('.');
+my $nlw_dir = "$ENV{HOME}/src/st/$opts{source}";
+chdir $nlw_dir or die "Can't chdir to $nlw_dir: $!";
 
-my $copy_name;
-my $svn_copy_path;
+my $tag_release = qq(tag-release $opts{source} $opts{type} "$opts{message}" )
+                  . ($opts{version} || '');
+my $output = qx($tag_release 2>&1);
+(my $copy_name = $output) =~ s/^Created tag (\S+) from branch .+/$1/s;
+die "Couldn't find the tag name ($output)" unless $copy_name;
 
-my $x = 1;
-
-do {
-    $copy_name = "$opts{type}-$socialtext_version-$x";
-    $svn_copy_path = "$SVN_REPO/code/tags/$copy_name";
-
-    $x++;
-} while ( `svn log --stop-on-copy $svn_copy_path` );
+my $svn_copy_path = "$SVN_REPO/code/tags/$copy_name";
 
 print "Creating new tag $copy_name\n";
-
-die "Must specify --source\n" unless $opts{source};
-my $source = $opts{source} eq 'trunk' ? '/code/trunk' : "/code/branches/$opts{source}";
-system( 'svn', '-q', 'cp',
-        "$SVN_REPO$source",
-        $svn_copy_path,
-        '-m', "copying $source to $svn_copy_path$opts{message}" )
-    and die $!;
 
 my $export_path = "/tmp/$$";
 
@@ -60,30 +48,12 @@ system( 'svn', '-q', 'export', $svn_copy_path, $export_path );
 
 chdir $export_path . '/nlw';
 
-print "Running 'sudo make release', which may ask for your password.\n";
-(system(qw(sudo build/bin/st-install))
-    or
- system(qw(sudo make realclean))
-    or
- system(qw(sudo rm -r), $export_path)
-) and print "\n\nRelease appears to have failed.  See $export_path\n";
+# create debian packages and upload using brett
+my $deb_msg = "$opts{message}\ntag: $copy_name";
+my $archive = 'dapper'; # should be based on version?
+system("brett -m '$deb_msg' -A $archive");
+exit;
 
-sub parse_socialtext_version {
-    my $base = shift;
-
-    my $socialtext_mod = $base . '/lib/Socialtext.pm';
-
-    open my $fh, '<', $socialtext_mod
-        or die "Cannot read $socialtext_mod $!";
-
-    while (<$fh>) {
-        if ( /^our\s+\$VERSION\s*=\s*(['"])([^'"]+)\1/ ) {
-            return $2;
-        }
-    }
-
-    die "Could not find version in $socialtext_mod\n";
-}
 
 sub show_help {
     print <<"EOF";
