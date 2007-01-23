@@ -1,3 +1,9 @@
+stconfig (20070123-1) socialtext; urgency=low
+
+  * Build debian package.  New Upstream version
+
+ --  <matthew@talc.socialtext.net>  Tue, 23 Jan 2007 12:51:17 -0800
+
 stconfig (20070116-1) socialtext; urgency=low
 
   * new upstream version
