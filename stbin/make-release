@@ -24,6 +24,9 @@ show_help() unless $opts{type};
 die "Do not run this script via sudo"
     unless $>;
 
+###################
+# Tag Release
+###################
 $opts{message} = "\n$opts{message}" if $opts{message};
 $opts{message} ||= '';
 
@@ -40,6 +43,9 @@ my $svn_copy_path = "$SVN_REPO/code/tags/$copy_name";
 
 print "Creating new tag $copy_name\n";
 
+###################
+# Export Tag
+###################
 my $export_path = "/tmp/$$";
 
 print "Exporting $svn_copy_path to $export_path\n";
@@ -48,12 +54,25 @@ system( 'svn', '-q', 'export', $svn_copy_path, $export_path );
 
 chdir $export_path . '/nlw';
 
+###################
+# Create new repo
+###################
+system( "ssh", "apt.socialtext.net", "create-repository", $copy_name, "main", "alien" )
+    and die "Could not create repository $copy_name";
+
+###################
+# Build Packages
+###################
 # create debian packages and upload using brett
 my $deb_msg = "$opts{message}\ntag: $copy_name";
 my $archive = 'dapper'; # should be based on version?
 system("brett -m '$deb_msg' -A $archive");
-exit;
 
+##########################
+# Update staging symlink
+##########################
+system( "ssh", "apt.socialtext.net", "link-repository", $copy_name, "staging" )
+    and die "Could not link repository $copy_name";
 
 sub show_help {
     print <<"EOF";
