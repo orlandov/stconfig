@@ -65,12 +65,12 @@ system( "ssh", "apt.socialtext.net", "create-repository", $copy_name, "main", "a
 ###################
 # create debian packages and upload using brett
 my $deb_msg = "$opts{message}\ntag: $copy_name";
-my $archive = 'dapper'; # should be based on version?
-system("brett -m '$deb_msg' -A $archive");
+system("brett -m '$deb_msg' -A $copy_name");
 
 ##########################
 # Update staging symlink
 ##########################
+print "Updating link repository staging -> $copy_name\n";
 system( "ssh", "apt.socialtext.net", "link-repository", $copy_name, "staging" )
     and die "Could not link repository $copy_name";
 
