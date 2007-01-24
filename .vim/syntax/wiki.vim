@@ -26,9 +26,7 @@ syntax match  stwikiWord          /\[[[:alnum:]\s]\+\]/
 syntax match stwikiLink           `\("[^"(]\+\((\([^)]\+\))\)\?":\)\?\(https\?\|ftp\|gopher\|telnet\|file\|notes\|ms-help\):\(\(\(//\)\|\(\\\\\)\)\+[A-Za-z0-9:#@%/;$~_?+-=.&\-\\\\]*\)`
 
 " text: *strong* 
-syntax match stwikiBold           /\(^\|\W\)\zs\*\([^ ].\{-}\)\*/
-" '''bold'''
-syntax match stwikiBold           /'''\([^'].\{-}\)'''/
+syntax match stwikiBold           /\(^\|\W\)\zs\*\([^\* ].\{-}\)\*/
 
 " text: _emphasis_
 syntax match stwikiItalic         /\(^\|\W\)\zs_\([^ ].\{-}\)_/
