@@ -13,7 +13,8 @@ my $plan_server     = 'http://www2.socialtext.net',
 my $plan_workspace  = 'regression-test';
 my $plan_page       = 'Test Plan';
 
-my $test_server     = 'http://talc.socialtext.net:21029';
+my $dev_port = 20000 + $>;
+my $test_server     = "http://talc.socialtext.com:$dev_port";
 my $test_workspace  = 'test-data';
 
 my $fake_content_file;
