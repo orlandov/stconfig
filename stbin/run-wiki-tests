@@ -14,7 +14,7 @@ my $plan_workspace  = 'regression-test';
 my $plan_page       = 'Test Plan';
 
 my $dev_port = 20000 + $>;
-my $test_server     = "http://talc.socialtext.com:$dev_port";
+my $test_server     = "http://talc.socialtext.net:$dev_port";
 my $test_workspace  = 'test-data';
 
 my $fake_content_file;
@@ -46,6 +46,7 @@ my $st_admin = qx(which st-admin);
 push @INC, "$nlw_path/lib";
 diag "Added $nlw_path/lib to \@INC...";
 
+warn "Testing $test_server\n";
 my $test_plan = Socialtext::WikiObject::TestPlan->new(
     rester => $rester,
     page => $plan_page,
