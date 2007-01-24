@@ -61,6 +61,12 @@ vim() { /usr/bin/vim "$@"; pwdtitle; }
 alias viml='vim !! -l'
 alias tail=multitail
 
+# stedit aliases
+alias appedit='stedit -p -w appliance-project'
+alias stossedit='stedit -p -w stoss'
+alias dgedit='stedit -p -w dev-guide'
+alias dtedit='stedit -p -w dev-tasks'
+
 function provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
 function stfreshen() {
