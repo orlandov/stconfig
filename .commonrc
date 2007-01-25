@@ -9,3 +9,5 @@ d=`which dircolors` && [ -x "$d" ] && eval `dircolors`
 if [ -r ~/stbin/stdefaultenv ]; then
     eval `~/stbin/stdefaultenv`
 fi
+
+export HISTIGNORE="&:ls:ls *:[bf]g:exit"
