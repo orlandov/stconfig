@@ -66,6 +66,7 @@ alias appedit='stedit -p -w appliance-project'
 alias stossedit='stedit -p -w stoss'
 alias dgedit='stedit -p -w dev-guide'
 alias dtedit='stedit -p -w dev-tasks'
+alias rtedit='stedit -w regression-test'
 
 function provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
