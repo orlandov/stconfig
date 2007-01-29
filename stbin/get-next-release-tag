@@ -11,7 +11,7 @@ VERSION=${2:-`st-version-from-file`}
 TAG_N=${3:-"1"}  # Don't ever pass this
 SVN_BASE=${ST_SVN:-"https://repo.socialtext.net:8999/svn"}
 TAG="$TAG_PREFIX-$VERSION-$TAG_N"
-SVN_PATH="$SVN_BASE/code/tags/$TAG"
+SVN_PATH="$SVN_BASE/socialtext/tags/$TAG"
 
 if svn -q log --stop-on-copy $SVN_PATH >/dev/null 2>/dev/null; then
     exec $0 $TAG_PREFIX $VERSION $(($TAG_N + 1))  # Never returns

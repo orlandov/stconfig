@@ -39,7 +39,7 @@ my $output = qx($tag_release 2>&1);
 (my $copy_name = $output) =~ s/^Created tag (\S+) from branch .+/$1/s;
 die "Couldn't find the tag name ($output)" unless $copy_name;
 
-my $svn_copy_path = "$SVN_REPO/code/tags/$copy_name";
+my $svn_copy_path = "$SVN_REPO/socialtext/tags/$copy_name";
 
 print "Creating new tag $copy_name\n";
 
@@ -59,6 +59,39 @@ chdir $export_path . '/nlw';
 ###################
 system( "ssh", "apt.socialtext.net", "create-repository", $copy_name, "main", "alien" )
     and die "Could not create repository $copy_name";
+
+###################################################
+# Export Appliance Build Infastructure in place
+# XXX OMG: HACK
+###################################################
+for my $repo (qw(appliance-bin debian)) {
+    system( "svn", "export", "$SVN_REPO/appliance/trunk/$repo", "$repo" )
+        and die "Could not export $repo";
+}
+chdir("share");
+mkdir("debian");
+mkdir("debian/bin");
+chdir("debian/bin");
+symlink("../../../dev-bin/regen-aliases","regen-aliases");
+symlink("../../../dev-bin/create-db-user","create-db-user");
+symlink("../../../dev-bin/create-help-workspace","create-help-workspace");
+symlink("../../../build/bin/db-login-test","db-login-test");
+symlink("../../../dev-bin/gen-config","gen-config"); 
+symlink("../../../dev-bin/setup-postgres-permissions","setup-postgres-permissions"); 
+
+chdir("..");
+mkdir("build");
+chdir("build");
+symlink( "../../../build/templates", "templates" );
+
+chdir("..");
+mkdir("migrations");
+chdir("migrations");
+symlink("../../../dev-bin/migration/update-homepage-is-dashboard", "update-homepage-is-dashboard");
+symlink(
+    "../../../dev-bin/migration/rename-workspace-navigation-to-announcements-and-links",
+    "rename-workspace-navigation-to-announcements-and-links" );
+chdir("../../..");
 
 ###################
 # Build Packages

@@ -11,14 +11,14 @@ fi
 
 cd "$HOME/src/st/$BRANCH/nlw"
 TAG=`get-next-release-tag $KIND $VERSION`
-MESSAGE="Copying /code/branches/$BRANCH to /code/tags/$TAG. $MSG"
+MESSAGE="Copying /socialtext/branches/$BRANCH to /socialtext/tags/$TAG. $MSG"
 
 SVN_BASE=${ST_SVN:-"https://repo.socialtext.net:8999/svn"}
-TAG_URL="$SVN_BASE/code/tags/$TAG"
+TAG_URL="$SVN_BASE/socialtext/tags/$TAG"
 if [ "$BRANCH" = "trunk" ]; then
-    BRANCH_URL="$SVN_BASE/code/trunk"
+    BRANCH_URL="$SVN_BASE/socialtext/trunk"
 else
-    BRANCH_URL="$SVN_BASE/code/branches/$BRANCH"
+    BRANCH_URL="$SVN_BASE/socialtext/branches/$BRANCH"
 fi
 
 if svn -q copy -m "$MESSAGE" $BRANCH_URL $TAG_URL >/dev/null; then
