@@ -24,7 +24,7 @@ my %default_env = (
     SCREENCOLOR       => 'g',
     WW                => 'base/javascript/Wikiwyg',
     SF_CODE_REPO      => 'https://svn.sourceforge.net/svnroot/socialtext',
-    ST_CODE_REPO      => 'https://repo.socialtext.net:8999/svn/code',
+    ST_CODE_REPO      => 'https://repo.socialtext.net:8999/svn/socialtext',
     ST_SVN            => 'https://repo.socialtext.net:8999/svn',
     WCNP_SERVER       => "'http://panacea.canonical.org/~matthew/cgi-bin/wcnp_server.cgi?who=$ENV{USER}'"
 );
