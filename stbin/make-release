@@ -57,7 +57,7 @@ chdir $export_path . '/nlw';
 ###################
 # Create new repo
 ###################
-system( "ssh", "apt.socialtext.net", "create-repository", $copy_name, "main", "alien" )
+system( "ssh", "apt.socialtext.net", "copy-repository", "deps", $copy_name )
     and die "Could not create repository $copy_name";
 
 ###################################################
@@ -68,7 +68,17 @@ for my $repo (qw(appliance-bin debian)) {
     system( "svn", "export", "$SVN_REPO/appliance/trunk/$repo", "$repo" )
         and die "Could not export $repo";
 }
+
 chdir("share");
+for my $dir (qw(javascript css images)) {
+    system(
+        "svn", "export", "--force", "$SVN_REPO/customer-skins/trunk/$dir",
+        $dir
+        )
+        and die "Could not export $SVN_REPO/customer-skins/trunk/$dir";
+}
+
+
 mkdir("debian");
 mkdir("debian/bin");
 chdir("debian/bin");
