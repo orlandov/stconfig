@@ -1,0 +1,82 @@
+#!/bin/sh
+set -e
+# @COPYRIGHT@
+
+TAG=$1
+TMP=`mktemp -d`
+DEST_REPO=''
+LINK_REPO=''
+MSG='testing new package'
+SSH='ssh apt.socialtext.net'
+
+if [ -n "$TAG" ]; then
+    echo Exporting $TAG
+    svn -q export --force $ST_SVN/socialtext/tags/$TAG $TMP
+    DEST_REPO=$TAG
+    LINK_REPO='staging'
+    MSG="tag: $TAG"
+else 
+    # Make sure we're in a good directory
+    BRANCH=$(basename $(readlink ~/src/st/current))
+    echo "Building release for $BRANCH"
+    cd ~/src/st/$BRANCH
+    DEST_REPO=$BRANCH
+    LINK_REPO='testing'
+
+    # Copy current branch to temp area
+    cp -vR * $TMP
+fi
+
+echo Copy dependency packages into new testing repo
+echo $SSH apt.socialtext.net copy-repository deps $DEST_REPO
+$SSH copy-repository deps $DEST_REPO
+
+###################################################
+# Export Appliance Build Infastructure in place
+###################################################
+cd $TMP/nlw
+for repo in appliance-bin debian; do
+    svn export $ST_SVN/appliance/trunk/$repo $repo
+done
+
+cd share;
+for dir in javascript css images; do
+    svn export --force $ST_SVN/customer-skins/trunk/$dir $dir
+done
+
+
+mkdir -p debian/bin;
+cd debian/bin;
+ln -s ../../../dev-bin/regen-aliases
+ln -s ../../../dev-bin/create-db-user
+ln -s ../../../dev-bin/create-help-workspace
+ln -s ../../../build/bin/db-login-test
+ln -s ../../../dev-bin/gen-config
+ln -s ../../../dev-bin/setup-postgres-permissions
+
+cd ..
+mkdir build
+cd build
+ln -s ../../../build/templates
+
+cd ..
+mkdir migrations
+cd migrations
+ln -s ../../../dev-bin/migration/update-homepage-is-dashboard
+ln -s ../../../dev-bin/migration/rename-workspace-navigation-to-announcements-and-links
+cd ../../..
+
+###################
+# Build Packages
+###################
+# create debian packages and upload using brett
+brett -m "$MSG" -A $DEST_REPO
+
+##########################
+# Update staging symlink
+##########################
+echo "Updating link repository $LINK_REPO -> $DEST_REPO"
+$SSH link-repository $DEST_REPO $LINK_REPO
+
+cd ~
+rm -rf $TMP
