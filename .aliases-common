@@ -63,6 +63,7 @@ alias tail=multitail
 
 # stedit aliases
 alias appedit='stedit -p -w appliance-project'
+alias appiter='appedit -l iteration'
 alias stossedit='stedit -p -w stoss'
 alias dgedit='stedit -p -w dev-guide'
 alias dtedit='stedit -p -w dev-tasks'
