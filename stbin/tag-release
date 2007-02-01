@@ -1,25 +1,24 @@
 #!/bin/sh
+set -e
 
 BRANCH=$1
 KIND=${2:-"release"}
 MSG=$3
-VERSION=$4
 if [ -z "$BRANCH" ]; then
     echo "Usage: $0 branch [type] [message] [version]"
     exit 1
 fi
 
-cd "$HOME/src/st/$BRANCH/nlw"
+VERSION=${4:-$(st-version $BRANCH)}
+if [ -z "$VERSION" ]; then
+    echo "Error: Could not determine version for $BRANCH";
+    exit 1;
+fi
+
 TAG=`get-next-release-tag $KIND $VERSION`
 MESSAGE="Copying /socialtext/branches/$BRANCH to /socialtext/tags/$TAG. $MSG"
-
-SVN_BASE=${ST_SVN:-"https://repo.socialtext.net:8999/svn"}
-TAG_URL="$SVN_BASE/socialtext/tags/$TAG"
-if [ "$BRANCH" = "trunk" ]; then
-    BRANCH_URL="$SVN_BASE/socialtext/trunk"
-else
-    BRANCH_URL="$SVN_BASE/socialtext/branches/$BRANCH"
-fi
+BRANCH_URL=$(st-branch-url $BRANCH)
+TAG_URL="$ST_CODE_REPO/tags/$TAG"
 
 if svn -q copy -m "$MESSAGE" $BRANCH_URL $TAG_URL >/dev/null; then
     echo "Created tag $TAG from branch $BRANCH"

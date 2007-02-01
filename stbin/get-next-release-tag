@@ -2,17 +2,18 @@
 set -e
 
 TAG_PREFIX=$1
-if [ -z "$TAG_PREFIX" ]; then
-    echo "Usage: $0 tag_prefix [version]"
+VERSION=$2
+TAG_N=${3:-"1"}  # Don't ever pass this by hand, for internal use only.
+
+if [ -z "$TAG_PREFIX" ] || [ -z "$VERSION" ]; then
+    echo "Usage: $0 tag_prefix version"
     exit 1
 fi
 
-VERSION=${2:-`st-version-from-file`}
-TAG_N=${3:-"1"}  # Don't ever pass this
-SVN_BASE=${ST_SVN:-"https://repo.socialtext.net:8999/svn"}
 TAG="$TAG_PREFIX-$VERSION-$TAG_N"
-SVN_PATH="$SVN_BASE/socialtext/tags/$TAG"
+SVN_PATH="$SVN_CODE_REPO/tags/$TAG"
 
+# See if $TAG exists, if it does recall this program with $TAG_N incremented.
 if svn -q log --stop-on-copy $SVN_PATH >/dev/null 2>/dev/null; then
     exec $0 $TAG_PREFIX $VERSION $(($TAG_N + 1))  # Never returns
 fi

@@ -1,0 +1,11 @@
+#!/bin/sh
+BRANCH=$1
+
+if [ -z "$BRANCH" ]; then
+    echo "Usage: $0 branch-name (or 'trunk')"
+    exit 1
+fi
+
+svn cat $(st-branch-url $BRANCH)/nlw/lib/Socialtext.pm |
+grep 'our.*$VERSION' |
+sed -e 's/[^\.0-9]//g'
