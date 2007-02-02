@@ -6,6 +6,7 @@ use Socialtext::Resting::Mock;
 use Socialtext::WikiObject::TestPlan;
 use Getopt::Long;
 use Test::More qw/no_plan/;
+use Sys::Hostname qw/hostname/;
 
 # Script to run wiki tests outside of `make test` harness.
 
@@ -14,7 +15,8 @@ my $plan_workspace  = 'regression-test';
 my $plan_page       = 'Test Plan';
 
 my $dev_port = 20000 + $>;
-my $test_server     = "http://talc.socialtext.net:$dev_port";
+my $hostname = hostname();
+my $test_server     = "http://$hostname:$dev_port";
 my $test_workspace  = 'test-data';
 
 my $fake_content_file;
@@ -52,12 +54,12 @@ my $test_plan = Socialtext::WikiObject::TestPlan->new(
     page => $plan_page,
     default_fixture => 'Socialtext',
     fixture_args => {
-        host => 'galena.socialtext.net',
+        host => $ENV{selenium_host} || 'galena.socialtext.net',
         port => 4444,
         browser_url => $test_server,
         workspace => $test_workspace,
         username => 'devnull1@socialtext.com',
-        password => 'password',
+        password => 'd3vnu11|',
     },
 );
 $test_plan->run_tests;
