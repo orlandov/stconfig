@@ -59,7 +59,7 @@ my $test_plan = Socialtext::WikiObject::TestPlan->new(
         browser_url => $test_server,
         workspace => $test_workspace,
         username => 'devnull1@socialtext.com',
-        password => 'd3vnu11l|',
+        password => 'd3vnu11l',
     },
 );
 $test_plan->run_tests;
