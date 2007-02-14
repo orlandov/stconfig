@@ -73,10 +73,15 @@ cd ../../..
 brett -m "$MSG" -A $DEST_REPO
 
 ##########################
-# Update staging symlink
+# Report the next steps
 ##########################
-echo "Updating link repository $LINK_REPO -> $DEST_REPO"
-$SSH link-repository $DEST_REPO $LINK_REPO
+echo 
+echo "#########################################################################"
+echo "To queue this release for staging run this command on apt.socialtext.net:"
+echo "link-repository $DEST_REPO staging"
+echo
+echo "To queue this release for prod run this command on apt.socialtext.net:"
+echo "link-repository $DEST_REPO prod"
 
 cd ~
 rm -rf $TMP
