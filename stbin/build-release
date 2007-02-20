@@ -47,9 +47,7 @@ done
 
 mkdir -p debian/bin;
 cd debian/bin;
-ln -s ../../../dev-bin/regen-aliases
 ln -s ../../../dev-bin/create-db-user
-ln -s ../../../dev-bin/create-help-workspace
 ln -s ../../../build/bin/db-login-test
 ln -s ../../../dev-bin/gen-config
 ln -s ../../../dev-bin/setup-postgres-permissions
