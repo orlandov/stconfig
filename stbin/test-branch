@@ -30,9 +30,11 @@ case "$verb" in
         else
             branch_path="branches/$branch"
         fi
+        full_path="$ST_CODE_REPO/$branch_path"
+        echo "Checking out: $full_path"
         sudo su - testrunner "
             LANG=en_US.UTF-8 \
-            svn co $ST_CODE_REPO/$branch_path \
+            svn co $full_path \
             && mv $branch $CHECKOUTS
         "
         ;;
