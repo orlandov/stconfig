@@ -28,7 +28,7 @@ else
 fi
 
 echo Copy dependency packages into new testing repo
-echo $SSH apt.socialtext.net copy-repository deps $DEST_REPO
+echo $SSH copy-repository deps $DEST_REPO
 $SSH copy-repository deps $DEST_REPO
 
 ###################################################
