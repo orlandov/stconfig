@@ -39,12 +39,7 @@ for repo in appliance-bin debian; do
     svn export $ST_SVN/appliance/trunk/$repo $repo
 done
 
-cd share;
-for dir in javascript css images; do
-    svn export --force $ST_SVN/customer-skins/trunk/$dir $dir
-done
-
-
+cd share
 mkdir -p debian/bin;
 cd debian/bin;
 ln -s ../../../dev-bin/create-db-user
@@ -56,12 +51,6 @@ cd ..
 mkdir build
 cd build
 ln -s ../../../build/templates
-
-cd ..
-mkdir migrations
-cd migrations
-ln -s ../../../dev-bin/migration/update-homepage-is-dashboard
-ln -s ../../../dev-bin/migration/rename-workspace-navigation-to-announcements-and-links
 cd ../../..
 
 ###################
