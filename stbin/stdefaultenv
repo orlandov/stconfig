@@ -6,7 +6,12 @@ use Cwd;
 my $src_base = $ENV{ST_SRC_BASE} || "$ENV{HOME}/src/st";
 
 chomp(my $scm = `which svk 2>/dev/null`);
-$scm = $scm ? 'svk' : 'svn';
+if ( -e "$ENV{HOME}/.svk" and $scm ) {
+    $scm = 'svk';
+}
+else {
+    $scm = 'svn';
+}
 
 my %default_env = (
     ST_SRC_BASE       => $src_base,
