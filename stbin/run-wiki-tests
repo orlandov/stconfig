@@ -18,6 +18,8 @@ my $dev_port = 20000 + $>;
 my $hostname = hostname();
 my $test_server     = "http://$hostname:$dev_port";
 my $test_workspace  = 'test-data';
+my $test_username   = 'devnull1@socialtext.com';
+my $test_password   = 'd3vnu11l';
 
 my $fake_content_file;
 GetOptions(
@@ -26,6 +28,8 @@ GetOptions(
     'plan-page=s'       => \$plan_page,
     'test-server=s'     => \$test_server,
     'test-workspace=s'  => \$test_workspace,
+    'test-username=s'   => \$test_username,
+    'test-password=s'   => \$test_password,
     'f|fake-content-file=s' => \$fake_content_file,
 ) or usage();
 
@@ -58,8 +62,8 @@ my $test_plan = Socialtext::WikiObject::TestPlan->new(
         port => 4444,
         browser_url => $test_server,
         workspace => $test_workspace,
-        username => 'devnull1@socialtext.com',
-        password => 'd3vnu11l',
+        username => $test_username,
+        password => $test_password,
     },
 );
 $test_plan->run_tests;
@@ -83,6 +87,10 @@ Options:
                         Default '$test_server'
  --test-workspace [ws]  Specify which workspace the testing should occur on
                         Default: '$test_workspace'
+ --test-username [ws]   Specify which username the testing should use
+                        Default: '$test_username'
+ --test-password [ws]   Specify which password the testing should use
+                        Default: '$test_password'
  --fake-content-file [file] Specify a file to read from instead of the wiki.
 EOT
     exit -1;
