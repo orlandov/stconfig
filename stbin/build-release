@@ -39,6 +39,10 @@ for repo in appliance-bin debian; do
     svn export $ST_SVN/appliance/trunk/$repo $repo
 done
 
+cd etc
+svn export --force $ST_SVN/appliance/trunk/cron cron/
+cd ..
+
 cd share
 mkdir -p debian/bin;
 cd debian/bin;
