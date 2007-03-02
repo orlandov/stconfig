@@ -15,9 +15,11 @@ if [ -n "$TAG" ]; then
     DEST_REPO=$TAG
     LINK_REPO='staging'
     MSG="tag: $TAG"
+    APP_BRANCH=${APP_BRANCH:-"trunk"}
 else 
     # Make sure we're in a good directory
     BRANCH=$(basename $(readlink ~/src/st/current))
+    APP_BRANCH="branches/"${APP_BRANCH:-"$BRANCH"}
     echo "Building release for $BRANCH"
     cd ~/src/st/$BRANCH
     DEST_REPO=$BRANCH
@@ -27,6 +29,17 @@ else
     cp -vR * $TMP
 fi
 
+###################################################
+# Export and Build st-appliance-update
+###################################################
+tempdir=`mktemp -d`
+svn export $ST_SVN/appliance/$APP_BRANCH/st-appliance-update $tempdir/st-appliance-update
+cd $tempdir/st-appliance-update
+brett
+
+###################################################
+# Create the release repository
+###################################################
 echo Copy dependency packages into new testing repo
 echo $SSH copy-repository deps $DEST_REPO
 $SSH copy-repository deps $DEST_REPO
@@ -36,11 +49,11 @@ $SSH copy-repository deps $DEST_REPO
 ###################################################
 cd $TMP/nlw
 for repo in appliance-bin debian; do
-    svn export $ST_SVN/appliance/trunk/$repo $repo
+    svn export $ST_SVN/appliance/$APP_BRANCH/$repo $repo
 done
 
 cd etc
-svn export --force $ST_SVN/appliance/trunk/cron cron/
+svn export --force $ST_SVN/appliance/$APP_BRANCH/cron cron/
 cd ..
 
 cd share
