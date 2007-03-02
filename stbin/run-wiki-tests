@@ -87,9 +87,9 @@ Options:
                         Default '$test_server'
  --test-workspace [ws]  Specify which workspace the testing should occur on
                         Default: '$test_workspace'
- --test-username [ws]   Specify which username the testing should use
+ --test-username [user] Specify which username the testing should use
                         Default: '$test_username'
- --test-password [ws]   Specify which password the testing should use
+ --test-password [pass] Specify which password the testing should use
                         Default: '$test_password'
  --fake-content-file [file] Specify a file to read from instead of the wiki.
 EOT
