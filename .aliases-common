@@ -68,6 +68,7 @@ alias stossedit='stedit -p -w stoss'
 alias dgedit='stedit -p -w dev-guide'
 alias dtedit='stedit -w dev-tasks'
 alias rtedit='stedit -w regression-test'
+alias stdedit='stedit -p -w stdev'
 
 function provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
