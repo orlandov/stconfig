@@ -1,0 +1,21 @@
+#!/bin/sh -e
+
+if [ -z "$*" ]; then
+    echo "USAGE: $0 Cromulent Corpuscle"
+    echo
+    echo "  Lets you edit a page called 'Cromulent Corpuscle Release Contract'"
+    echo "  in dev-tasks."
+    exit 1
+fi
+
+contract_name="$@ Release Contract"
+
+# TODO: It would be nice to take a branch name and possibly some other
+# arguments/flags from the command line and fill in the obvious blanks in the
+# template.
+exec \
+wikedit \
+    --workspace=dev-tasks \
+    --server=https://www2.socialtext.net \
+    --template=release-contract-template \
+    "$contract_name"
