@@ -19,7 +19,9 @@ if [ -n "$TAG" ]; then
 else 
     # Make sure we're in a good directory
     BRANCH=$(basename $(readlink ~/src/st/current))
-    APP_BRANCH="branches/"${APP_BRANCH:-"$BRANCH"}
+    if [ "$APP_BRANCH" != "trunk" ]; then
+        APP_BRANCH="branches/"${APP_BRANCH:-"$BRANCH"}
+    fi
     echo "Building release for $BRANCH"
     cd ~/src/st/$BRANCH
     DEST_REPO=$BRANCH
