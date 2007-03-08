@@ -58,20 +58,6 @@ cd etc
 svn export --force $ST_SVN/appliance/$APP_BRANCH/cron cron/
 cd ..
 
-cd share
-mkdir -p debian/bin;
-cd debian/bin;
-ln -s ../../../dev-bin/create-db-user
-ln -s ../../../build/bin/db-login-test
-ln -s ../../../dev-bin/gen-config
-ln -s ../../../dev-bin/setup-postgres-permissions
-
-cd ..
-mkdir build
-cd build
-ln -s ../../../build/templates
-cd ../../..
-
 ###################
 # Build Packages
 ###################
