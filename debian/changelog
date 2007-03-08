@@ -1,3 +1,15 @@
+stconfig (20070308-1173387118) socialtext; urgency=low
+
+  * new upstream version
+
+ --  <matthew@talc.socialtext.net>  Thu,  8 Mar 2007 12:51:58 -0800
+
+stconfig (20070221-1172114781) socialtext; urgency=low
+
+  * new upstream version
+
+ --  <matthew@talc.socialtext.net>  Wed, 21 Feb 2007 19:26:21 -0800
+
 stconfig (20070201-1) socialtext; urgency=low
 
   * Rebuild latest version of package
