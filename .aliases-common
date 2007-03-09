@@ -64,13 +64,17 @@ alias viml='vim !! -l'
 alias tail=multitail
 
 # stedit aliases
-alias appedit='stedit -p -w appliance-project'
-alias appiter='appedit -l iteration'
 alias stossedit='stedit -p -w stoss'
 alias dgedit='stedit -p -w dev-guide'
 alias dtedit='stedit -w dev-tasks'
 alias rtedit='stedit -w regression-test'
 alias stdedit='stedit -p -w stdev'
+
+# Appliance project aliases
+alias appedit='stedit -p -w appliance-project'
+alias apmedit='stedit -p -w appliance-manual'
+alias appiter='appedit -l iteration'
+alias appiter='apmedit -l iteration'
 
 function provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
