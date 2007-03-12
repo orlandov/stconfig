@@ -19,6 +19,7 @@ my $hostname = hostname();
 my $test_server     = "http://$hostname:$dev_port";
 my $test_workspace  = 'test-data';
 my $test_username   = 'devnull1@socialtext.com';
+my $test_email      = $test_username;
 my $test_password   = 'd3vnu11l';
 
 my $fake_content_file;
@@ -29,6 +30,7 @@ GetOptions(
     'test-server=s'     => \$test_server,
     'test-workspace=s'  => \$test_workspace,
     'test-username=s'   => \$test_username,
+    'test-email=s'      => \$test_email,
     'test-password=s'   => \$test_password,
     'f|fake-content-file=s' => \$fake_content_file,
 ) or usage();
@@ -64,6 +66,7 @@ my $test_plan = Socialtext::WikiObject::TestPlan->new(
         workspace => $test_workspace,
         username => $test_username,
         password => $test_password,
+        email => $test_email,
     },
 );
 $test_plan->run_tests;
