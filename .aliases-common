@@ -71,6 +71,7 @@ alias rtedit='stedit -w regression-test'
 alias stdedit='stedit -p -w stdev'
 
 # Appliance project aliases
+alias apm='wikrad -w appliance-manual "Appliance Project Plan"'
 alias appedit='stedit -p -w appliance-project'
 alias apmedit='stedit -p -w appliance-manual'
 alias appiter='appedit -l iteration'
