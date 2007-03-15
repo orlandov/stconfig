@@ -7,7 +7,7 @@ function! RunLastT()
     if (!strlen($lasttfile))
        execute '!./' . expand('%')
     else
-        !prove -lv $lasttfile
+        !prv -v $lasttfile
     endif
 endf
 
