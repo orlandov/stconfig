@@ -40,4 +40,4 @@ if [[ -z "$*" ]] {
 }
 
 # Do it.
-exec prove -l $switches $tests
+PERL5OPT="-Mdiagnostics $PERL5OPT" exec prove -l $switches $tests
