@@ -94,6 +94,8 @@ Options:
                         Default: '$test_username'
  --test-password [pass] Specify which password the testing should use
                         Default: '$test_password'
+ --test-email [email]   Specify which email the testing should use
+                        Default: '$test_email'
  --fake-content-file [file] Specify a file to read from instead of the wiki.
 EOT
     exit -1;
