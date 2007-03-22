@@ -45,9 +45,11 @@ echo x | (grep x --color >/dev/null 2>&1) && alias grep='grep --color=auto'
 }; function CDtrunk() { scmcd $ST_TRUNK
 }; function cdcur() { cd `abs_path $ST_CURRENT`
 }; function CDcur() { scmcd `abs_path $ST_CURRENT`
-}; function cdcfg() { cd `abs_path $ST_CURRENT/stconfig`
-}; function CDcfg() { scmcd `abs_path $ST_CURRENT/stconfig` && ./stconfig-setup
+}; function cdcfg() { cd `abs_path $ST_CURRENT/../stconfig`
+}; function CDcfg() { scmcd `abs_path $ST_CURRENT/../stconfig` && ./stconfig-setup
+}; function cdcrp() { cd `abs_path $ST_CURRENT/../clients/rest/perl`
 }
+
 MAC_FILE="~/.nlw/etc/Socialtext/MAC.secret"
 alias muckmac="rm $MAC_FILE; echo bemucked > $MAC_FILE"
 alias accessd="cd /var/log/apache-perl/; ls"
@@ -75,7 +77,7 @@ alias apm='wikrad -w appliance-manual "Appliance Project Plan"'
 alias appedit='stedit -p -w appliance-project'
 alias apmedit='stedit -p -w appliance-manual'
 alias appiter='appedit -l iteration'
-alias appiter='apmedit -l iteration'
+alias apmiter='apmedit -l iteration'
 
 function provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
