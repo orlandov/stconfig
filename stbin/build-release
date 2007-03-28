@@ -19,8 +19,10 @@ if [ -n "$TAG" ]; then
 else 
     # Make sure we're in a good directory
     BRANCH=$(basename $(readlink ~/src/st/current))
-    if [ "$APP_BRANCH" != "trunk" ]; then
+    if [ "$BRANCH" != "trunk" ]; then
         APP_BRANCH="branches/"${APP_BRANCH:-"$BRANCH"}
+    else
+        APP_BRANCH=trunk
     fi
     echo "Building release for $BRANCH"
     cd ~/src/st/$BRANCH
@@ -35,6 +37,7 @@ fi
 # Export and Build st-appliance-update
 ###################################################
 tempdir=`mktemp -d`
+echo svn export $ST_SVN/appliance/$APP_BRANCH/st-appliance-update $tempdir/st-appliance-update
 svn export $ST_SVN/appliance/$APP_BRANCH/st-appliance-update $tempdir/st-appliance-update
 cd $tempdir/st-appliance-update
 brett
