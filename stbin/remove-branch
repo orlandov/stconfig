@@ -1,0 +1,33 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Socialtext::Resting::Getopt qw/get_rester/;
+use lib "$ENV{HOME}/src/st/trunk/nlw/lib";
+use Socialtext::System qw/shell_run/;
+
+my $r = get_rester();
+
+my $dead_branch = shift;
+usage() unless $dead_branch;
+my $branch_path = "//mirror/socialtext/branches/$dead_branch";
+
+# then deleting my working copy of the branch
+print "Ctrl-C now to not remove the branch from svn and locally\n\n",
+    "Press enter to delete the branch...\n";
+<STDIN>;
+shell_run("svk rm -m 'remove-branch $dead_branch' $branch_path");
+shell_run("rm -rf ~/src/st/$dead_branch");
+
+# remove it from the testrunner?
+# -- not supported yet --
+
+# Check the release contract for something?
+# -- not supported yet --
+
+exit;
+
+sub usage {
+    die <<EOT;
+$0 <rester options> branch-to-remove
+EOT
+}
