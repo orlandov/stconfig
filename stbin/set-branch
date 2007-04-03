@@ -3,6 +3,8 @@
 BRANCH=$1
 [ -z "$BRANCH" ] && echo "Usage: $0 branch" && exit 1;
 
+PRIVATE=$2
+
 BRANCH_DIR="$ST_SRC_BASE/$BRANCH"
 if [ ! -e "$BRANCH_DIR" ]; then
     read -p "$BRANCH_DIR doesn't exist.  Run $SVN_COMMAND checkout? [Y/n] " ans
@@ -10,8 +12,10 @@ if [ ! -e "$BRANCH_DIR" ]; then
         cd $ST_SRC_BASE;
         if [ "$BRANCH" = "trunk" ]; then
             scm checkout "$ST_CODE_REPO/$BRANCH";
-        else
+        elif [ -z "$PRIVATE" ]; then
             scm checkout "$ST_CODE_REPO/branches/$BRANCH";
+        else
+            scm checkout "$ST_CODE_REPO/private-branches/$BRANCH";
         fi
     fi
 fi
