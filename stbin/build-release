@@ -39,7 +39,7 @@ fi
 tempdir=`mktemp -d`
 echo svn export $ST_SVN/appliance/$APP_BRANCH/st-appliance-update $tempdir/st-appliance-update
 svn export $ST_SVN/appliance/$APP_BRANCH/st-appliance-update $tempdir/st-appliance-update
-if [ ! -d "$tmpdir/st-appliance-update" ]; then
+if [ ! -d "$tempdir/st-appliance-update" ]; then
     echo "Couldn't find $APP_BRANCH in appliance tree.  Using trunk."
     APP_BRANCH="trunk"
     echo svn export $ST_SVN/appliance/$APP_BRANCH/st-appliance-update $tempdir/st-appliance-update
