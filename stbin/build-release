@@ -5,7 +5,6 @@ set -e
 TAG=$1
 TMP=`mktemp -d`
 DEST_REPO=''
-LINK_REPO=''
 MSG='testing new package'
 SSH='ssh apt.socialtext.net'
 
@@ -13,7 +12,6 @@ if [ -n "$TAG" ]; then
     echo Exporting $TAG
     svn -q export --force $ST_SVN/socialtext/tags/$TAG $TMP
     DEST_REPO=$TAG
-    LINK_REPO='staging'
     MSG="tag: $TAG"
     APP_BRANCH=${APP_BRANCH:-"trunk"}
 else 
@@ -24,10 +22,9 @@ else
     else
         APP_BRANCH=trunk
     fi
-    echo "Building release for $BRANCH"
+    echo "Building release for nlw:$BRANCH appliance:$APP_BRANCH"
     cd ~/src/st/$BRANCH
     DEST_REPO=$BRANCH
-    LINK_REPO='testing'
 
     # Copy current branch to temp area
     cp -vR * $TMP
