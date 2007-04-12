@@ -8,7 +8,7 @@ Standards-Version: 3.6.1
 Package: stconfig
 Architecture: all
 Suggests: st-dev
-Depends: ${perl:Depends}, libfile-chdir-perl, liberror-perl
+Depends: ${perl:Depends}, libfile-chdir-perl, liberror-perl, libfile-find-rule-perl
 Conflicts:
 Description: Socialtext Developer Config. Files
     This package contains a number of developer config files used by

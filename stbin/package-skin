@@ -1,0 +1,225 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@ 
+use strict;
+use warnings;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use Cwd qw(abs_path);
+use File::Basename qw(dirname basename);
+use File::Find::Rule;
+use File::Copy qw(copy);
+use File::Path qw(mkpath);
+use File::Slurp qw(write_file);
+use File::Spec::Functions qw(catdir updir);
+use File::Temp qw(tempdir);
+use Getopt::Long;
+
+my $no_upload;
+GetOptions(
+    'no-upload' => \$no_upload,
+) or usage("Bad option");
+
+my $skin = shift || usage("No skin!");
+my $repo = shift || $no_upload || usage("No Repo!");
+
+my $share_dir = abs_path( "share" );
+die "Couldn't find sharedir: $share_dir" unless -d $share_dir;
+
+create_debian_package($skin);
+exit;
+
+sub create_debian_package {
+    my $skin    = shift;
+    my $files   = get_files($skin);
+    my $package = get_package_name($skin);
+    my $version = get_version();
+    my $src_dir = "$package-$version";
+
+    my $dir = tempdir( CLEANUP => 0 );
+    _chdir($dir);
+
+    _mkdir($src_dir);
+    _chdir($src_dir);
+    _mkdir("debian");
+    create_changelog( $skin, $version, $package );
+    create_compat();
+    create_control( $skin, $package );
+    create_rules();
+
+    # Copy files into temp area for package building
+    for my $orig_name (@$files) {
+	(my $rel_name = $orig_name) =~ s#^$share_dir\/##;
+        mkpath dirname $rel_name;
+	copy($orig_name, $rel_name) or die "Can't copy $orig_name, $rel_name: $!";
+    }
+
+    build_package();
+    upload_package() unless $no_upload;
+
+    _chdir("/"); # avoid error on CLEANUP
+}
+
+sub build_package {
+    system( "brett", "-b", "-n" ) and die "Could not build package!\n";
+}
+
+sub upload_package {
+    system( "brett", "-u", "-A", $repo )
+        and die "Could not upload package!\n";
+}
+
+sub create_changelog {
+    my ( $skin, $version, $package ) = @_;
+    my $text = <<CONTENT;
+$package ($version-1) socialtext; urgency=low
+
+  * Skin for $skin
+
+ -- Matthew O'Connor <matthew.oconnor\@socialtext.net>  Fri,  5 Jan 2007 09:10:00 -0800
+
+CONTENT
+    write_file( "debian/changelog", $text );
+}
+
+sub create_compat {
+    my $skin = shift;
+    write_file( "debian/compat", "4\n" );
+}
+
+sub create_control {
+    my ( $skin, $package ) = @_;
+    my $text = <<CONTENT;
+Source: $package
+Section: misc
+Priority: optional
+Maintainer: Matthew O'Connor <matthew.oconnor\@socialtext.com>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.1
+
+Package: $package
+Architecture: all
+Depends: st-static-files-css (>> 2.9.8.0-1), st-static-files-images (>> 2.9.8.0-1), st-static-files-javascript (>> 2.9.8.0-1)
+Description: Skin for $skin.
+ Skin for $skin.
+CONTENT
+    write_file( "debian/control", $text );
+}
+
+sub create_rules {
+    my $skin = shift;
+    my $files = shift;
+    my $text = <<'CONTENT';
+#!/usr/bin/make -f
+PACKAGE=$(shell dh_listpackages)
+DESTDIR=$(CURDIR)/debian/$(PACKAGE)
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	touch configure-stamp
+
+build: build-stamp
+build-stamp: configure-stamp 
+	dh_testdir
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+	dh_clean 
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	install -d -m 755 $(DESTDIR)/usr/share/nlw/css
+	if [ -e css ]; then cp -r css $(DESTDIR)/usr/share/nlw; fi
+	install -d -m 755 $(DESTDIR)/usr/share/nlw/javascript
+	if [ -e javascript ]; then cp -r javascript $(DESTDIR)/usr/share/nlw; fi
+	install -d -m 755 $(DESTDIR)/usr/share/nlw/images
+	if [ -e images ]; then cp -r images $(DESTDIR)/usr/share/nlw; fi
+	dh_installdirs
+
+binary: make_binary
+
+make_binary: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installdocs
+	dh_installexamples
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+.PHONY: configure build clean install binary
+CONTENT
+    write_file( "debian/rules", $text );
+    chmod( 0755, "debian/rules" )
+        || die "Could not chmod 0755 debian/rules: $!\n";
+}
+
+sub _mkdir {
+    my $dir = shift;
+    mkdir $dir or die "Could not make $dir: $!\n";
+}
+
+sub _chdir {
+    my $dir = shift;
+    chdir $dir or die "Could not change into $dir: $!\n";
+}
+
+sub get_version {
+    sleep 1;
+    return time();
+}
+
+sub get_package_name {
+    my $skin = shift;
+    my $pkg  = lc($skin);
+    $pkg =~ s/[^a-z0-9-]//g;
+    return "st-$pkg-skin";
+}
+
+sub get_files {
+    my $skin = shift;
+
+    _chdir($share_dir);
+    my @files = (
+        File::Find::Rule->extras( { follow => 1 } )->file()->name('*.js')
+            ->in("javascript/$skin/"),
+        File::Find::Rule->extras( { follow => 1 } )->file()->name('*.css')
+            ->in("css/$skin/"),
+        File::Find::Rule->extras( { follow => 1 } )->file()
+            ->in("images/$skin/"),
+    );
+
+    return [
+        map {"$share_dir/$_"} 
+        grep { $_ !~ /^\.svn/ } 
+        @files
+    ];
+}
+
+sub usage {
+    my $msg = shift || '';
+    print "$msg\n" if $msg;
+    die <<EOT;
+USAGE: $0 skin repo
+
+Where:
+  skin is the directory name for the skin you'd like to package.
+  repo is the repository the package should be uploaded to.
+EOT
+}
+
