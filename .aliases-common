@@ -29,26 +29,25 @@ f() {
     awk $@ "{print \$${N:-1}}";
 }
 
-abs_path() { perl -MCwd -le "print Cwd::abs_path(shift)" $1; }
-scmcd() { cd $1; scm up; scm status; }
-kiss() { command kiss "$@"; rehash; }
-conceive() { command conceive "$@"; rehash; }
-aginstall() { ~/stbin/aginstall "$@"; rehash; }
+abs_path()  { perl -MCwd -le "print Cwd::abs_path(shift)" $1; }
+scmcd()     { cd $1; scm up; scm status; }
+kiss()      { command kiss "$@";      rehash; }
+conceive()  { command conceive "$@";  rehash; }
+aginstall() { command aginstall "$@"; rehash; }
 
 # Check for GNU before aliasing:
 ls --version > /dev/null 2>&1 && alias ls='ls --classify --color=auto'
 echo x | (grep x --color >/dev/null 2>&1) && alias grep='grep --color=auto'
 
-   function cdnlw() { cd `abs_path $ST_CURRENT/nlw`
-}; function CDnlw() { scmcd `abs_path $ST_CURRENT/nlw`
-}; function cdtrunk() { cd $ST_TRUNK
-}; function CDtrunk() { scmcd $ST_TRUNK
-}; function cdcur() { cd `abs_path $ST_CURRENT`
-}; function CDcur() { scmcd `abs_path $ST_CURRENT`
-}; function cdcfg() { cd `abs_path $ST_CURRENT/../stconfig`
-}; function CDcfg() { scmcd `abs_path $ST_CURRENT/../stconfig` && ./stconfig-setup
-}; function cdcrp() { cd `abs_path $ST_CURRENT/../clients/rest/perl`
-}
+cdnlw()   { cd `abs_path $ST_CURRENT/nlw`; }
+CDnlw()   { scmcd `abs_path $ST_CURRENT/nlw`; }
+cdtrunk() { cd $ST_TRUNK; }
+CDtrunk() { scmcd $ST_TRUNK; }
+cdcur()   { cd `abs_path $ST_CURRENT`; }
+CDcur()   { scmcd `abs_path $ST_CURRENT`; }
+cdcfg()   { cd `abs_path $ST_CURRENT/../stconfig`; }
+CDcfg()   { scmcd `abs_path $ST_CURRENT/../stconfig` && ./stconfig-setup; }
+cdcrp()   { cd `abs_path $ST_CURRENT/../clients/rest/perl`; }
 
 MAC_FILE="~/.nlw/etc/Socialtext/MAC.secret"
 alias muckmac="rm $MAC_FILE; echo bemucked > $MAC_FILE"
@@ -58,10 +57,10 @@ alias tl='test-less'
 alias tlp='test-less --prove'
 alias dict='/usr/bin/dict -dall'
 alias pwdtitle='screentitle "$(basename $(pwd))/"';
-cd() { builtin cd "$@"; pwdtitle; }
+cd()    { builtin cd "$@"; pwdtitle; }
 pushd() { builtin pushd "$@"; pwdtitle; }
-popd() { builtin popd; pwdtitle; }
-vim() { /usr/bin/vim "$@"; pwdtitle; }
+popd()  { builtin popd; pwdtitle; }
+vim()   { command vim "$@"; pwdtitle; }
 alias viml='vim !! -l'
 alias tail=multitail
 
@@ -79,9 +78,9 @@ alias apmedit='stedit -p -w appliance-manual'
 alias appiter='appedit -l iteration'
 alias apmiter='apmedit -l iteration'
 
-function provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
+provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
-function stfreshen() {
+stfreshen() {
     CDcur
     cdnlw
     ctags -R .. &
