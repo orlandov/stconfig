@@ -76,10 +76,10 @@ brett -m "$MSG" -A $DEST_REPO
 echo 
 echo "#########################################################################"
 echo "To queue this release for staging run this command on apt.socialtext.net:"
-echo "link-repository $DEST_REPO staging"
+echo "make-live $DEST_REPO staging"
 echo
 echo "To queue this release for prod run this command on apt.socialtext.net:"
-echo "link-repository $DEST_REPO prod"
+echo "make-live $DEST_REPO prod"
 
 cd ~
 rm -rf $TMP
