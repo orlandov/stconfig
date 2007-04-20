@@ -1,2 +1,2 @@
 #!/bin/sh
-svnrgrep "$@"
+exec svnrgrep "$@"
