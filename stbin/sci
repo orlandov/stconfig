@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+# A shortcut for checking stuff in.  Runs some fast tests for you if you're
+# checking in from 'nlw'.
+
+# Run a couple really quick tests before committing.
+#
+if [ $(basename $(pwd)) == 'nlw' ]; then
+    prv \
+        t/compile.t \
+        t/pod-coverage.t
+fi
+
+scm ci "$@"
