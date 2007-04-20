@@ -35,6 +35,8 @@ while (<>) {
     }
 }
 
+print fix_table(@table_lines) if $in_table;
+
 # Given a list of lines from a table, return a prettier version.
 sub fix_table {
     my @rows = rows(@_);
