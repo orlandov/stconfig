@@ -1,0 +1,30 @@
+#!/bin/sh
+set -e
+
+BRANCH=$1
+VERSION=$2
+if [ -z "$BRANCH" ] || [ -z "$VERSION" ]; then
+    echo "Usage: $0 branch version"
+    exit 1
+fi
+
+TAG="appliance-$VERSION"
+
+# Create the NLW tag
+MESSAGE="Copying /socialtext/branches/$BRANCH to /socialtext/tags/$TAG."
+ST_BRANCH_URL=$(st-branch-url $BRANCH)
+ST_TAG_URL="$ST_CODE_REPO/tags/$TAG"
+
+if svn -q copy -m "$MESSAGE" $ST_BRANCH_URL $ST_TAG_URL >/dev/null; then
+    echo "Created Socialtext tag $TAG from branch $BRANCH"
+fi
+
+# Create the Appliance tag
+MESSAGE="Copying /appliance/branches/$BRANCH to /appliance/tags/$TAG."
+APP_BRANCH_URL="$ST_SVN/appliance/branches/$BRANCH"
+APP_TAG_URL="$ST_SVN/appliance/tags/$TAG"
+
+if svn -q copy -m "$MESSAGE" $APP_BRANCH_URL $APP_TAG_URL >/dev/null; then
+    echo "Created Appliance tag $TAG from branch $BRANCH"
+fi
+
