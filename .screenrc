@@ -9,6 +9,3 @@ hardstatus alwayslastline "%{k${SCREENCOLOR}}%H: %-Lw%{= k${SCREENCOLOR}}%50>%n%
 defmonitor on
 multiuser on
 acladd $ST_HAXORS
-escape ^Bb
-# bindkey -d -k kb stuff \010
-bindkey -d -k kD stuff ^?
