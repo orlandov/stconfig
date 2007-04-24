@@ -31,6 +31,13 @@ else
 fi
 
 ###################################################
+# Create the release repository
+###################################################
+echo Copy dependency packages into new testing repo
+echo $SSH copy-repository deps $DEST_REPO
+$SSH copy-repository deps $DEST_REPO
+
+###################################################
 # Export and Build st-appliance-update
 ###################################################
 tempdir=`mktemp -d`
@@ -43,14 +50,7 @@ if [ ! -d "$tempdir/st-appliance-update" ]; then
     svn export $ST_SVN/appliance/$APP_BRANCH/st-appliance-update $tempdir/st-appliance-update
 fi
 cd $tempdir/st-appliance-update
-brett
-
-###################################################
-# Create the release repository
-###################################################
-echo Copy dependency packages into new testing repo
-echo $SSH copy-repository deps $DEST_REPO
-$SSH copy-repository deps $DEST_REPO
+brett -A $DEST_REPO
 
 ###################################################
 # Export Appliance Build Infastructure in place

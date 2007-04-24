@@ -21,4 +21,14 @@ if [ -z "$BRANCH" ]; then
 fi
 
 echo "Making branch: /$REPO/branches/$BRANCH"
-svn copy -m "Making branch $BRANCH" $ST_SVN/$REPO/trunk $ST_SVN/$REPO/branches/$BRANCH
+SRC=$ST_SVN/$REPO/trunk 
+DEST=$ST_SVN/$REPO/branches/$BRANCH
+svn copy -m "Making branch $BRANCH"  $SRC $DEST
+
+if [ -e "$HOME/.svk" ]; then
+    echo "Updating svk mirror"
+    svk sync //mirror/$REPO
+    if [ "$REPO" = "socialtext" ]; then
+        set-branch $BRANCH
+    fi
+fi
