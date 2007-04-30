@@ -1,0 +1,3 @@
+#!/bin/sh
+set -ve
+killall -9  apache apache2 apache-perl perl ceqlotron st-admin 2>/dev/null
