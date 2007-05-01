@@ -1,0 +1,41 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use lib "$ENV{HOME}/src/st/trunk/nlw/lib";
+use Socialtext::System qw/shell_run/;
+use Getopt::Long;
+
+my %opts;
+GetOptions( \%opts,
+    'pretend',
+    'message=s',
+) or usage();
+
+my $branch = shift;
+usage() unless $branch;
+
+my $branch_path = "//mirror/socialtext/branches/$branch";
+my $trunk = "//mirror/socialtext/trunk";
+my $smerge_opts  = $opts{pretend} ? '-C ' : '';
+
+$opts{message} ||= "update-branch $branch";
+$smerge_opts .= "-m '$opts{message}'";
+
+map { shell_run($_) }
+    "svk up -s ~/src/st/trunk",
+    "svk up -s ~/src/st/$branch",
+    "svk smerge $smerge_opts $trunk $branch_path",
+    "svk up -s ~/src/st/$branch",
+    "cowsay 'Branch $branch updated!'",
+    ;
+
+exit;
+
+sub usage {
+    die <<EOT;
+$0 [rester options] [options] new-branch-name
+
+options:
+  --pretend     don't really do the merge (svk smerge -C)
+EOT
+}
