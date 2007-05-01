@@ -4,8 +4,14 @@ use warnings;
 use Socialtext::Resting::Getopt qw/get_rester/;
 use lib "$ENV{HOME}/src/st/trunk/nlw/lib";
 use Socialtext::System qw/shell_run/;
+use Getopt::Long;
 
 my $r = get_rester();
+
+my %opts;
+GetOptions( \%opts,
+    'no-rc',
+) or usage();
 
 my $new_branch = shift;
 usage() unless $new_branch;
@@ -22,23 +28,28 @@ shell_run("svk co $branch_path ~/src/st/$new_branch");
 # -- not supported yet --
 
 # writing a release contract,
-print "Creating a new release contract.\n";
-$r->server('https://www2.socialtext.net');
-$r->workspace('dev-tasks');
-my $rc_template_page = 'Release Contract Template';
-my $rc_template = $r->get_page($rc_template_page);
-my @rc_tags = $r->get_pagetags($rc_template_page);
-my $new_rc_page = "$new_branch Contract";
-$r->put_page($new_rc_page, $rc_template);
-$r->put_pagetag($new_rc_page, $_) for @rc_tags;
+unless ($opts{'no-rc'}) {
+    print "Creating a new release contract.\n";
+    $r->server('https://www2.socialtext.net');
+    $r->workspace('dev-tasks');
+    my $rc_template_page = 'Release Contract Template';
+    my $rc_template = $r->get_page($rc_template_page);
+    my @rc_tags = $r->get_pagetags($rc_template_page);
+    my $new_rc_page = "$new_branch Contract";
+    $r->put_page($new_rc_page, $rc_template);
+    $r->put_pagetag($new_rc_page, $_) for @rc_tags;
 
-shell_run("wikedit -s '" . $r->server
-        . "' -w '" . $r->workspace
-        . "' '$new_rc_page'" );
+    shell_run("wikedit -s '" . $r->server
+            . "' -w '" . $r->workspace
+            . "' '$new_rc_page'" );
+}
 exit;
 
 sub usage {
     die <<EOT;
-$0 <rester options> new-branch-name
+$0 [rester options] [options] new-branch-name
+
+options:
+  --no-rc   Don't create a release contract
 EOT
 }
