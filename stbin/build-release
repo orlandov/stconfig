@@ -13,7 +13,11 @@ if [ -n "$TAG" ]; then
     svn -q export --force $ST_SVN/socialtext/tags/$TAG $TMP
     DEST_REPO=$TAG
     MSG="tag: $TAG"
-    APP_BRANCH=${APP_BRANCH:-"trunk"}
+    if [ -n "$APP_BRANCH" ]; then
+        APP_BRANCH="branches/$APP_BRANCH"
+    else
+        APP_BRANCH="trunk"
+    fi
 else 
     # Make sure we're in a good directory
     BRANCH=$(basename $(readlink ~/src/st/current))
