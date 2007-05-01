@@ -24,7 +24,7 @@ for skin in $(grep -v ^# $SKINFILE | awk {'print $1'}); do
     if [ "$TYPE" == "appliance" ]; then
         REPO=$(grep "^$skin" $SKINFILE | awk {'print $2'})
     fi
-    package-skin --no-upload '$skin' '$REPO'
+    package-skin "$skin" "$REPO"
 done
 
 rm -rf $TMPDIR
