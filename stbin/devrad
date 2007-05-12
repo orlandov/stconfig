@@ -1,0 +1,8 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+my $port = $> + 20000;
+my $server = "http://localhost:$port";
+system("wikrad -s $server -w admin -u devnull1\@socialtext.com -p d3vnu11l");
+
