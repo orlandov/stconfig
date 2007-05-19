@@ -43,3 +43,11 @@ function! GetFileEncoding()
     return str
 endfunction
 
+" ============================================
+" surround.vim
+" ============================================
+" gettextnize texts
+let g:surround_103 = "loc('\r')"  " 103 = g
+let g:surround_71 = "loc(\"\r\")" " 71 = G
+nmap g' cs'g
+nmap g" cs"G
