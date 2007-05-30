@@ -11,11 +11,10 @@ my $r = get_rester();
 my %opts;
 GetOptions( \%opts,
     'no-rc',
-    'base:s',
+    'from=s',
 ) or usage();
 
-my $base = $opts{base} ? "//mirror/socialtext/branches/$opts{base}" : 
-                         "//mirror/socialtext/trunk";
+my $from = $opts{from} ? "branches/$opts{from}" : "trunk";
 
 my $new_branch = shift;
 usage() unless $new_branch;
@@ -23,7 +22,7 @@ usage() unless $new_branch;
 # Making a branch,
 my $branch_path = "//mirror/socialtext/branches/$new_branch";
 shell_run("svk cp -m 'make-branch $new_branch' "
-          . "$base $branch_path");
+          . "//mirror/socialtext/$from $branch_path");
 
 # then checking it out,
 shell_run("svk co $branch_path ~/src/st/$new_branch");
@@ -55,6 +54,6 @@ $0 [rester options] [options] new-branch-name
 
 options:
   --no-rc   Don't create a release contract
-  --base    Branch to copy from (Default: trunk)
+  --from    Branch to copy from (Default: trunk)
 EOT
 }
