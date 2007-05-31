@@ -40,4 +40,8 @@ if [[ -z "$*" ]] {
 }
 
 # Do it.
-PERL5OPT="-Mdiagnostics $PERL5OPT" exec prove -l $switches $tests
+OPTIONS=""
+if [ -z "$FUCK_YOU_DIAGNOSTICS_GO_TO_HELL" ]; then
+    OPTIONS="$OPTIONS -Mdiagnostics"
+fi
+PERL5OPT=$OPTIONS exec prove -l $switches $tests
