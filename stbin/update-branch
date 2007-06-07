@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use lib "$ENV{HOME}/src/st/trunk/nlw/lib";
+use lib "$ENV{HOME}/src/st/current/nlw/lib";
 use Socialtext::System qw/shell_run/;
 use Getopt::Long;
 
@@ -23,7 +23,7 @@ $opts{message} ||= "update-branch $branch";
 $smerge_opts .= "-m '$opts{message}'";
 
 map { shell_run($_) }
-    "svk up -s ~/src/st/$opts{from}",
+    "svk up -s ~/src/st/$from_branch",
     "svk up -s ~/src/st/$branch",
     "svk smerge $smerge_opts //mirror/socialtext/$from_branch $branch_path",
     "svk up -s ~/src/st/$branch",
