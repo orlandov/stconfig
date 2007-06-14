@@ -13,7 +13,7 @@ if [ ! -d "nlw" ]; then
 fi
 
 # Clean house!
-scm status --no-ignore | awk '{print $2}' | xargs rm -fR
+scm status --no-ignore | awk '{print $2}' | grep -v '^\.\+$' | xargs rm -fR
 scm revert -R .
 if [ -d ".svn" ]; then
     svn update
