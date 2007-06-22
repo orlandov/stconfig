@@ -7,10 +7,15 @@ use File::chdir;
 
 make_symlinks();
 make_rtrc();
+link_personal_config();
+exit;
+
+sub _stconfig_base {
+    return Cwd::abs_path($FindBin::Bin);
+}
 
 sub make_symlinks {
-    my $base = $FindBin::Bin;
-    $base = Cwd::abs_path($base);
+    my $base = _stconfig_base();
 
     # A hack so this stuff works when packaged
     if ($base eq '/usr/bin') {
@@ -71,4 +76,27 @@ sub link_or_descend {
         unlink $file; # This removes stale symlinks.
         symlink($dest, $file) or die "link $file -> $dest: $!\n";
     }
+}
+
+sub link_personal_config {
+    my ($username) = getpwuid($>);
+    my $base = _stconfig_base();
+
+    my $personal_rc = "$base/personal/${username}_after";
+    if (! -e $personal_rc) {
+        warn "    skipping $personal_rc, doesn't exist\n";
+        return;
+    }
+
+    my $personal_symlink = "$ENV{HOME}/.stconfig-after";
+    return if -l $personal_symlink;
+    if (-f $personal_symlink) {
+        warn "    skipping $personal_rc, file exists\n";
+        return;
+    }
+
+    print "Linking $personal_symlink\n";
+    unlink $personal_symlink; # remove stale symlinks
+    symlink($personal_rc, $personal_symlink) or 
+        die "link $personal_rc -> $personal_symlink: $!";
 }

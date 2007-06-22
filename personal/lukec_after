@@ -1,0 +1,4 @@
+alias ssh='ssh -A'
+set -o vi
+
+export TD=lukecloss@jervis.textdrive.com
