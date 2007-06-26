@@ -38,7 +38,7 @@ unless ($opts{'no-rc'}) {
     my $rc_template_page = 'Release Contract Template';
     my $rc_template = $r->get_page($rc_template_page);
     my @rc_tags = $r->get_pagetags($rc_template_page);
-    my $new_rc_page = "$new_branch Contract";
+    my $new_rc_page = "$new_branch Release Contract";
     $r->put_page($new_rc_page, $rc_template);
     $r->put_pagetag($new_rc_page, $_) for @rc_tags;
 
