@@ -17,13 +17,14 @@ usage() unless $branch;
 
 my $branch_path = "//mirror/socialtext/branches/$branch";
 my $from_branch = $opts{from} ? "branches/$opts{from}" : "trunk";
+my $from_dir = $opts{from} || 'trunk';
 my $smerge_opts  = $opts{pretend} ? '-C ' : '';
 
 $opts{message} ||= "update-branch $branch";
 $smerge_opts .= "-m '$opts{message}'";
 
 map { shell_run($_) }
-    "svk up -s ~/src/st/$from_branch",
+    "svk up -s ~/src/st/$from_dir",
     "svk up -s ~/src/st/$branch",
     "svk smerge $smerge_opts //mirror/socialtext/$from_branch $branch_path",
     "svk up -s ~/src/st/$branch",
