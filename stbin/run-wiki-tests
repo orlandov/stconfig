@@ -51,7 +51,7 @@ else {
 # Add current branch's lib to our include path
 my $st_admin = qx(which st-admin);
 (my $nlw_path = $st_admin) =~ s#/bin/st-admin.+##s;
-push @INC, "$nlw_path/lib";
+unshift @INC, "$nlw_path/lib";
 diag "Added $nlw_path/lib to \@INC...";
 
 warn "Testing $test_server\n";
