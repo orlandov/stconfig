@@ -20,7 +20,7 @@ my $from_branch = $opts{from} ? "branches/$opts{from}" : "trunk";
 my $from_dir = $opts{from} || 'trunk';
 my $smerge_opts  = $opts{pretend} ? '-C ' : '';
 
-$opts{message} ||= "update-branch $branch";
+$opts{message} ||= "update-branch $branch from $from_branch";
 $smerge_opts .= "-m '$opts{message}'";
 
 map { shell_run($_) }
