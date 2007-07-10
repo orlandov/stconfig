@@ -78,6 +78,9 @@ alias apmedit='stedit -p -w appliance-manual'
 alias appiter='appedit -l iteration'
 alias apmiter='apmedit -l iteration'
 
+# wikrad aliases
+alias tigrad='wikrad -w tigger'
+
 provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
 stfreshen() {
