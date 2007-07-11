@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use utf8;
 use Socialtext::Resting;
 use Socialtext::Resting::Mock;
 use Socialtext::WikiObject::TestPlan;
@@ -22,6 +23,7 @@ my $test_username   = 'devnull1@socialtext.com';
 my $test_email      = $test_username;
 my $test_password   = 'd3vnu11l';
 
+my $time_out        = '10000';
 my $fake_content_file;
 GetOptions(
     'plan-server=s'     => \$plan_server,
@@ -67,6 +69,7 @@ my $test_plan = Socialtext::WikiObject::TestPlan->new(
         username => $test_username,
         password => $test_password,
         email => $test_email,
+        selenium_timeout => $time_out,
     },
 );
 $test_plan->run_tests;
