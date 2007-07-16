@@ -35,6 +35,7 @@ GetOptions(
     'test-email=s'      => \$test_email,
     'test-password=s'   => \$test_password,
     'f|fake-content-file=s' => \$fake_content_file,
+    'timeout=i'         => \$time_out,
 ) or usage();
 
 my $rester;
@@ -99,6 +100,8 @@ Options:
                         Default: '$test_password'
  --test-email [email]   Specify which email the testing should use
                         Default: '$test_email'
+ --timeout [ms]         Number of milliesconds to wait before timing out
+                        Default: '10000'
  --fake-content-file [file] Specify a file to read from instead of the wiki.
 EOT
     exit -1;
