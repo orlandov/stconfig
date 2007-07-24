@@ -14,6 +14,9 @@ autocmd BufRead *.wiki set ft=wiki tw=0
 au FileType vim set iskeyword+=. iskeyword+=/ iskeyword+=~
 set splitright
 
+set termencoding=utf-8
+set encoding=utf-8
+set fileencoding=utf-8
 
 " ============================================
 " lookupfile.vim

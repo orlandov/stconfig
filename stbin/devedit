@@ -4,5 +4,5 @@ use warnings;
 
 my $port = $> + 20000;
 my $server = "http://localhost:$port";
-system("wikedit -s $server -w admin -u devnull1\@socialtext.com -p d3vnu11l @ARGV");
+system("wikedit", "-s", "$server", "-w", "admin", "-u", "devnull1\@socialtext.com", "-p", "d3vnu11l", @ARGV);
 

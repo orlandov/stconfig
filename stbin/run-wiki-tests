@@ -103,6 +103,10 @@ Options:
  --timeout [ms]         Number of milliesconds to wait before timing out
                         Default: '10000'
  --fake-content-file [file] Specify a file to read from instead of the wiki.
+
+Environment Variables:
+  selenium_host    => machine running the Selenium RC server
+  selenium_browser => browser string to pass to server
 EOT
     exit -1;
 }
