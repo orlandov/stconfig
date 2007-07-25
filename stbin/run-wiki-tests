@@ -106,6 +106,7 @@ Options:
 
 Environment Variables:
   selenium_host    => machine running the Selenium RC server
+  selenium_port    => Selenium RC port
   selenium_browser => browser string to pass to server
 EOT
     exit -1;
