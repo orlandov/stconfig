@@ -9,6 +9,8 @@ use Getopt::Long;
 use Test::More qw/no_plan/;
 use Sys::Hostname qw/hostname/;
 
+$SIG{INT} = sub { warn "Caught SIGINT\n"; exit 255 };
+
 # Script to run wiki tests outside of `make test` harness.
 
 my $plan_server     = 'http://www2.socialtext.net',
