@@ -9,7 +9,6 @@ alias POSTf='POST -UseS'
 alias HEADf='HEAD -UseS'
 alias rc="rcontract-create"
 alias rq='stedit -w dev-tasks "Release Queue"'
-alias sb='set-branch'
 
 alias agu='sudo apt-get update'
 alias agdu='sudo apt-get update; sudo apt-get dist-upgrade'
@@ -35,6 +34,7 @@ scmcd()     { cd $1; scm up; scm status; }
 kiss()      { command kiss "$@";      rehash; }
 conceive()  { command conceive "$@";  rehash; }
 aginstall() { command aginstall "$@"; rehash; }
+sb()        { set-branch $1; cdnlw; }
 
 # Check for GNU before aliasing:
 ls --version > /dev/null 2>&1 && alias ls='ls --classify --color=auto'
