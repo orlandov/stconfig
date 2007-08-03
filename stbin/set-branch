@@ -3,21 +3,18 @@ use strict;
 use warnings;
 use File::Path qw/mkpath/;
 use Fatal qw/:void mkpath chdir unlink symlink/;
+use English;
 
-sub usage {
-    die <<EOT;
-set-branch branch
-EOT
-}
-
-my $branch = shift;
+my $branch = shift || '';
 my $private = shift;
-usage() unless $branch;
 
 my $src_base   = $ENV{ST_SRC_BASE};
 unless (-d $src_base) {
     mkpath $src_base;
 }
+
+$branch = num_to_name($branch) if $branch =~ m/^\d+$/;
+usage() unless $branch;
 
 my $branch_dir = "$src_base/$branch";
 unless (-d $branch_dir) {
@@ -53,4 +50,30 @@ sub checkout {
     my $cmd = "scm checkout '$ENV{ST_CODE_REPO}/$branch_path'";
     print "Running $cmd\n";
     system($cmd);
+}
+
+sub num_to_name {
+    my $num = shift;
+    my @branches = branch_list();
+    $num--; # was 1 based
+    return $branches[$num];
+}
+
+sub usage {
+    my $i = 1;
+    my @branches = map { sprintf('  %2d - %s', $i++, $_) } branch_list();
+    
+    local $LIST_SEPARATOR = "\n";
+    die <<EOT;
+USAGE: set-branch <branch>
+
+Existing branches:
+@branches
+EOT
+}
+
+sub branch_list {
+    my @branches = sort glob("$src_base/*/nlw");
+    return grep { $_ ne 'current' }
+        map { s#.+/(.+)/nlw#$1#; $_ } @branches;
 }
