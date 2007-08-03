@@ -1,25 +1,56 @@
-#!/bin/bash
+#!/usr/bin/perl
+use strict;
+use warnings;
+use File::Path qw/mkpath/;
+use Fatal qw/:void mkpath chdir unlink symlink/;
 
-BRANCH=$1
-[ -z "$BRANCH" ] && echo "Usage: $0 branch" && exit 1;
+sub usage {
+    die <<EOT;
+set-branch branch
+EOT
+}
 
-PRIVATE=$2
+my $branch = shift;
+my $private = shift;
+usage() unless $branch;
 
-BRANCH_DIR="$ST_SRC_BASE/$BRANCH"
-if [ ! -e "$BRANCH_DIR" ]; then
-    read -p "$BRANCH_DIR doesn't exist.  Run $SVN_COMMAND checkout? [Y/n] " ans
-    if [ "$ans" = "y" -o "$ans" = "Y" -o -z "$ans" ]; then
-        cd $ST_SRC_BASE;
-        if [ "$BRANCH" = "trunk" ]; then
-            scm checkout "$ST_CODE_REPO/$BRANCH";
-        elif [ -z "$PRIVATE" ]; then
-            scm checkout "$ST_CODE_REPO/branches/$BRANCH";
-        else
-            scm checkout "$ST_CODE_REPO/private-branches/$BRANCH";
-        fi
-    fi
-fi
+my $src_base   = $ENV{ST_SRC_BASE};
+unless (-d $src_base) {
+    mkpath $src_base;
+}
 
-rm $ST_SRC_BASE/current || exit 1;
-ln -s $BRANCH_DIR $ST_SRC_BASE/current || exit 1;
-exit 0;
+my $branch_dir = "$src_base/$branch";
+unless (-d $branch_dir) {
+    print "$branch_dir doesn't exist.  Run $ENV{SVN_COMMAND} checkout? [Y/n]\n";
+    my $ans = <STDIN>;
+    if ($ans =~ m/^y|\s*$/i or ($ans) == 0) {
+        if ($branch eq 'trunk') {
+            checkout($branch);
+        }
+        elsif ($private) { 
+            checkout("private-branches/$branch");
+        }
+        else {
+            checkout("branches/$branch");
+        }
+    }
+    else {
+        print "Bye!\n";
+        exit;
+    }
+}
+
+if (-d $branch_dir) {
+    my $curlink = "$src_base/current";
+    unlink $curlink if -l $curlink;
+    symlink $branch_dir, $curlink;
+}
+exit;
+
+sub checkout {
+    my $branch_path = shift;
+    chdir $src_base;
+    my $cmd = "scm checkout '$ENV{ST_CODE_REPO}/$branch_path'";
+    print "Running $cmd\n";
+    system($cmd);
+}
