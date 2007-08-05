@@ -63,4 +63,4 @@ alias pssel='pstree -aAhlnp selenium'
 
 # functions
 branches() {  /bin/ls /home/$1/src/st ; }
-sb()        { set-branch $1; cdnlw; cd .. }
+sb()        { set-branch $1; cdnlw; cd ..; }
