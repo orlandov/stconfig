@@ -1,0 +1,9 @@
+Stick your personal bash aliases and functions in a file named after your username.
+
+We can refactor commonly used dev and qa aliases out to qa-after and dev-after files
+that get sourced by the per-user aliases.
+
+
+Format:
+  <username>-before
+  <username>-after
