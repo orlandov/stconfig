@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# aliases when CWD is the top of a checkout e.g. trunk or usability-dev
+alias sta='./nlw/bin/st-admin '
+alias freshdev='./nlw/dev-bin/nlwctl stop; rm -rf ~/.nlw; ./nlw/dev-bin/fresh-dev-env-from-scratch'
+alias stopme='./nlw/dev-bin/nlwctl stop'
+alias startme='./nlw/dev-bin/nlwctl start'
+alias restartme='./nlw/dev-bin/nlwctl restart'
+alias svnstatus='svn status --show-updates'
+alias ceqread='./nlw/bin/ceq-read'
+alias ceqstat='./nlw/bin/ceq-stat'
+
+# aliases for an installed NLW
+alias sww='sudo -u www-data '
+alias swa='sudo -u www-data st-admin '
+
+
+# convenience aliases
+alias findceq='ps x  | grep ceqlotron | grep -v grep'
+alias findwikis='ls ~/.nlw/root/data/'
+alias cdcurr='cd ~/src/st/current'
+alias cdroot='cd ~/.nlw/root'
+alias cddata='cd ~/.nlw/root/data'
+alias cdst='cd ~/.nlw/etc/socialtext'
+alias cdjs='cd ~/src/st/current/nlw/share/javascript'
+alias cdfonts='cd ~/src/st/current/nlw/share/fonts'
+alias cdwidgets='cd ~/src/st/current/nlw/share/images/widgets'
+
+
+# alias to manage  a branch. Requires svnco.bash
+alias svnco="~/src/st/stconfig/kenpier/svnco.bash $1 $2"
+alias svnup='svn up; freshdev; pushd nlw/share/js-test; make; popd;'
+
+# alias to run Wiki Tests
+# # requires stconfig dev setup and run-wiki-tests.bash
+RWT=~/src/st/stconfig/kenpier/run-wiki-tests.bash
+alias rwt="$RWT $1 $2"
+alias rwta="$RWT 'All Testcases'" 
+alias rwto="$RWT 'OSR Testcases'"
+# execute wiki test
+alias xwt="run-wiki-tests --timeout 30000 --plan-page "
+
+
+# aliases to evaluate wiki tests
+alias grnok="grep  -C 6 'not ok' testcases.out"
+alias grtc="grep 'Loading\|COMPLETED' testcases.out"
+alias ttc='tail -f testcases.out'
+
+
+export SVN_COMMAND='svn'
+
+# Miscellaneous
+alias lld='ls -ld'
+alias ll='ls -ld'
+
+alias psken='pstree -aAhlnp kenpier'
+alias psqa1='pstree -aAhlnp qa1'
+alias psqa2='pstree -aAhlnp qa2'
+alias psqa3='pstree -aAhlnp qa3'
+alias psqa4='pstree -aAhlnp qa4'
+alias pslyssa='pstree -aAhlnp lyssa'
+alias pssel='pstree -aAhlnp selenium'
+
+# functions
+branches() {  /bin/ls /home/$1/src/st ; }
+sb()        { set-branch $1; cdnlw; cd .. }
