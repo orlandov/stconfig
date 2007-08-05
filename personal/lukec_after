@@ -2,6 +2,3 @@ alias ssh='ssh -A'
 set -o vi
 
 export TD=lukecloss@jervis.textdrive.com
-
-# ken's stuff is really helpful
-source ~/src/st/stconfig/personal/kenpier_after
