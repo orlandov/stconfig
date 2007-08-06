@@ -1,0 +1,55 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use lib "$ENV{HOME}/src/st/current/nlw/lib";
+use Socialtext::File qw/get_contents/;
+use TAP::Parser;
+use Socialtext::Resting::Getopt qw/get_rester/;
+use Socialtext::Resting;
+use Data::Dumper;
+
+my $r = get_rester(workspace => 'st-sandbox');
+my $result_page = 'WikiTest Results';
+
+my $filename = "$ENV{HOME}/bad.out";
+my $wikitest_tap = get_contents($filename);
+my $tp = TAP::Parser->new( { tap => $wikitest_tap } );
+
+my @failures;
+while(my $r = $tp->next) {
+    next unless $r->type eq 'test';
+    next if $r->is_ok;
+    push @failures, $r->as_string;
+}
+
+my $branch = readlink("$ENV{HOME}/src/st/current") || 'unknown';
+$branch =~ s#.+/##;
+my $revision = qx($ENV{SVN_COMMAND} info $ENV{HOME}/src/st/$branch | grep Revision | awk '{print \$2}');
+chomp $revision;
+my $num_tests = $tp->tests_run;
+my $num_passed = $tp->passed;
+my $num_failed = $tp->failed;
+
+my $results = <<EOT;
+^ Test Results
+
+*Branch:* $branch
+*Revision:* $revision
+
+*Tests Run:* $num_tests
+*Tests Passed:* $num_passed
+*Tests Failed:* $num_failed
+EOT
+
+if (@failures) {
+    $results .= "^ Failures\n\n.pre\n" . join("\n", @failures) . "\n.pre\n";
+}
+$results .= "\n^ Full Test Output\n\n.pre\n" . $wikitest_tap . "\n.pre\n";
+
+$r->put_page($result_page, $results);
+$r->put_pagetag($result_page, $_) for ("branch: $branch", 'test-result');
+my $uri = $r->server . "/" . $r->workspace . "/?" . Socialtext::Resting::_name_to_id($result_page);
+print "$results\n", 
+      "Uploaded test results to $uri\n";
+
+exit;
