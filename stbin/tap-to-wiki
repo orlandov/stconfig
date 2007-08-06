@@ -7,11 +7,13 @@ use TAP::Parser;
 use Socialtext::Resting::Getopt qw/get_rester/;
 use Socialtext::Resting;
 use Data::Dumper;
+use Getopt::Long;
 
 my $r = get_rester(workspace => 'st-sandbox');
-my $result_page = 'WikiTest Results';
 
-my $filename = "$ENV{HOME}/bad.out";
+my $filename = shift or usage();
+usage("Invalid file: $filename") unless -e $filename;
+
 my $wikitest_tap = get_contents($filename);
 my $tp = TAP::Parser->new( { tap => $wikitest_tap } );
 
@@ -46,6 +48,7 @@ if (@failures) {
 }
 $results .= "\n^ Full Test Output\n\n.pre\n" . $wikitest_tap . "\n.pre\n";
 
+my $result_page = "$branch wikitest results";
 $r->put_page($result_page, $results);
 $r->put_pagetag($result_page, $_) for ("branch: $branch", 'test-result');
 my $uri = $r->server . "/" . $r->workspace . "/?" . Socialtext::Resting::_name_to_id($result_page);
@@ -53,3 +56,19 @@ print "$results\n",
       "Uploaded test results to $uri\n";
 
 exit;
+
+
+sub usage {
+    my $msg = shift || '';
+    die <<EOT;
+$msg
+
+USAGE: $0 [<rester options>] <TAP file>
+
+Where rester options specify where the tap file should be uploaded to.
+The default REST information comes from ~/.wikeditrc.
+
+Specify --workspace to choose where to upload the result summary to.
+The workspace defaults to the `st-sandbox` workspace.
+EOT
+}
