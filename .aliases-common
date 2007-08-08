@@ -9,6 +9,7 @@ alias POSTf='POST -UseS'
 alias HEADf='HEAD -UseS'
 alias rc="rcontract-create"
 alias rq='stedit -w dev-tasks "Release Queue"'
+alias rqrad='corprad -w dev-tasks "Release Queue"'
 
 alias agu='sudo apt-get update'
 alias agdu='sudo apt-get update; sudo apt-get dist-upgrade'
