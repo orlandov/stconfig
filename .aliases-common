@@ -167,6 +167,30 @@ ppout() {
     esac
 }
 
+set-skin () {
+    NAME=$1 
+    WORKSPACE=$2
+    NLW=`abs_path $ST_CURRENT/nlw`
+
+    if [ -z "$WORKSPACE" ]
+    then
+        WORKSPACE=admin
+    fi
+
+    echo "Setting skin of $WORKSPACE to $NAME"
+    st-admin set-workspace-config --workspace $WORKSPACE skin_name $NAME
+
+    if [ -d $NLW/share/javascript/$NAME ]
+    then
+        echo "Setting customjs of $WORKSPACE to $NAME"
+        st-admin set-workspace-config --workspace $WORKSPACE customjs_uri base/javascript/$NAME/custom.js
+    else
+        echo "Setting customjs of $WORKSPACE to blank"
+        st-admin set-workspace-config --workspace $WORKSPACE customjs_uri ''
+    fi
+}
+
+
 _ppout_usage() {
     cat <<'EOT'
 ppout - Examine postprocess output.

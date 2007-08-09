@@ -1,17 +1,1 @@
-set-skin () {
-    NAME=$1 
-    NLW=`abs_path $ST_CURRENT/nlw`
-
-    echo "Setting skin to $NAME"
-    st-admin set-workspace-config --workspace admin skin_name $NAME
-
-    if [ -d $NLW/share/javascript/$NAME ]
-    then
-        echo "Setting customjs to $NAME"
-        st-admin set-workspace-config --workspace admin customjs_uri base/javascript/$NAME/custom.js
-    else
-        echo "Setting customjs to blank"
-        st-admin set-workspace-config --workspace admin customjs_uri ''
-    fi
-}
 
