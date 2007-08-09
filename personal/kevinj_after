@@ -28,7 +28,7 @@ PATH="$PATH:/usr/share/stconfig/stbin"
 selenium_host=bonobo
 
 # ZSH specific stuff from here on
-ls =ls >/dev/null 2>&1 || exec "zsh"
+ls =ls >/dev/null 2>&1 || return
 
 RPS1=''
 eval $(dircolors | perl -pe 's/di=01;34/di=01;36/')
