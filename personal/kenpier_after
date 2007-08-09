@@ -46,6 +46,8 @@ alias grnok="grep  -C 6 'not ok' testcases.out"
 alias grtc="grep 'Loading\|COMPLETED' testcases.out"
 alias ttc='tail -f testcases.out'
 
+# use *chrome instead of default *firefox so that upload attachments will work
+export selenium_browser=*chrome
 
 export SVN_COMMAND='svn'
 
@@ -60,7 +62,11 @@ alias psqa3='pstree -aAhlnp qa3'
 alias psqa4='pstree -aAhlnp qa4'
 alias pslyssa='pstree -aAhlnp lyssa'
 alias pssel='pstree -aAhlnp selenium'
+alias pschris='pstree -aAhlnp cmcmahon'
+
 
 # functions
 branches() {  /bin/ls /home/$1/src/st ; }
 sb()        { set-branch $1; cdnlw; cd ..; }
+
+alias brqa='branches qa*'
