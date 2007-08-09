@@ -51,6 +51,8 @@ unless ($opts{'no-rc'}) {
             . "' -w '" . $r->workspace
             . "' '$new_rc_page'" );
 }
+
+shell_run("set-branch $new_branch");
 exit;
 
 sub usage {
