@@ -20,12 +20,7 @@
 # GNU General Public License for more details.
 ################################################################
 
-alias kevblog='picblog --tag '\''Daily Blog'\'' --tag '\''Daily Dev Blog'\'' --tag "Kevin'\''s Dev Log" --name kevinj --user kevin.jones@socialtext.com --pass monday --workspace stoss --server http://www.socialtext.net'
-
 alias dtrad='wikrad --server https://www2.socialtext.net --workspace dev-tasks'
-
-PATH="$PATH:/usr/share/stconfig/stbin"
-selenium_host=bonobo
 
 # ZSH specific stuff from here on
 ls =ls >/dev/null 2>&1 || return
