@@ -59,6 +59,14 @@ my $st_admin = qx(which st-admin);
 unshift @INC, "$nlw_path/lib";
 diag "Added $nlw_path/lib to \@INC...";
 
+# Set a the location of files for upload tests, depending on the
+# selenium server platform
+my $wikitest_files_dir = {
+    linux => '/wikitest_files',
+    windows => 'C:\wikitest_files',
+    osx => '/private/wikitest_files',
+}->{$ENV{selenium_platform} || 'linux'};
+
 warn "Testing $test_server\n";
 my $test_plan = Socialtext::WikiObject::TestPlan->new(
     rester => $rester,
@@ -73,6 +81,7 @@ my $test_plan = Socialtext::WikiObject::TestPlan->new(
         password => $test_password,
         email => $test_email,
         selenium_timeout => $time_out,
+        wikitest_files => $wikitest_files_dir,
     },
 );
 $test_plan->run_tests;
