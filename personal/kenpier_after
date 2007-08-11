@@ -70,3 +70,5 @@ branches() {  /bin/ls /home/$1/src/st ; }
 sb()        { set-branch $1; cdnlw; cd ..; }
 
 alias brqa='branches qa*'
+alias ffx='ps auxww | grep firefox'
+alias fsel='ps auxww | grep selenium'
