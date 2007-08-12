@@ -47,7 +47,8 @@ alias grtc="grep 'Loading\|COMPLETED' testcases.out"
 alias ttc='tail -f testcases.out'
 
 # use *chrome instead of default *firefox so that upload attachments will work
-export selenium_browser=*chrome
+# chrome browser is commented out until it is fixed on galena selenium-rc
+# export selenium_browser=*chrome
 
 export SVN_COMMAND='svn'
 
