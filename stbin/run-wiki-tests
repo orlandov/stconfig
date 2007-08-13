@@ -25,6 +25,7 @@ my $test_username   = 'devnull1@socialtext.com';
 my $test_email      = $test_username;
 my $test_password   = 'd3vnu11l';
 
+my $verbose;
 my $time_out        = '10000';
 my $fake_content_file;
 GetOptions(
@@ -38,6 +39,7 @@ GetOptions(
     'test-password=s'   => \$test_password,
     'f|fake-content-file=s' => \$fake_content_file,
     'timeout=i'         => \$time_out,
+    'verbose'           => \$verbose,
 ) or usage();
 
 my $rester;
@@ -73,6 +75,7 @@ my $test_plan = Socialtext::WikiObject::TestPlan->new(
     page => $plan_page,
     default_fixture => 'Socialtext',
     fixture_args => {
+        verbose => $verbose,
         host => $ENV{selenium_host} || 'galena.socialtext.net',
         port => $ENV{selenium_port} || 4444,
         browser_url => $test_server,
