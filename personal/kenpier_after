@@ -29,7 +29,7 @@ alias cdwidgets='cd ~/src/st/current/nlw/share/images/widgets'
 
 # alias to manage  a branch. Requires svnco.bash
 alias svnco="~/src/st/stconfig/personal/kenpier/svnco.bash $1 $2"
-alias svnup='svn up; freshdev; pushd nlw/share/js-test; make; popd;'
+alias svnup='cd ~/src/st/current; stopme; svn up; freshdev; pushd nlw/share/js-test; make; popd; pushd nlw/share/javascript; make clean; make; popd;'
 
 # alias to run Wiki Tests
 # # requires stconfig dev setup and run-wiki-tests.bash
