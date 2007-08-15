@@ -3,7 +3,6 @@ use strict;
 use warnings;
 use utf8;
 use Socialtext::Resting;
-use Socialtext::Resting::Mock;
 use Socialtext::WikiObject::TestPlan;
 use Getopt::Long;
 use Test::More qw/no_plan/;
@@ -52,6 +51,7 @@ if (!defined $fake_content_file) {
     );
 }
 else {
+    require Socialtext::Resting::Mock;
     $rester = Socialtext::Resting::Mock->new(file => $fake_content_file);
 }
 
