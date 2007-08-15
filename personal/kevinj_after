@@ -30,7 +30,6 @@ eval $(dircolors | perl -pe 's/di=01;34/di=01;36/')
 bindkey "^R" history-incremental-search-backward
 
 unsetopt print_exit_value
-unsetopt extended_glob
 
 setopt BASH_AUTO_LIST
 setopt NO_AUTO_MENU
