@@ -1,0 +1,147 @@
+#!/usr/bin/perl
+use warnings;
+use strict;
+
+use Getopt::Long;
+use Socialtext::Resting::Getopt qw(get_rester rester_usage);
+use YAML;
+
+# It would be nice if ST::Resting::Getopt let us specify defaults for some of
+# these things.
+unshift @ARGV, '--server=https://www.socialtext.net/', '--workspace=buildbot_config';
+my $rester = get_rester();
+
+sub usage { print <<END_USAGE; exit 0 }
+USAGE: bbcfg ARGS
+
+This script changes the buildbot settings stored in the wiki at
+https://www.socialtext.net/lite/page/buildbot_config/.
+
+   branches show
+   branches add BRANCH    (e.g., 'branches/interwiki-search',
+   branches remove BRANCH        'privates-branches/wired')
+
+   silly show
+   silly set QUERY RESPONSE
+   silly clear QUERY
+
+   slaves show
+   slaves set SLAVENAME PASSWORD
+   slaves clear SLAVENAME
+
+Keywords can be abbreviated as long as they remain unique.  E.g.,
+
+  bbcfg br sh
+
+END_USAGE
+
+my %action = (
+    branches => {
+        show   => sub { yaml_show_list('branches') },
+        add    => sub { yaml_append( 'branches', shift ) },
+        remove => sub { yaml_remove( 'branches' ), shift },
+    },
+    silly => {
+        show  => sub { yaml_show_dict('silly') },
+        set   => sub { yaml_set( 'silly', shift, shift ) },
+        clear => sub { yaml_clear( 'silly', shift ) },
+    },
+    slaves => {
+        show  => sub { yaml_show_dict('slaves') },
+        set   => sub { yaml_set( 'slaves', shift, shift ) },
+        clear => sub { yaml_clear( 'slaves', shift ) },
+    },
+    help => \&usage,
+);
+
+SUBJECT: for my $subject (keys %action) {
+    next SUBJECT unless starts_with( $subject, $ARGV[0] );
+    shift;
+
+    if (ref $action{$subject} eq 'CODE') {
+        $action{$subject}->(@ARGV);
+        exit;
+    } else {
+        VERB: for my $verb ( keys %{ $action{$subject} } ) {
+            next VERB unless starts_with( $verb, $ARGV[0] );
+            shift;
+            $action{$subject}{$verb}->(@ARGV);
+            exit;
+        }
+    }
+}
+
+usage();
+
+# Lists
+#
+sub yaml_show_list {
+    my ( $page_id ) = @_;
+
+    print "$_\n" for @{ yaml_get($page_id) };
+}
+
+sub yaml_append {
+    my ( $page_id, $item ) = @_;
+
+    yaml_put( $page_id, [ @{ yaml_get($page_id) }, $item ] )
+}
+
+sub yaml_remove {
+    my ( $page_id, $item ) = @_;
+
+    yaml_put(
+        $page_id,
+        [ grep $_ ne $item, @{ yaml_get($page_id) } ] );
+}
+
+# Dicts
+#
+sub yaml_show_dict {
+    my ( $page_id ) = @_;
+
+    my $dictref = yaml_get($page_id);
+
+    while ( my ( $k, $v ) = each %$dictref ) {
+        printf "$k\n  $v\n";
+    }
+}
+
+sub yaml_set {
+    my ( $page_id, $key, $value ) = @_;
+
+    my $dictref = { %{ yaml_get($page_id) }, $key => $value };
+    yaml_put( $page_id, $dictref );
+}
+
+sub yaml_clear {
+    my ( $page_id, $key ) = @_;
+
+    my $dictref = yaml_get($page_id);
+    delete $dictref->{$key};
+    yaml_put( $page_id, $dictref );
+}
+
+# Getting and putting YAML pages.
+#
+sub yaml_put {
+    my ( $page_id, $content ) = @_;
+
+    $rester->put_page( $page_id, ".pre\n" . Dump($content) . ".pre\n" );
+}
+
+sub yaml_get {
+    my ( $page_id ) = @_;
+
+    my $content = $rester->get_page($page_id);
+    $content =~ s/(?:\A\.pre\n|^\.pre\n?\Z)//mg;
+    return Load($content);
+}
+
+# Handy little function
+#
+sub starts_with {
+    my ( $long, $short ) = @_;
+
+    return (substr $long, 0, length $short) eq $short;
+}
