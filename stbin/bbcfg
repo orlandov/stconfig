@@ -21,13 +21,14 @@ https://www.socialtext.net/lite/page/buildbot_config/.
    branches add BRANCH    (e.g., 'branches/interwiki-search',
    branches remove BRANCH        'privates-branches/wired')
 
+   slaves show
+   slaves add SLAVENAME PASSWORD
+   slaves password SLAVENAME NEWPASS
+   slaves remove SLAVENAME
+
    silly show
    silly set QUERY RESPONSE
    silly clear QUERY
-
-   slaves show
-   slaves set SLAVENAME PASSWORD
-   slaves clear SLAVENAME
 
 Keywords can be abbreviated as long as they remain unique.  E.g.,
 
@@ -41,18 +42,21 @@ my %action = (
         add    => sub { yaml_append( 'branches', shift ) },
         remove => sub { yaml_remove( 'branches' ), shift },
     },
+    slaves => {
+        show   => \&show_slaves,
+        add    => sub { yaml_append( 'slaves',
+                { 'slave-name' => shift, 'password' => shift } ) },
+        remove => sub { remove_slave( shift ) },
+    },
     silly => {
         show  => sub { yaml_show_dict('silly') },
         set   => sub { yaml_set( 'silly', shift, shift ) },
         clear => sub { yaml_clear( 'silly', shift ) },
     },
-    slaves => {
-        show  => sub { yaml_show_dict('slaves') },
-        set   => sub { yaml_set( 'slaves', shift, shift ) },
-        clear => sub { yaml_clear( 'slaves', shift ) },
-    },
     help => \&usage,
 );
+
+usage() unless @ARGV;
 
 SUBJECT: for my $subject (keys %action) {
     next SUBJECT unless starts_with( $subject, $ARGV[0] );
@@ -72,6 +76,22 @@ SUBJECT: for my $subject (keys %action) {
 }
 
 usage();
+
+# The slave data is arranged sort of weirdly.
+#
+sub show_slaves {
+    printf "%30.30s %-30.30s\n", 'USERNAME', 'PASSWORD';
+    for my $slave_spec (@{ yaml_get('slaves') }) {
+        printf "%30.30s %-30.30s\n", $slave_spec->{'slave-name'}, $slave_spec->{password};
+    }
+}
+
+sub remove_slave {
+    my ( $slave_name ) = @_;
+
+    my $slaves = [ grep $_->[0] ne $slave_name, @{ yaml_get('slaves') } ];
+    yaml_put( 'slaves', $slaves );
+}
 
 # Lists
 #
