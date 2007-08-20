@@ -69,6 +69,7 @@ alias pschris='pstree -aAhlnp cmcmahon'
 # functions
 branches() {  /bin/ls /home/$1/src/st ; }
 sb()        { set-branch $1; cdnlw; cd ..; }
+trunkdiff () { svn diff https://repo.socialtext.net:8999/svn/socialtext/trunk https://repo.socialtext.net:8999/svn/socialtext/branches/$1 ; }
 
 alias brqa='branches qa*'
 alias ffx='ps auxww | grep firefox'
