@@ -12,8 +12,8 @@ svn co https://repo.socialtext.net:8999/svn/control
 cd ~/src/st/current/nlw
 ~/src/st/current/nlw/dev-bin/link-control-panel
 
-echo Restarting server for control to take effect
-~/src/st/current/nlw/dev-bin/nlwctl restart
+echo Restarting apache-perl server for control to take effect
+~/src/st/current/nlw/dev-bin/nlwctl -1 start
 
 cd ~/src/st/current/
 echo plan-page is $1
