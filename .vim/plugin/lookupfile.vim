@@ -102,10 +102,10 @@ if (! exists("no_plugin_maps") || ! no_plugin_maps) &&
   noremap <script> <silent> <Plug>LookupFile :LookupFile<CR>
 
   if !hasmapto('<Plug>LookupFile', 'n')
-    nmap <unique> <silent> <F5> <Plug>LookupFile
+    silent! nmap <unique> <silent> <F5> <Plug>LookupFile
   endif
   if !hasmapto('<Plug>LookupFile', 'i')
-    imap <unique> <expr> <silent> <F5> (pumvisible()?"\<C-E>":"")."\<Esc>\<Plug>LookupFile"
+    silent! imap <unique> <expr> <silent> <F5> (pumvisible()?"\<C-E>":"")."\<Esc>\<Plug>LookupFile"
   endif
 endif
 
