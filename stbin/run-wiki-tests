@@ -62,9 +62,6 @@ if ($version) {
     $mod = strftime('%F %R', localtime($mod));
     print "$0 v$VERSION last-modified: $mod\n\n";
 
-    use Data::Dump 'dump';
-    #dump \%INC;
-
     for my $lib (@libs) {
         eval "require $lib";
         (my $file = "$lib.pm") =~ s{::}{/}g;
