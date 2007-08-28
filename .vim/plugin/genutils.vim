@@ -1045,7 +1045,7 @@ if exists('loaded_genutils')
   finish
 endif
 if v:version < 700
-  echomsg 'genutils: You need at least Vim 7.0'
+  " echomsg 'genutils: You need at least Vim 7.0' " Noise sucks. -mml
   finish
 endif
 
