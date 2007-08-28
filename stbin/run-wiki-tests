@@ -78,6 +78,7 @@ my $test_plan = Socialtext::WikiObject::TestPlan->new(
         verbose => $verbose,
         host => $ENV{selenium_host} || 'galena.socialtext.net',
         port => $ENV{selenium_port} || 4444,
+        browser => $ENV{selenium_browser} || '*chrome',
         browser_url => $test_server,
         workspace => $test_workspace,
         username => $test_username,
