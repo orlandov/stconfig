@@ -99,7 +99,7 @@ diag "Added $nlw_path/lib to \@INC...";
 # Set a the location of files for upload tests, depending on the
 # selenium server platform
 my $wikitest_files_dir = {
-    linux => '/wikitest_files/',
+    linux => '/opt/wikitest_files/',
     windows => 'C:\\wikitest_files\\',
     osx => '/private/wikitest_files/',
 }->{$ENV{selenium_platform} || 'linux'};
