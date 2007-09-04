@@ -10,6 +10,7 @@ alias HEADf='HEAD -UseS'
 alias rc="rcontract-create"
 alias rq='stedit -w dev-tasks "Release Queue"'
 alias rqrad='corprad -w dev-tasks "Release Queue"'
+alias wefocus='stedit -p -w stdev "Western Electric Focus"'
 
 alias ..='cd ..'
 alias ..1='cd ..'
