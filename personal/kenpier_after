@@ -37,18 +37,15 @@ RWT=~/src/st/stconfig/personal/kenpier/run-wiki-tests.bash
 alias rwt="$RWT $1 $2"
 alias rwta="$RWT 'All Testcases'" 
 alias rwto="$RWT 'OSR Testcases'"
+
 # execute wiki test
 alias xwt="run-wiki-tests --timeout 30000 --plan-page "
-
+alias xwjst='export selenium_browser=*firefox; xwt "Test Case: JS Test"; unset selenium_browser;'
 
 # aliases to evaluate wiki tests
 alias grnok="grep  -C 6 'not ok' testcases.out"
 alias grtc="grep 'Loading\|COMPLETED' testcases.out"
 alias ttc='tail -f testcases.out'
-
-# use *chrome instead of default *firefox so that upload attachments will work
-# chrome browser is commented out until it is fixed on galena selenium-rc
-# export selenium_browser=*chrome
 
 export SVN_COMMAND='svn'
 
@@ -64,7 +61,7 @@ alias psqa4='pstree -aAhlnp qa4'
 alias pslyssa='pstree -aAhlnp lyssa'
 alias pssel='pstree -aAhlnp selenium'
 alias pschris='pstree -aAhlnp cmcmahon'
-
+alias psrick='pstree -aAhlnp rick'
 
 # functions
 branches() {  /bin/ls /home/$1/src/st ; }
