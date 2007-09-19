@@ -1,0 +1,61 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use Getopt::Long;
+
+####################################
+# Command Line Parsing
+#
+my $USAGE = "Usage: $0 --skin [--branch | --dir] [--debug] [skin]\n";
+my %opts;
+GetOptions(
+    \%opts,
+    "skin=s",
+    "dir=s",
+    "branch=s",
+    "debug",
+);
+$opts{skin} ||= shift;  # Allow it from the command-line too.
+die $USAGE unless defined $opts{skin};
+die $USAGE if $opts{dir} and $opts{branch};
+
+####################################
+# Setup Arguments for dir2deb
+#
+
+# Setup either --dir or --svn for dir2deb, based on what we got on our command
+# line.  Using svn trunk is the default if neither is specified.
+my @src_arg = ();
+if ( $opts{dir} ) {
+    @src_arg = ( "--dir" => $opts{dir} );
+}
+else {
+    my $branch = $opts{branch} ? "branches/$opts{branch}" : "trunk";
+    $branch = 'trunk' if $branch eq 'branches/trunk';   # Allow --branch=trunk
+    my $svn_base = $ENV{ST_SVN} || "https://repo.socialtext.net:8999/svn";
+    my $svn_url = "${svn_base}/customer-skins/$branch/$opts{skin}";
+    @src_arg = ( "--svn" => $svn_url );
+}
+
+# Setup debug options
+my @debug_arg = $opts{debug} ? ("--debug") : ();
+
+# This script munges the layout of the skins to match how they need to be
+# installed.  See the script for details.  This and the --transform-script
+# option can be deleted when/if the files are installed on the system in the
+# same way they're stored in the repo.
+my $transform = "reorganize-skin-files-for-install.sh";
+
+####################################
+# Build the Package
+#
+system(
+    "dir2deb",
+    "--package"          => $opts{skin},
+    "--root"             => "/usr/share/nlw",
+    "--transform-script" => $transform,
+    "--exclude"          => "\.svn",
+    @src_arg,
+    @debug_arg,
+) and exit 1;
+exit 0;
