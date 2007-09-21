@@ -36,6 +36,7 @@ alias svnup='cdcur; stopme; svn up; freshdev; pushd nlw/share/js-test; make; pop
 RWT=~/src/st/stconfig/personal/kenpier/run-wiki-tests.bash
 alias rwt="$RWT $1 $2"
 alias rwta="$RWT 'All Testcases'" 
+alias rwti="$RWT 'IE Testcases'"
 alias rwto="$RWT 'OSR Testcases'"
 
 # execute wiki test
