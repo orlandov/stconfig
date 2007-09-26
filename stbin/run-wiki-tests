@@ -72,6 +72,7 @@ if ($version) {
         my $mod = (stat $INC{$file})[9];
         $mod = strftime('%F %R', localtime($mod));
         print "$lib v$ver last-modified: $mod\n";
+        print "\t-- $INC{$file}\n" if $verbose;
     }
 
     exit;
