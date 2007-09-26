@@ -56,6 +56,9 @@ if ($version) {
         Socialtext::Resting
         Socialtext::WikiObject
         Socialtext::WikiObject::TestPlan
+        Socialtext::WikiFixture
+        Socialtext::WikiFixture::Selenese
+        Socialtext::WikiFixture::Socialtext
     );
 
     my $mod = (stat $0)[9];
