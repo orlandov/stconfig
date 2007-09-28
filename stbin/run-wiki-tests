@@ -48,6 +48,12 @@ GetOptions(
     'version'           => \$version,
 ) or usage();
 
+# Add current branch's lib to our include path
+my $st_admin = qx(which st-admin);
+(my $nlw_path = $st_admin) =~ s#/bin/st-admin.+##s;
+unshift @INC, "$nlw_path/lib";
+diag "Added $nlw_path/lib to \@INC...";
+
 if ($version) {
 
     my @libs = qw(
@@ -99,12 +105,6 @@ else {
     require Socialtext::Resting::Mock;
     $rester = Socialtext::Resting::Mock->new(file => $fake_content_file);
 }
-
-# Add current branch's lib to our include path
-my $st_admin = qx(which st-admin);
-(my $nlw_path = $st_admin) =~ s#/bin/st-admin.+##s;
-unshift @INC, "$nlw_path/lib";
-diag "Added $nlw_path/lib to \@INC...";
 
 # Set a the location of files for upload tests, depending on the
 # selenium server platform
