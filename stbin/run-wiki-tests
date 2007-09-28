@@ -72,7 +72,13 @@ if ($version) {
         my $mod = (stat $INC{$file})[9];
         $mod = strftime('%F %R', localtime($mod));
         print "$lib v$ver last-modified: $mod\n";
-        print "\t-- $INC{$file}\n" if $verbose;
+        if ($verbose) {
+            require Digest::MD5;
+            Digest::MD5->import('md5_hex');
+            my $md5 = md5_hex($INC{$file});
+            print "\t-- $INC{$file}\n";
+            print "\t-- $md5\n";
+        }
     }
 
     exit;
