@@ -11,7 +11,6 @@ alias rc="rcontract-create"
 alias rq='stedit -w dev-tasks "Release Queue"'
 alias rqrad='corprad -w dev-tasks "Release Queue"'
 alias wefocus='stedit -p -w stdev "Western Electric Focus"'
-alias jhc='wikedit -w stdev -temp "JHC Standup Template" "JHC Standup, `date +%Y-%m-%d`"'
 
 alias ..='cd ..'
 alias ..1='cd ..'
@@ -204,3 +203,9 @@ OUTFILE can be 'last' which will manipulate the most recent file in the
 directory instead.
 EOT
 }
+
+function jhc() {
+    when=${*:-now}
+    wikedit -w stdev -temp "JHC Standup Template" "JHC Standup, `date -d $when +%Y-%m-%d`"
+}
+
