@@ -9,6 +9,7 @@ d=`which dircolors` && [ -x "$d" ] && eval `dircolors`
 if [ -r ~/stbin/stdefaultenv ]; then
     eval `~/stbin/stdefaultenv`
 fi
+alias profile='source ~/.bashrc'
 
 export HISTIGNORE="&:[bf]g:exit"
 export PGDATABASE=NLW_$(whoami)
