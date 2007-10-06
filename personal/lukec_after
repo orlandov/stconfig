@@ -2,3 +2,10 @@ alias ssh='ssh -A'
 set -o vi
 
 export TD=lukecloss@jervis.textdrive.com
+
+function corpblog {
+    corprad -l "luke's log weblog"
+}
+function blog {
+    wikrad -l "Luke's Dev Log"
+}
