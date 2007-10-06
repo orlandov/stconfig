@@ -11,3 +11,4 @@ if [ -r ~/stbin/stdefaultenv ]; then
 fi
 
 export HISTIGNORE="&:[bf]g:exit"
+export PGDATABASE=NLW_$(whoami)
