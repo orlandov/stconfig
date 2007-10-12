@@ -42,6 +42,7 @@ alias rwto="$RWT 'OSR Testcases'"
 # execute wiki test
 alias xwt="run-wiki-tests --timeout 30000 --plan-page "
 alias xwjst='export selenium_browser=*firefox; xwt "Test Case: JS Test"; unset selenium_browser;'
+alias xwjsti='export selenium_browser=*iexplore; xwt "Test Case: JS Test"; unset selenium_browser;'
 
 # aliases to evaluate wiki tests
 alias grnok="grep  -C 6 'not ok' testcases.out"
