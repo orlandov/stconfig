@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+SERVER=https://www2.socialtext.net
+WORKSPACE=dev-tasks
+
 rc="$*"
 
 if [ -z "$rc" ]; then
@@ -46,9 +49,11 @@ echo "Creating $rc"
 # TODO: It would be nice to take a branch name and possibly some other
 # arguments/flags from the command line and fill in the obvious blanks in the
 # template.
-exec \
 wikedit \
-    --workspace=dev-tasks \
-    --server=https://www2.socialtext.net \
+    --workspace="$WORKSPACE" \
+    --server="$SERVER" \
     --template=release-contract-template \
     "$rc"
+
+exec perl -MURI::Escape -le \
+    "print '$SERVER/$WORKSPACE/index.cgi?', uri_escape('$rc')"
