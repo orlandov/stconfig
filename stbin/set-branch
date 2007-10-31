@@ -17,23 +17,15 @@ $branch = num_to_name($branch) if $branch =~ m/^\d+$/;
 usage() unless $branch;
 
 my $branch_dir = "$src_base/$branch";
-unless (-d $branch_dir) {
-    print "$branch_dir doesn't exist.  Run $ENV{SVN_COMMAND} checkout? [Y/n]\n";
-    my $ans = <STDIN>;
-    if ($ans =~ m/^y|\s*$/i or ($ans) == 0) {
-        if ($branch eq 'trunk') {
-            checkout($branch);
-        }
-        elsif ($private) { 
-            checkout("private-branches/$branch");
-        }
-        else {
-            checkout("branches/$branch");
-        }
+unless ( -d $branch_dir ) {
+    if ( $branch eq 'trunk' ) {
+        checkout($branch);
+    }
+    elsif ($private) {
+        checkout("private-branches/$branch");
     }
     else {
-        print "Bye!\n";
-        exit;
+        checkout("branches/$branch");
     }
 }
 
