@@ -25,7 +25,7 @@ alias cdst='cd ~/.nlw/etc/socialtext'
 alias cdjs='cd ~/src/st/current/nlw/share/javascript'
 alias cdfonts='cd ~/src/st/current/nlw/share/fonts'
 alias cdwidgets='cd ~/src/st/current/nlw/share/images/widgets'
-
+alias cdpers='cd ~/personal'
 
 # alias to manage  a branch. Requires svnco.bash
 alias svnco="~/src/st/stconfig/personal/kenpier/svnco.bash $1 $2"
@@ -40,7 +40,7 @@ alias rwti="$RWT 'IE Testcases'"
 alias rwto="$RWT 'OSR Testcases'"
 
 # execute wiki test
-alias xwt="run-wiki-tests --timeout 30000 --plan-page "
+alias xwt="run-wiki-tests --timeout 60000 --plan-page "
 alias xwjst='export selenium_browser=*firefox; xwt "Test Case: JS Test"; unset selenium_browser;'
 alias xwjsti='export selenium_browser=*iexplore; xwt "Test Case: JS Test"; unset selenium_browser;'
 
@@ -72,6 +72,7 @@ alias pslyssa='pstree -aAhlnp lyssa'
 alias pssel='pstree -aAhlnp selenium'
 alias pschris='pstree -aAhlnp cmcmahon'
 alias psrick='pstree -aAhlnp rick'
+alias psshahed='pstree -aAhlnp shahed'
 
 # functions
 branches() {  /bin/ls /home/$1/src/st ; }

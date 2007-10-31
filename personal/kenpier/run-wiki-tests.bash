@@ -20,5 +20,5 @@ echo Restarting apache server for control to take effect
 
 cd ~/src/st/current/
 echo plan-page is $1
-~/stbin/run-wiki-tests --timeout 30000 --plan-page "$1" >& testcases.out&
+~/stbin/run-wiki-tests --timeout 60000 --plan-page "$1" >& testcases.out&
 echo RUNNING ...
