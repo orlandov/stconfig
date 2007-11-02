@@ -53,6 +53,7 @@ PREAMBLE
 
 sub slurp {
     my $file = shift;
+    return join "", <STDIN> if $file eq '-';
     open( my $fh, "<", $file ) or die "Could not open ${file}: $!\n";
     my $text = join "", <$fh>;
     close($fh) or die "Could not close ${file}: $!\n";
