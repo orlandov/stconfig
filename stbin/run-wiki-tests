@@ -106,13 +106,19 @@ else {
     $rester = Socialtext::Resting::Mock->new(file => $fake_content_file);
 }
 
-# Set a the location of files for upload tests, depending on the
-# selenium server platform
+# Set  the location of files for upload tests, depending on the
+# selenium client and server platforms
+my $wikitest_client_files_dir = {
+    linux => '/opt/wikitest_files/',
+    windows => 'C:\\wikitest_files\\',
+    osx => '/private/wikitest_files/',
+}->{$ENV{selenium_client_platform} || 'linux'};
+
 my $wikitest_files_dir = {
     linux => '/opt/wikitest_files/',
     windows => 'C:\\wikitest_files\\',
     osx => '/private/wikitest_files/',
-}->{$ENV{selenium_platform} || 'linux'};
+}->{$ENV{selenium_server_platform} || 'linux'};
 
 diag "Testing $test_server\n";
 my $test_plan = Socialtext::WikiObject::TestPlan->new(
@@ -132,6 +138,7 @@ my $test_plan = Socialtext::WikiObject::TestPlan->new(
         email => $test_email,
         selenium_timeout => $time_out,
         wikitest_files => $wikitest_files_dir,
+        wikitest_client_files => $wikitest_client_files_dir,
     },
 );
 $test_plan->run_tests;
