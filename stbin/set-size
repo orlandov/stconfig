@@ -2,7 +2,7 @@
 
 # osascript ~/bin/set-size.scpt $*
 
-if [$1 == ""]; then
+if [ "$1" == "" ]; then
     echo "USAGE: set-size <cols> <rows>"
     exit -1
 fi
