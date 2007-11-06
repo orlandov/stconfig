@@ -21,6 +21,9 @@ unless ( -d $branch_dir ) {
     if ( $branch eq 'trunk' ) {
         checkout($branch);
     }
+    elsif ($branch =~ m#^tags/#) {
+        checkout($branch);
+    }
     elsif ($private) {
         checkout("private-branches/$branch");
     }
