@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Getopt::Long qw/:config pass_through/;
+
+sub usage {
+    die <<EOT;
+USAGE: $0 [--prod|-p] <ARGS>
+
+This script wraps the wikrad script specifically for editing internal
+Socialtext Wikis.
+
+Options:
+ --prod|-p  Set the server to https://www.socialtext.net
+            (Defaults to https://www2.socialtext.net)
+
+All other options are passed directly to wikrad.
+EOT
+}
+
+my $prod;
+GetOptions(
+    'prod|p' => \$prod,
+);
+
+my $server = 'https://www2.socialtext.net';
+$server =~ s/2// if $prod;
+
+system(qw(wikrad --server), $server, @ARGV);

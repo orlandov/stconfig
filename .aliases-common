@@ -1,4 +1,6 @@
 #!/bin/bash
+
+
 alias ll='ls -l'
 alias la='ls -la'
 alias RM='rm -rf' # for Mr. dot Net
@@ -9,7 +11,6 @@ alias POSTf='POST -UseS'
 alias HEADf='HEAD -UseS'
 alias rc="rcontract-create"
 alias rq='stedit -w dev-tasks "Release Queue"'
-alias rqrad='corprad -w dev-tasks "Release Queue"'
 alias wefocus='stedit -p -w stdev "Western Electric Focus"'
 
 alias ..='cd ..'
@@ -90,6 +91,9 @@ alias apmiter='apmedit -l iteration'
 
 # wikrad aliases
 alias tigrad='wikrad -w tigger'
+alias rqrad='w2rad -w dev-tasks "Release Queue"'
+alias convrad='w2rad -w conversation'
+alias stprad='w2rad -w socialpedia'
 
 provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 

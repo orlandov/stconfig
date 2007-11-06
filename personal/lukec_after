@@ -4,7 +4,7 @@ set -o vi
 export TD=lukecloss@jervis.textdrive.com
 
 function corpblog {
-    corprad -l "luke's log weblog"
+    convrad -l "luke's blog"
 }
 function blog {
     wikrad -l "Luke's Dev Log"
