@@ -2,6 +2,11 @@
 
 # osascript ~/bin/set-size.scpt $*
 
+if [$1 == ""]; then
+    echo "USAGE: set-size <cols> <rows>"
+    exit -1
+fi
+
 exec osascript - $* <<EOF
 on run argv
         tell application "Terminal"
