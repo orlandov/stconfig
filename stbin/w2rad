@@ -26,4 +26,4 @@ GetOptions(
 my $server = 'https://www2.socialtext.net';
 $server =~ s/2// if $prod;
 
-system(qw(wikrad --server), $server, @ARGV);
+system(qw(wikrad --server), $server, '--workspace', 'socialpedia', @ARGV);
