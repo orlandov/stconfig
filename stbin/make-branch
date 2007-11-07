@@ -14,7 +14,13 @@ GetOptions( \%opts,
     'from=s',
 ) or usage();
 
-my $from = $opts{from} ? "branches/$opts{from}" : "trunk";
+my $from = 'trunk';
+if ($opts{from} =~ m/^tags\/.+/) {
+    $from = $opts{from};
+}
+elsif ($opts{from}) {
+    $from = "branches/$opts{from}";
+}
 
 my $new_branch = shift;
 usage() unless $new_branch;
@@ -26,8 +32,7 @@ unless (qx(svk ls $branch_path 2>&1) =~ m/is not versioned/) {
     die "It appears $branch_path already exists...\n";
 }
 
-shell_run("svk cp -m 'make-branch $new_branch' "
-          . "//mirror/socialtext/$from $branch_path");
+shell_run("svk cp //mirror/socialtext/$from $branch_path");
 
 # then checking it out,
 shell_run("svk co $branch_path ~/src/st/$new_branch");
