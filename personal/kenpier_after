@@ -38,6 +38,8 @@ alias rwt="$RWT $1 $2"
 alias rwta="$RWT 'All Testcases'" 
 alias rwti="$RWT 'IE Testcases'"
 alias rwto="$RWT 'OSR Testcases'"
+SELSET=~/src/st/stconfig/personal/kenpier/setup-selenium
+alias setsel="source $SELSET"
 
 # execute wiki test
 alias xwt="run-wiki-tests --timeout 60000 --plan-page "
