@@ -6,6 +6,9 @@ use lib "$ENV{HOME}/src/st/trunk/nlw/lib";
 use Socialtext::System qw/shell_run/;
 use Getopt::Long;
 
+my $socialtext_svk_mirror = "//mirror/socialtext";
+my $socialtext_svn_repo   = "https://repo.socialtext.net:8999/svn/socialtext";
+
 my $r = get_rester();
 
 my %opts;
@@ -25,15 +28,22 @@ elsif ($opts{from}) {
 my $new_branch = shift;
 usage() unless $new_branch;
 
+sync_mirror();
+
 # Check that the branch doesn't exist already
-shell_run("svk sync //mirror/socialtext");
-my $branch_path = "//mirror/socialtext/branches/$new_branch";
+my $branch_path = "${socialtext_svk_mirror}/branches/$new_branch";
 unless (qx(svk ls $branch_path 2>&1) =~ m/is not versioned/) {
     die "It appears $branch_path already exists...\n";
 }
 
-shell_run("svk cp //mirror/socialtext/$from $branch_path");
+# use svn to actually make branch because some of our partners have
+# to maintain separate mirrors, one for branches, one for tags
+my $make_branch_command =
+  "svn cp ${socialtext_svn_repo}/$from ${socialtext_svn_repo}/branches/$new_branch";
+shell_run($make_branch_command);
 
+# sync again
+sync_mirror();
 # then checking it out,
 shell_run("svk co $branch_path ~/src/st/$new_branch");
 
@@ -59,6 +69,10 @@ unless ($opts{'no-rc'}) {
 
 shell_run("set-branch $new_branch");
 exit;
+
+sub sync_mirror {
+    shell_run("svk sync $socialtext_svk_mirror");
+}
 
 sub usage {
     die <<EOT;
