@@ -9,3 +9,15 @@ function corpblog {
 function blog {
     wikrad -l "Luke's Dev Log"
 }
+
+alias lukerad='wikrad -w lukec'
+
+# git aliases
+
+alias ga='git-add'
+alias gd='git-diff'
+alias gst='git-status'
+alias gci='git-commit'
+
+# Always keep my latest ssh details, so I can source later
+env | grep SSH | perl -lne 'chomp; m/^(\w+)=(.+)$/; print qq{export $1="$2"}' > ~/.latest-ssh-rc;
