@@ -1,4 +1,4 @@
-#!/bin/bash
+!/bin/bash
 
 # aliases when CWD is the top of a checkout e.g. trunk or usability-dev
 alias sta='./nlw/bin/st-admin '
@@ -83,5 +83,5 @@ alias ffx='ps auxww | grep firefox'
 alias fsel='ps auxww | grep selenium'
 
 # aliases for staging
-alias srwto='sudo -u www-data run-wiki-tests --test-server http://teststaging.socialtext.net --timeout 30000 --plan-page "OSR Testcases" &> testcases.out &'
-alias srwt='sudo -u www-data run-wiki-tests --test-server http://teststaging.socialtext.net --timeout 30000 --plan-page '
+alias srwto='sudo -u www-data run-wiki-tests --test-server http://teststaging.socialtext.net --timeout 60000 --plan-page "OSR Testcases" &> testcases.out &'
+alias srwt='sudo -u www-data run-wiki-tests --test-server http://teststaging.socialtext.net --timeout 60000 --plan-page '
