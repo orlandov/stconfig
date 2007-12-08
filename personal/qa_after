@@ -1,4 +1,3 @@
-!/bin/bash
 
 # aliases when CWD is the top of a checkout e.g. trunk or usability-dev
 alias sta='./nlw/bin/st-admin '
