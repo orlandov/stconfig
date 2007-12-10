@@ -188,6 +188,7 @@ set-skin () {
     st-admin set-workspace-config --workspace $WS skin_name $NAME
     st-admin set-workspace-config --workspace $WS customjs_name $NAME
     st-admin set-workspace-config --workspace $WS cascade_css f
+    set +x
 }
 
 
