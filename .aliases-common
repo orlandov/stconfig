@@ -186,9 +186,8 @@ set-skin () {
     WS=${2:-admin}
     set -x
     st-admin set-workspace-config --workspace $WS skin_name $NAME
-    #st-admin set-workspace-config --workspace $WS customjs_name $NAME
+    st-admin set-workspace-config --workspace $WS customjs_name $NAME
     st-admin set-workspace-config --workspace $WS cascade_css f
-    st-admin set-workspace-config --workspace $WS customjs_uri "/static/javascript/$NAME/custom.js"
 }
 
 
