@@ -82,5 +82,5 @@ alias ffx='ps auxww | grep firefox'
 alias fsel='ps auxww | grep selenium'
 
 # aliases for staging
-alias srwto='sudo -u www-data run-wiki-tests --test-server http://teststaging.socialtext.net --timeout 60000 --plan-page "OSR Testcases" &> testcases.out &'
-alias srwt='sudo -u www-data run-wiki-tests --test-server http://teststaging.socialtext.net --timeout 60000 --plan-page '
+alias srwto='sudo -u www-data /home/qa/stbin/run-wiki-tests --test-server http://teststaging.socialtext.net --timeout 60000 --plan-page "OSR Testcases" &> testcases.out &'
+alias srwt='sudo -u www-data /home/qa/stbin/run-wiki-tests --test-server http://teststaging.socialtext.net --timeout 60000 --plan-page '
