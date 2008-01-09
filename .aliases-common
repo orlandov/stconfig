@@ -81,9 +81,12 @@ alias dtrad='corprad -w dev-tasks'
 alias rtedit='stedit -w regression-test'
 alias rtrad='corprad -w regression-test'
 alias stdedit='stedit -p -w stdev'
+alias iterad='dtrad -l iteration'
+alias projrad='dtrad -l project'
 
 # Appliance project aliases
 alias apm='wikrad -w appliance-manual "Appliance Project Plan"'
+alias apprad='wikrad -w appliance-project'
 alias appedit='stedit -p -w appliance-project'
 alias apmedit='stedit -p -w appliance-manual'
 alias appiter='appedit -l iteration'
