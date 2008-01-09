@@ -34,6 +34,7 @@ bindkey "^R" history-incremental-search-backward
 unsetopt print_exit_value
 unsetopt cdablevars
 
+setopt NOPROMPTCR
 setopt BASH_AUTO_LIST
 setopt NO_AUTO_MENU
 setopt NO_ALWAYS_LAST_PROMPT
