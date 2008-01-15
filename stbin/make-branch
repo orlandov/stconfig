@@ -2,12 +2,14 @@
 use strict;
 use warnings;
 use Socialtext::Resting::Getopt qw/get_rester/;
+use Term::ANSIColor;
 use lib "$ENV{HOME}/src/st/trunk/nlw/lib";
 use Socialtext::System qw/shell_run/;
 use Getopt::Long;
 
-my $socialtext_svk_mirror = "//mirror/socialtext";
-my $socialtext_svn_repo   = "https://repo.socialtext.net:8999/svn/socialtext";
+my $source_base = $ENV{ST_SRC_BASE} || "$ENV{HOME}/src/st";
+my $svk_mirror_base = '//mirror';
+my %repo_names = map { $_ => 1 } qw/socialtext control appliance report/;
 
 my $r = get_rester();
 
@@ -15,43 +17,69 @@ my %opts;
 GetOptions( \%opts,
     'no-rc',
     'from=s',
+    'force',
+    'repo=s',
 ) or usage();
 
-my $from = 'trunk';
-if ($opts{from} =~ m/^tags\/.+/) {
-    $from = $opts{from};
+$opts{repo} ||= 'socialtext'; # Default to avoid changing behaviour
+$opts{repo} = join(',', keys %repo_names) if $opts{repo} =~ m/^all$/i;
+my @repos = split ',', $opts{repo};
+for my $r (@repos) {
+    usage("$r is not a valid repository") unless $repo_names{$r};
+    $r =~ s/report/socialtext-reports/; # shorthand
 }
-elsif ($opts{from}) {
-    $from = "branches/$opts{from}";
+
+my $from = 'trunk';
+if ($opts{from}) {
+    if ($opts{from} =~ m/^tags\/.+/) {
+        $from = $opts{from};
+    }
+    else {
+        $from = "branches/$opts{from}";
+    }
 }
 
 my $new_branch = shift;
 usage() unless $new_branch;
 
-sync_mirror();
+for my $repo (@repos) {
+    color_print('magenta', "Creating $new_branch in $repo repository.\n");
+    sync_mirror($repo);
 
-# Check that the branch doesn't exist already
-my $branch_path = "${socialtext_svk_mirror}/branches/$new_branch";
-unless (qx(svk ls $branch_path 2>&1) =~ m/is not versioned/) {
-    die "It appears $branch_path already exists...\n";
+    # Check that the branch doesn't exist already
+    my $branch_path = "${svk_mirror_base}/$repo/branches/$new_branch";
+    unless (qx(svk ls $branch_path 2>&1) =~ m/is not versioned/) {
+        color_print('red bold', "It appears $branch_path already exists...\n");
+        next if $opts{force};
+        exit -1;
+    }
+
+    # use svn to actually make branch because some of our partners have
+    # to maintain separate mirrors, one for branches, one for tags
+    my $svn_repo = "$ENV{ST_SVN}/$repo";
+    my $msg = "make-branch $new_branch in $repo";
+    my $make_branch_command =
+      "svn cp -m '$msg' ${svn_repo}/$from ${svn_repo}/branches/$new_branch";
+    shell_run($make_branch_command);
+
+    # sync again
+    sync_mirror($repo);
+
+    (my $repo_local = $repo) =~ s/^socialtext-//;
+    if ($repo eq 'socialtext') {
+        my $checkout_dir = "$source_base/$new_branch";
+        shell_run("svk co $branch_path $checkout_dir");
+    }
+    else {
+        shell_run("svk up -s $source_base/$repo_local");
+    }
 }
-
-# use svn to actually make branch because some of our partners have
-# to maintain separate mirrors, one for branches, one for tags
-my $make_branch_command =
-  "svn cp ${socialtext_svn_repo}/$from ${socialtext_svn_repo}/branches/$new_branch";
-shell_run($make_branch_command);
-
-# sync again
-sync_mirror();
-# then checking it out,
-shell_run("svk co $branch_path ~/src/st/$new_branch");
 
 # then adding it to testrunner (maybe not required),
 # -- not supported yet --
 
 # writing a release contract,
-unless ($opts{'no-rc'}) {
+if (!$opts{'no-rc'} and create_rc_prompt()) {
     print "Creating a new release contract.\n";
     $r->server('https://www2.socialtext.net');
     $r->workspace('dev-tasks');
@@ -68,18 +96,54 @@ unless ($opts{'no-rc'}) {
 }
 
 shell_run("set-branch $new_branch");
+
+color_print('magenta', "Symlinking repos into $source_base/current ...\n");
+for my $repo (@repos) {
+    # make symlink to this branch from inside the current symlink
+    (my $repo_local = $repo) =~ s/^socialtext-//;
+    my $checkout_dir = "$source_base/$repo_local/branches/$new_branch";
+    if ($repo ne 'socialtext' and -d "$source_base/current") {
+        shell_run("ln -sf $checkout_dir $source_base/current/$repo");
+    }
+}
+
+color_print('bold green', "\nAll done creating branch $new_branch!\n");
 exit;
 
+sub create_rc_prompt {
+    local $| = 1;
+    color_print('green',
+        'Would you like to create a Release Contract page right now? ');
+    color_print('yellow', 'Y/n: ');
+    my $ans = <STDIN>;
+    return $ans =~ m/^y/i;
+}
+
 sub sync_mirror {
-    shell_run("svk sync $socialtext_svk_mirror");
+    my $repo = shift;
+    shell_run("svk sync $svk_mirror_base/$repo");
 }
 
 sub usage {
-    die <<EOT;
+    my $msg = shift || '';
+    my $valid_repos = join(',', keys %repo_names);
+    color_print('bold red', $msg);
+    color_print('yellow', <<EOT);
+
 $0 [rester options] [options] new-branch-name
 
 options:
   --no-rc   Don't create a release contract
   --from    Branch to copy from (Default: trunk)
+  --force   Continue even if branches already exist
+  --repo    The repositories to create the branch in:
+            $valid_repos OR all
 EOT
+    exit -1;
+}
+
+sub color_print {
+    my $color = shift;
+    my $msg = shift;
+    print color($color), $msg, color('reset');
 }
