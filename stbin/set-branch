@@ -37,6 +37,8 @@ if (-d $branch_dir) {
     unlink $curlink if -l $curlink;
     symlink $branch_dir, $curlink;
 }
+
+create_repo_symlinks();
 exit;
 
 sub checkout {
@@ -45,6 +47,17 @@ sub checkout {
     my $cmd = "scm checkout '$ENV{ST_CODE_REPO}/$branch_path'";
     print "Running $cmd\n";
     system($cmd);
+}
+
+sub create_repo_symlinks {
+    my @repos = split /\s+/, qx(st-repo-list);
+    for my $r (@repos) {
+        my $repo_branch = "$src_base/$r/branches/$branch";
+        my $st_path = "$src_base/$branch/$r";
+        next if -e $st_path;
+        symlink $repo_branch => $st_path
+            or die "Can't symlink $repo_branch => $st_path: $!";
+    }
 }
 
 sub num_to_name {

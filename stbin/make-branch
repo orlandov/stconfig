@@ -9,7 +9,7 @@ use Getopt::Long;
 
 my $source_base = $ENV{ST_SRC_BASE} || "$ENV{HOME}/src/st";
 my $svk_mirror_base = '//mirror';
-my %repo_names = map { $_ => 1 } qw/socialtext control appliance report/;
+my %repo_names = map { $_ => 1 } split /\s+/, qx(st-repo-list);
 
 my $r = get_rester();
 
