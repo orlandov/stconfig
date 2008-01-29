@@ -1,0 +1,7 @@
+# aliases
+alias dir='ls -l'
+alias cls='clear'
+
+# exports
+export EDITOR=vi
+export PAGER=less
