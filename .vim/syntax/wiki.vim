@@ -1,12 +1,12 @@
 " Vim syntax file
-" Copied from:
-" Language:     FlexWiki, http://www.flexwiki.com/
+" Language:     Socialtext Wiki, http://www.socialtext.net/
 " Maintainer:   George V. Reilly  <george@reilly.org>
-" Home:         http://www.georgevreilly.com/vim/flexwiki/
-" Other Home:   http://www.vim.org/scripts/script.php?script_id=1529
+" Home:         http://www.georgevreilly.com/vim/stwiki/
+" Other Home:   http://www.vim.org/scripts/script.php?script_id=2131
+" Other Home:   http://www.socialtext.net/open/index.cgi?editing_the_wiki_with_vim_or_editor
 " Author:       George V. Reilly
 " Filenames:    *.wiki
-" Last Change: Wed Apr 26 11:00 PM 2006 P
+" Last Change: Mon Jan 28 10:00 PM 2008 P
 " Version:      0.3
 
 " Quit if syntax file is already loaded
@@ -21,9 +21,18 @@ endif
 " A [bracketed wiki word]
 syntax match  stwikiWord          /\[[[:alnum:]\s]\+\]/
 
-" text: "this is a link (optional tooltip)":http://www.microsoft.com
+" text: "this is a link"<http://www.microsoft.com>  -or-
+" text: "this is a link" <http://www.microsoft.com> -or-
+" text: <http://www.microsoft.com>                  -or-
+" text: http://www.microsoft.com
 " TODO: check URL syntax against RFC
-syntax match stwikiLink           `\("[^"(]\+\((\([^)]\+\))\)\?":\)\?\(https\?\|ftp\|gopher\|telnet\|file\|notes\|ms-help\):\(\(\(//\)\|\(\\\\\)\)\+[A-Za-z0-9:#@%/;$~_?+-=.&\-\\\\]*\)`
+syntax match stwikiLink           `\("[^"]*"\s*\)\?<\?\(https\?\|ftp\|mailto\|file\|notes\|ms-help\):\(\(\(//\)\|\(\\\\\)\)*[A-Za-z0-9:#@%/;$~_?+-=.&\-\\\\]*\)>\?`
+
+" text: "Link text" [Page Link]  -or-  [Page Link]
+syntax match stwikiLink           `\("[^"]*"\s*\)\?\(\[[^]]\+\]\)`
+
+" text: {link: another workspace [Page Title] Section}
+syntax match stwikiLink           `\({[^}]\+}\)`
 
 " text: *strong* 
 syntax match stwikiBold           /\(^\|\W\)\zs\*\([^\* ].\{-}\)\*/
@@ -34,7 +43,7 @@ syntax match stwikiItalic         /\(^\|\W\)\zs_\([^ ].\{-}\)_/
 syntax match stwikiItalic         /''\([^'].\{-}\)''/
 
 " `code`
-syntax match stwikiCode     /`\([^`].\{-}\)`/
+syntax match stwikiCode           /`\([^`].\{-}\)`/
 
 "   text: -deleted text- 
 syntax match stwikiDelText        /\(^\|\s\+\)\zs-\([^ <a ]\|[^ <img ]\|[^ -].*\)-/
@@ -58,7 +67,7 @@ syntax match stwikiH6             /^\^\^\^\^\^\^.*$/
 " <hr>, horizontal rule
 syntax match stwikiHR             /^----.*$/
 
-" Tables. Each line starts and ends with '||'; each cell is separated by '||'
+" Tables. Each line starts and ends with '|'; each cell is separated by '|'
 syntax match stwikiTable          /|/
 
 " Bulleted list items start with one or tabs, followed by whitespace, then '*'
@@ -69,6 +78,8 @@ syntax match stwikiList           /^\(\*\|#\)\+.*$/   contains=@stwikiText
 " Treat all other lines that start with spaces as PRE-formatted text.
 syntax match stwikiPre            /^[ \t]\+[^ \t*1].*$/
 
+" Handle nested HTML inside .html blocks
+" syn cluster htmlPreProc add=@tt2_top_cluster
 
 " Link stWiki syntax items to colors
 hi def link stwikiH1                    Title
