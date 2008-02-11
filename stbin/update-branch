@@ -26,7 +26,7 @@ $opts{repo} = join(',', keys %repo_names) if $opts{repo} =~ m/^all$/i;
 my @repos = split ',', $opts{repo};
 for my $r (@repos) {
     usage("$r is not a valid repository") unless $repo_names{$r};
-    $r =~ s/report/socialtext-reports/; # shorthand
+    $r =~ s/^reports?$/socialtext-reports/; # shorthand
 }
 
 $opts{message} ||= "update-branch $branch from $from_branch";
@@ -57,5 +57,6 @@ $0 [rester options] [options] new-branch-name
 options:
   --pretend     don't really do the merge (svk smerge -C)
   --from        branch to update from (default: trunk)
+  --repo <repo> Specify the repo to use
 EOT
 }
