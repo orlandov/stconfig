@@ -27,9 +27,9 @@ imap <buffer> <C-s> $self->
 map <buffer> \if :!flip-if<cr>
 map <buffer> \gs :!grepsubs %<cr>
 
-" Commenting/decommenting:
-map <buffer> \# :s/^/#/g<cr>:noh<cr>
-map <buffer> \$ :s/^#//g<cr>:noh<cr>
+" " Commenting/decommenting:
+" map <buffer> \# :s/^/#/g<cr>:noh<cr>
+" map <buffer> \$ :s/^#//g<cr>:noh<cr>
 
 " Go to the test for this module, or module for this test.
 map <buffer> \t :e <C-r>=AlternateTestFile(expand('%'))<CR><CR>
