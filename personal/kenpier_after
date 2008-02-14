@@ -27,6 +27,10 @@ alias cdfonts='cd ~/src/st/current/nlw/share/fonts'
 alias cdwidgets='cd ~/src/st/current/nlw/share/images/widgets'
 alias cdpers='cd ~/personal'
 
+# ssskin aliases
+alias cdskin='cd ~/src/st/current/nlw/share/skin'
+alias cds2='cd ~/src/st/current/nlw/share/skin/s2'
+
 # alias to manage  a branch. Requires svnco.bash
 alias svnco="~/src/st/stconfig/personal/kenpier/svnco.bash $1 $2"
 alias svnup='cdcur; stopme; svn up; freshdev; pushd nlw/share/js-test; make; popd; pushd nlw/share/javascript; make clean; make; popd;'
