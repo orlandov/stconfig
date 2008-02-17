@@ -52,7 +52,7 @@ alias xwjsti='export selenium_browser=*iexplore; xwt "Test Case: JS Test"; unset
 
 # aliases to evaluate wiki tests
 alias grnok="grep  -C 6 'not ok' testcases.out"
-alias grtc="grep 'Loading\|COMPLETED' testcases.out"
+alias grtc="grep 'Loading test plan\|COMPLETED' testcases.out"
 alias ttc='tail -f testcases.out'
 
 export SVN_COMMAND='svn'
