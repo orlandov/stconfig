@@ -17,7 +17,6 @@ my $branch = shift;
 usage() unless $branch;
 
 my $from_branch = $opts{from} ? "branches/$opts{from}" : "trunk";
-my $from_dir = $opts{from} || 'trunk';
 my $smerge_opts  = $opts{pretend} ? '-C ' : '';
 
 my %repo_names = map { $_ => 1 } split /\s+/, qx(st-repo-list);
@@ -26,7 +25,6 @@ $opts{repo} = join(',', keys %repo_names) if $opts{repo} =~ m/^all$/i;
 my @repos = split ',', $opts{repo};
 for my $r (@repos) {
     usage("$r is not a valid repository") unless $repo_names{$r};
-    $r =~ s/^reports?$/socialtext-reports/; # shorthand
 }
 
 $opts{message} ||= "update-branch $branch from $from_branch";
@@ -35,15 +33,19 @@ $smerge_opts .= "-m '$opts{message}'";
 for my $repo (@repos) {
     my $svk_base = "//mirror/$repo";
     my $branch_path = "$svk_base/branches/$branch";
+    my $from_dir = $opts{from} || 'trunk';
+
+    my $r_branch = $branch;
+    $repo = 'reports' if $repo eq 'socialtext-reports';
     if ($repo ne 'socialtext') {
-        $from_dir = "$repo/$from_dir";
-        $branch = "$repo/branches/$branch";
+        $from_dir = "$repo/$from_branch";
+        $r_branch = "$repo/branches/$branch";
     }
     map { shell_run($_) }
         "svk up -s ~/src/st/$from_dir",
-        "svk up -s ~/src/st/$branch",
+        "svk up -s ~/src/st/$r_branch",
         "svk smerge $smerge_opts $svk_base/$from_branch $branch_path",
-        "svk up -s ~/src/st/$branch",
+        "svk up -s ~/src/st/$r_branch",
         "cowsay 'Branch $branch updated!'",
         ;
 }

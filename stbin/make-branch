@@ -26,7 +26,6 @@ $opts{repo} = join(',', keys %repo_names) if $opts{repo} =~ m/^all$/i;
 my @repos = split ',', $opts{repo};
 for my $r (@repos) {
     usage("$r is not a valid repository") unless $repo_names{$r};
-    $r =~ s/^reports?$/socialtext-reports/; # shorthand
 }
 
 my $from = 'trunk';
