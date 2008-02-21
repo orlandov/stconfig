@@ -75,7 +75,7 @@ sub usage {
     my @branches = map { sprintf('  %2d - %s', $i++, $_) } branch_list();
     
     (my $current = readlink("$src_base/current")) =~ s#.+/##;
-    @branches = map { s/^\s(\s+\d+\s\-\s\Q$current\E)/*$1/; $_ } @branches;
+    @branches = map { s/^\s(\s+\d+\s\-\s\Q$current\E)$/*$1/; $_ } @branches;
 
     local $LIST_SEPARATOR = "\n";
     die <<EOT;
