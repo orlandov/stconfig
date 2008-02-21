@@ -1,0 +1,38 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use lib "$ENV{ST_SRC_BASE}/current/nlw/lib";
+use Socialtext::System qw/shell_run/;
+use Term::ANSIColor;
+
+my $src_base = $ENV{ST_SRC_BASE} or die "\$ST_SRC_BASE is not defined!";
+my $current = readlink("$src_base/current");
+die "No current branch set!" unless $current;
+(my $branch_name = $current) =~ s#.+/##;
+
+my $SCM_up = $ENV{SVN_COMMAND} eq 'svk' ? 'svk up -s' : 'svn up';
+
+my @repos = split m/\s+/, qx(st-repo-list);
+for my $r (@repos) {
+    color_print('yellow', "Updating $branch_name - $r\n");
+    if ($r eq 'socialtext') {
+        shell_run("$SCM_up $src_base/$branch_name");
+    }
+    else {
+        my $branch_path = $branch_name eq 'trunk'
+                        ? "$src_base/$r/trunk"
+                        : "$src_base/$r/branches/$branch_name";
+        shell_run("$SCM_up $branch_path");
+    }
+}
+
+color_print('green', "All repositories of $branch_name updated!\n");
+exit;
+
+
+
+sub color_print {
+    my $color = shift;
+    my $msg = shift;
+    print color($color), $msg, color('reset');
+}
