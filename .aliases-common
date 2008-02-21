@@ -25,6 +25,8 @@ alias agi='sudo apt-get update; sudo apt-get install'
 alias acs='apt-cache search'
 alias acsh='apt-cache show'
 
+alias rb='refresh-branch'
+
 for cmd in `find $HOME/stbin/ -name 'svn*'`; do
     svn_cmd=`basename $cmd`
     svk_cmd=`echo $svn_cmd | sed s/svn/svk/`
