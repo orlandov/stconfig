@@ -79,12 +79,8 @@ alias tail=multitail
 # stedit aliases
 alias dgedit='stedit -p -w dev-guide'
 alias dtedit='stedit -w dev-tasks'
-alias dtrad='corprad -w dev-tasks'
 alias rtedit='stedit -w regression-test'
-alias rtrad='corprad -w regression-test'
 alias stdedit='stedit -p -w stdev'
-alias iterad='dtrad -l iteration'
-alias projrad='dtrad -l project'
 
 # Appliance project aliases
 alias apm='wikrad -w appliance-manual "Appliance Project Plan"'
@@ -95,12 +91,16 @@ alias appiter='appedit -l iteration'
 alias apmiter='apmedit -l iteration'
 
 # wikrad aliases
-alias tigrad='wikrad -w tigger'
-alias rqrad='w2rad -w dev-tasks "Release Queue"'
+alias rtrad='w2rad -w regression-test'
+alias dtrad='w2rad -w dev-tasks'
+alias iterad='dtrad -l iteration'
+alias projrad='dtrad -l project'
+alias rqrad='dtrad "Release Queue"'
 alias convrad='w2rad -w conversation'
 alias stprad='w2rad -w socialpedia'
+alias tigrad='wikrad -w tigger'
 alias stdrad='wikrad -w stdev'
-alias wefocus='stedit -p -w stdev "Western Electric Focus"'
+alias staxrad='w2rad -w stax'
 
 provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
