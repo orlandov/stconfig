@@ -64,13 +64,12 @@ for my $repo (@repos) {
     # sync again
     sync_mirror($repo);
 
-    (my $repo_local = $repo) =~ s/^socialtext-//;
     if ($repo eq 'socialtext') {
         my $checkout_dir = "$source_base/$new_branch";
         shell_run("svk co $branch_path $checkout_dir");
     }
     else {
-        shell_run("svk up -s $source_base/$repo_local");
+        shell_run("svk up -s $source_base/$repo");
     }
 }
 
