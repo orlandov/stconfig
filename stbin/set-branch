@@ -57,9 +57,9 @@ sub create_repo_symlinks {
             ? "$src_base/$r/trunk"
             : "$src_base/$r/branches/$branch";
         my $st_path = "$src_base/$branch/$r";
-        next if -e $st_path;
+        unlink $st_path if -l $st_path;
         symlink $repo_branch => $st_path
-            or warn "Can't symlink $repo_branch => $st_path: $!\n";
+            or warn "Can't create repo symlink for $r - is it checked out?\n";
     }
 }
 
