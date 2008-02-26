@@ -78,5 +78,6 @@ fi \
     s/\( *\)\(FOREIGN KEY (.*)\) \(REFERENCES \)/\1\2\
 \1\3/
 ' \
+| grep -v "CREATE SCHEMA" \
 | uniq	# eliminate duplicate blank lines
 exit 0
