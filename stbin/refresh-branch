@@ -22,7 +22,12 @@ for my $r (@repos) {
         my $branch_path = $branch_name eq 'trunk'
                         ? "$src_base/$r/trunk"
                         : "$src_base/$r/branches/$branch_name";
-        shell_run("$SCM_up $branch_path");
+        if (-d $branch_path) {
+            shell_run("$SCM_up $branch_path");
+        }
+        else {
+            color_print('yellow', "Skipping $r")
+        }
     }
 }
 
