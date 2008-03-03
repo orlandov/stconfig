@@ -1,0 +1,85 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use lib "$ENV{ST_SRC_BASE}/current/nlw/lib";
+use Socialtext::System qw/shell_run/;
+use Socialtext::File qw(get_contents);
+use Term::ANSIColor;
+use File::Temp 'tempfile';
+use Data::Dump 'dump';
+
+my $src_base = $ENV{ST_SRC_BASE} or die "\$ST_SRC_BASE is not defined!";
+my $current = readlink("$src_base/current");
+die "No current branch set!" unless $current;
+(my $branch_name = $current) =~ s#.+/##;
+
+my $SCM = $ENV{SVN_COMMAND};
+
+my @repos = split m/\s+/, qx(st-repo-list);
+my @paths;
+for my $r (@repos) {
+    my $path = $r eq 'socialtext' ?
+        "$src_base/$branch_name" :
+            $branch_name eq 'trunk'
+                ? "$src_base/$r/trunk"
+                : "$src_base/$r/branches/$branch_name";
+    if (-d $path) {
+        push @paths, $path;
+    }
+    else {
+        color_print('yellow', "Skipping $r\n")
+    }
+}
+
+my @files;
+for my $path (@paths) {
+    color_print('yellow', "Finding files in $path\n");
+    push @files, grep { /^[AM]/ } qx($SCM st $path);
+}
+
+my $files = join('', @files);
+
+my ($fh, $filename) = tempfile;
+print $fh <<EOT;
+
+=== Targets to commit (you may delete items from it) ===
+$files
+EOT
+close $fh;
+
+my $mod = (stat $filename)[9];
+
+system "vim $filename";
+
+if ($mod == (stat $filename)[9]) {
+    color_print('red', "ABORTED\n");
+    exit;
+}
+
+my $content = get_contents($filename);
+unlink $filename;
+
+my ($msg, $submit_files) = $content =~
+    /^(.*)\n
+     ===.Targets.to.commit.\(you.may.delete.items.from.it\).===\n
+     (.*)
+    /xsm;
+
+$msg =~ s/'//g;
+
+my @submit_files = grep { s/^[AM]\s*// } split("\n", $submit_files);
+
+for my $path (@paths) {
+    color_print('yellow', "Submiting files in $path");
+    my $cmd = join " ", "$SCM ci -m '$msg'", grep { /^$path/ } @submit_files;
+    system $cmd;
+}
+
+color_print('green', "All repositories of $branch_name updated!\n");
+exit;
+
+sub color_print {
+    my $color = shift;
+    my $msg = shift;
+    print color($color), $msg, color('reset');
+}
