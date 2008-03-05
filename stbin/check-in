@@ -34,7 +34,7 @@ for my $r (@repos) {
 my @files;
 for my $path (@paths) {
     color_print('yellow', "Finding files in $path\n");
-    push @files, grep { /^[AM]/ } qx($SCM st $path);
+    push @files, grep { /^[AMD]/ } qx($SCM st $path);
 }
 
 my $files = join('', @files);
@@ -67,7 +67,7 @@ my ($msg, $submit_files) = $content =~
 
 $msg =~ s/'//g;
 
-my @submit_files = grep { s/^[AM]\s*// } split("\n", $submit_files);
+my @submit_files = grep { s/^[AMD]\s*// } split("\n", $submit_files);
 
 for my $path (@paths) {
     color_print('yellow', "Submiting files in $path");
