@@ -60,6 +60,11 @@ CDcur()   { scmcd `abs_path $ST_CURRENT`; }
 cdcfg()   { cd `abs_path $ST_CURRENT/../stconfig`; }
 CDcfg()   { scmcd `abs_path $ST_CURRENT/../stconfig` && ./stconfig-setup; }
 cdcrp()   { cd `abs_path $ST_CURRENT/../clients/rest/perl`; }
+cdrpt()   { cd `abs_path $ST_CURRENT/socialtext-reports`; }
+cdapp()   { cd `abs_path $ST_CURRENT/appliance`; }
+cdcon()   { cd `abs_path $ST_CURRENT/appliance/libsocialtext-appliance-perl`; }
+cdctrl()  { cd `abs_path $ST_CURRENT/control`; }
+cdskin()  { cd `abs_path $ST_CURRENT/socialtext-skins`; }
 
 MAC_FILE="~/.nlw/etc/Socialtext/MAC.secret"
 alias muckmac="rm $MAC_FILE; echo bemucked > $MAC_FILE"
