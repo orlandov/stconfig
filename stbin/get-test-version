@@ -1,0 +1,34 @@
+#!/bin/sh
+set -e
+
+TAG=$1
+if [  -z "$TAG" ]; then
+    echo "Usage: $0  TAG"
+    exit 1
+fi
+
+# these are the repos that are tagged and need to be checked out
+
+for REPO in  {socialtext-skins,socialtext-reports,control,appliance} ;
+
+do
+    if cd ~/src/st/$REPO/tags >&/dev/null; then
+        if $SVN_COMMAND -q  co $ST_SVN/$REPO/tags/test-$TAG >/dev/null; then
+            echo "Checked out $REPO/tags/test-$TAG" to `pwd`
+        else
+            echo "Error while checking out" $ST_SVN/$REPO/tags/test-$TAG
+        fi
+    else
+        echo "Could not find directory" ~/src/st/$REPO/tags
+    fi
+done    
+
+
+# set branch to the test tag
+
+if $(set-branch tags/test-$TAG) >/dev/null; then
+    echo "Set branch to" test-$TAG
+else
+    echo "Could not set branch to" test-$TAG
+fi
+
