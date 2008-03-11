@@ -5,7 +5,7 @@ USAGE="usage: source setup-selenium  PORT [BROWSER [PLATFORM]]"
 BROWSER="*chrome"
 PORT="4444"
 HOST="localhost"
-PLATFORM='linux'
+PLATFORM="linux"
 DEBUGPRINT="1"
 
 if [ !  $1  ]
