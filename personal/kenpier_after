@@ -9,6 +9,7 @@ alias restartme='./nlw/dev-bin/nlwctl restart'
 alias svnstatus='svn status --show-updates'
 alias ceqread='./nlw/bin/ceq-read'
 alias ceqstat='./nlw/bin/ceq-stat'
+alias ceqrm='./nlw/bin/ceq-rm'
 
 # aliases for an installed NLW
 alias sww='sudo -u www-data '
@@ -18,22 +19,21 @@ alias swa='sudo -u www-data st-admin '
 # convenience aliases
 alias findceq='ps x  | grep ceqlotron | grep -v grep'
 alias findwikis='ls ~/.nlw/root/data/'
-alias cdcurr='cd ~/src/st/current'
 alias cdroot='cd ~/.nlw/root'
 alias cddata='cd ~/.nlw/root/data'
 alias cdst='cd ~/.nlw/etc/socialtext'
-alias cdjs='cd ~/src/st/current/nlw/share/javascript'
 alias cdfonts='cd ~/src/st/current/nlw/share/fonts'
-alias cdwidgets='cd ~/src/st/current/nlw/share/images/widgets'
+alias cdwidgets='cd ~/src/st/current/nlw/share/widgets'
 alias cdpers='cd ~/personal'
 
 # ssskin aliases
 alias cdskin='cd ~/src/st/current/nlw/share/skin'
 alias cds2='cd ~/src/st/current/nlw/share/skin/s2'
+alias cdjs='cd ~/src/st/current/nlw/share/skin/s2/javascript'
 
 # alias to manage  a branch. Requires svnco.bash
 alias svnco="~/src/st/stconfig/personal/kenpier/svnco.bash $1 $2"
-alias svnup='cdcur; stopme; svn up; freshdev; pushd nlw/share/js-test; make; popd; pushd nlw/share/javascript; make clean; make; popd;'
+alias svnall='cdcur; stopme; rb; freshdev; cdcur'
 
 # alias to run Wiki Tests
 # # requires stconfig dev setup and run-wiki-tests.bash
@@ -42,8 +42,8 @@ alias rwt="$RWT $1 $2"
 alias rwta="$RWT 'All Testcases'" 
 alias rwti="$RWT 'IE Testcases'"
 alias rwto="$RWT 'OSR Testcases'"
-SELSET=~/src/st/stconfig/personal/kenpier/setup-selenium
-alias setsel="source $SELSET"
+SETSEL=~/src/st/stconfig/personal/kenpier/setup-selenium
+alias setsel="source $SETSEL"
 
 # execute wiki test
 alias xwt="run-wiki-tests --timeout 60000 --plan-page "
@@ -79,6 +79,7 @@ alias pssel='pstree -aAhlnp selenium'
 alias pschris='pstree -aAhlnp cmcmahon'
 alias psrick='pstree -aAhlnp rick'
 alias psshahed='pstree -aAhlnp shahed'
+alias psmatt='pstree -aAhlnp mheusser'
 
 # functions
 branches() {  /bin/ls /home/$1/src/st ; }
