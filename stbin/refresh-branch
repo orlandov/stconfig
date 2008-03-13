@@ -5,10 +5,13 @@ use lib "$ENV{ST_SRC_BASE}/current/nlw/lib";
 use Socialtext::System qw/shell_run/;
 use Term::ANSIColor;
 
+my $what_to_refresh = shift;
+
 my $src_base = $ENV{ST_SRC_BASE} or die "\$ST_SRC_BASE is not defined!";
 my $current = readlink("$src_base/current");
 die "No current branch set!" unless $current;
 (my $branch_name = $current) =~ s#.+/##;
+$branch_name = $what_to_refresh if $what_to_refresh;
 
 my $SCM_up = $ENV{SVN_COMMAND} eq 'svk' ? 'svk up -s' : 'svn up';
 
