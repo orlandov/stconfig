@@ -41,12 +41,15 @@ if ($opts{from}) {
 my $new_branch = shift;
 usage() unless $new_branch;
 
+my $svn_prefix = 'branches/';
+$svn_prefix = 'tags/' if $new_branch =~ s#^tags/##;
+
 for my $repo (@repos) {
     color_print('magenta', "Creating $new_branch in $repo repository.\n");
     sync_mirror($repo);
 
     # Check that the branch doesn't exist already
-    my $branch_path = "${svk_mirror_base}/$repo/branches/$new_branch";
+    my $branch_path = "${svk_mirror_base}/$repo/$svn_prefix$new_branch";
     unless (qx(svk ls $branch_path 2>&1) =~ m/is not versioned/) {
         color_print('red bold', "It appears $branch_path already exists...\n");
         next if $opts{force};
@@ -58,7 +61,7 @@ for my $repo (@repos) {
     my $svn_repo = "$ENV{ST_SVN}/$repo";
     my $msg = "make-branch $new_branch in $repo";
     my $make_branch_command =
-      "svn cp -m '$msg' ${svn_repo}/$from ${svn_repo}/branches/$new_branch";
+      "svn cp -m '$msg' ${svn_repo}/$from ${svn_repo}/$svn_prefix$new_branch";
     shell_run($make_branch_command);
 
     # sync again
@@ -99,7 +102,7 @@ color_print('magenta', "Symlinking repos into $source_base/current ...\n");
 for my $repo (@repos) {
     # make symlink to this branch from inside the current symlink
     (my $repo_local = $repo) =~ s/^socialtext-//;
-    my $checkout_dir = "$source_base/$repo_local/branches/$new_branch";
+    my $checkout_dir = "$source_base/$repo_local/$svn_prefix$new_branch";
     if ($repo ne 'socialtext' and -d "$source_base/current") {
         shell_run("ln -sf $checkout_dir $source_base/current/$repo");
     }
