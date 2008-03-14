@@ -36,7 +36,6 @@ for my $repo (@repos) {
     my $from_dir = $opts{from} || 'trunk';
 
     my $r_branch = $branch;
-    $repo = 'reports' if $repo eq 'socialtext-reports';
     if ($repo ne 'socialtext') {
         $from_dir = "$repo/$from_branch";
         $r_branch = "$repo/branches/$branch";
@@ -55,6 +54,10 @@ exit;
 sub usage {
     die <<EOT;
 $0 [rester options] [options] new-branch-name
+
+Update a branch from a base branch using SVK.
+
+Requires you have SVK set up!
 
 options:
   --pretend     don't really do the merge (svk smerge -C)

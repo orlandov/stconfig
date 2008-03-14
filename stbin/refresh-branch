@@ -4,6 +4,12 @@ use warnings;
 use lib "$ENV{ST_SRC_BASE}/current/nlw/lib";
 use Socialtext::System qw/shell_run/;
 use Term::ANSIColor;
+use Getopt::Long;
+
+my %opts;
+GetOptions( \%opts,
+    'quiet',
+) or usage();
 
 my $what_to_refresh = shift;
 
@@ -19,17 +25,17 @@ my @repos = split m/\s+/, qx(st-repo-list);
 for my $r (@repos) {
     color_print('yellow', "Updating $branch_name - $r\n");
     if ($r eq 'socialtext') {
-        shell_run("$SCM_up $src_base/$branch_name");
+        run("$SCM_up $src_base/$branch_name");
     }
     else {
         my $branch_path = $branch_name eq 'trunk'
                         ? "$src_base/$r/trunk"
                         : "$src_base/$r/branches/$branch_name";
         if (-d $branch_path) {
-            shell_run("$SCM_up $branch_path");
+            run("$SCM_up $branch_path");
         }
         else {
-            color_print('yellow', "Skipping $r")
+            color_print('yellow', "Skipping $r\n")
         }
     }
 }
@@ -37,6 +43,23 @@ for my $r (@repos) {
 color_print('green', "All repositories of $branch_name updated!\n");
 exit;
 
+sub run {
+    my $cmd = shift;
+    local $Socialtext::System::SILENT_RUN = 0;
+    if ($opts{quiet}) {
+        $cmd = "$cmd > /dev/null";
+        $Socialtext::System::SILENT_RUN = 1;
+    }
+    shell_run($cmd);
+}
+
+sub usage {
+    die <<EOT;
+USAGE: $0 [--quiet] [branch]
+
+Update the current (or specified branch) across all repositories.
+EOT
+}
 
 
 sub color_print {
