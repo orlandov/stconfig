@@ -1,13 +1,15 @@
+#!/bin/bash
 
 # aliases when CWD is the top of a checkout e.g. trunk or usability-dev
-alias sta='./nlw/bin/st-admin '
-alias freshdev='./nlw/dev-bin/nlwctl stop; rm -rf ~/.nlw; ./nlw/dev-bin/fresh-dev-env-from-scratch'
-alias stopme='./nlw/dev-bin/nlwctl stop'
-alias startme='./nlw/dev-bin/nlwctl start'
-alias restartme='./nlw/dev-bin/nlwctl restart'
+alias sta='$ST_SRC_BASE/current/nlw/bin/st-admin '
+alias freshdev='$ST_SRC_BASE/current/nlw/dev-bin/nlwctl stop; rm -rf ~/.nlw; ./nlw/dev-bin/fresh-dev-env-from-scratch'
+alias stopme='$ST_SRC_BASE/current/nlw/dev-bin/nlwctl stop'
+alias startme='$ST_SRC_BASE/current/nlw/dev-bin/nlwctl start'
+alias restartme='$ST_SRC_BASE/current/nlw/dev-bin/nlwctl restart'
 alias svnstatus='svn status --show-updates'
-alias ceqread='./nlw/bin/ceq-read'
-alias ceqstat='./nlw/bin/ceq-stat'
+alias ceqread='$ST_SRC_BASE/current/nlw/bin/ceq-read'
+alias ceqstat='$ST_SRC_BASE/current/nlw/bin/ceq-stat'
+alias ceqrm='$ST_SRC_BASE/current/nlw/bin/ceq-rm'
 
 # aliases for an installed NLW
 alias sww='sudo -u www-data '
@@ -17,35 +19,39 @@ alias swa='sudo -u www-data st-admin '
 # convenience aliases
 alias findceq='ps x  | grep ceqlotron | grep -v grep'
 alias findwikis='ls ~/.nlw/root/data/'
-alias cdcurr='cd ~/src/st/current'
 alias cdroot='cd ~/.nlw/root'
 alias cddata='cd ~/.nlw/root/data'
-alias cdst='cd ~/.nlw/etc/socialtext'
-alias cdjs='cd ~/src/st/current/nlw/share/javascript'
-alias cdfonts='cd ~/src/st/current/nlw/share/fonts'
-alias cdwidgets='cd ~/src/st/current/nlw/share/images/widgets'
+alias cdst='cd $ST_SRC_BASE'
+alias cdconf='cd ~/.nlw/etc/socialtext'
+alias cdfonts='cd $ST_SRC_BASE/current/nlw/share/fonts'
+alias cdwidgets='cd $ST_SRC_BASE/current/nlw/share/widgets'
+alias cdpers='cd ~/personal'
 
+# ssskin aliases
+alias cdskin='cd $ST_SRC_BASE/current/nlw/share/skin'
+alias cds2='cd $ST_SRC_BASE/current/nlw/share/skin/s2'
+alias cdjs='cd $ST_SRC_BASE/current/nlw/share/skin/s2/javascript'
 
-# alias to manage  a branch. Requires svnco.bash
-alias svnco="~/src/st/stconfig/personal/kenpier/svnco.bash $1 $2"
-alias svnup='cdcur; stopme; svn up; freshdev; pushd nlw/share/js-test; make; popd; pushd nlw/share/javascript; make clean; make; popd;'
+alias svnall='cdcur; stopme; rb; freshdev; cdcur'
 
 # alias to run Wiki Tests
 # # requires stconfig dev setup and run-wiki-tests.bash
-RWT=~/src/st/stconfig/personal/kenpier/run-wiki-tests.bash
+RWT=$ST_SRC_BASE/stconfig/personal/qa/run-wiki-tests.bash
 alias rwt="$RWT $1 $2"
 alias rwta="$RWT 'All Testcases'" 
 alias rwti="$RWT 'IE Testcases'"
 alias rwto="$RWT 'OSR Testcases'"
+SETSEL=$ST_SRC_BASE/stconfig/personal/qa/setup-selenium
+alias setsel="source $SETSEL"
 
 # execute wiki test
-alias xwt="run-wiki-tests --timeout 30000 --plan-page "
+alias xwt="run-wiki-tests --timeout 60000 --plan-page "
 alias xwjst='export selenium_browser=*firefox; xwt "Test Case: JS Test"; unset selenium_browser;'
 alias xwjsti='export selenium_browser=*iexplore; xwt "Test Case: JS Test"; unset selenium_browser;'
 
 # aliases to evaluate wiki tests
 alias grnok="grep  -C 6 'not ok' testcases.out"
-alias grtc="grep 'Loading\|COMPLETED' testcases.out"
+alias grtc="grep 'Loading test plan\|COMPLETED' testcases.out"
 alias ttc='tail -f testcases.out'
 
 export SVN_COMMAND='svn'
@@ -71,6 +77,8 @@ alias pslyssa='pstree -aAhlnp lyssa'
 alias pssel='pstree -aAhlnp selenium'
 alias pschris='pstree -aAhlnp cmcmahon'
 alias psrick='pstree -aAhlnp rick'
+alias psshahed='pstree -aAhlnp shahed'
+alias psmatt='pstree -aAhlnp mheusser'
 
 # functions
 branches() {  /bin/ls /home/$1/src/st ; }
@@ -80,7 +88,3 @@ trunkdiff () { svn diff https://repo.socialtext.net:8999/svn/socialtext/trunk ht
 alias brqa='branches qa*'
 alias ffx='ps auxww | grep firefox'
 alias fsel='ps auxww | grep selenium'
-
-# aliases for staging
-alias srwto='sudo -u www-data /home/qa/stbin/run-wiki-tests --test-server http://teststaging.socialtext.net --timeout 60000 --plan-page "OSR Testcases" &> testcases.out &'
-alias srwt='sudo -u www-data /home/qa/stbin/run-wiki-tests --test-server http://teststaging.socialtext.net --timeout 60000 --plan-page '
