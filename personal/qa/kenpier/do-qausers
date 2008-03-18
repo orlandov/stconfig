@@ -1,2 +1,0 @@
-for i in `cat qausers` ; do sudo -u $i  svn update /home/$i/src/st/stconfig ; done ;
-
