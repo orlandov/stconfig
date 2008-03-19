@@ -2,7 +2,7 @@
 
 BRANCH=""
 BRANCH_PATH=""
-PLAN_WORKSPACE="feb22-test"
+PLAN_WORKSPACE="regression-test"
 
 if [ $2!="" ]
 then
