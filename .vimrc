@@ -17,6 +17,7 @@ set splitright
 set termencoding=utf-8
 set encoding=utf-8
 set fileencoding=utf-8
+set pastetoggle=<F13>
 
 " ============================================
 " lookupfile.vim
