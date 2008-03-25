@@ -1,10 +1,16 @@
 #!/bin/bash -e
 
+if [ "$1" == "" ]
+then
+    echo "Usage: $0 PLAN_PAGE [BRANCH [1]] means run plan page, update branch BRANCH, fdefs if 1"
+    exit
+fi
+
 BRANCH=""
 BRANCH_PATH=""
 PLAN_WORKSPACE="regression-test"
 
-if [ $2!="" ]
+if [ "$2" != "" ]
 then
     BRANCH="$2"
     BRANCH_PATH="branches/$2"
@@ -15,12 +21,6 @@ then
     PLAN_WORKSPACE="$SELENIUM_PLAN_WORKSPACE"
 fi
 
-echo Removing all ceqlotron tasks to stop unnecessary indexing
-$ST_SRC_BASE/current/nlw/bin/ceq-rm /.+/
-
-echo Retrieving test data
-$ST_SRC_BASE/current/nlw/dev-bin/create-test-data-workspace
-
 if [ "$BRANCH" != "" ]
 then
     # check out control
@@ -28,18 +28,10 @@ then
     cd $ST_SRC_BASE/control/
     svn co https://repo.socialtext.net:8999/svn/control/$BRANCH_PATH $BRANCH_PATH
     
-    # link it in the right place in the working copy
-    cd $ST_SRC_BASE/current/nlw
-    $ST_SRC_BASE/current/nlw/dev-bin/link-control-panel $BRANCH
-    
     # check out console
     echo Importing Console from $BRANCH
     cd $ST_SRC_BASE/appliance/
     svn co https://repo.socialtext.net:8999/svn/appliance/$BRANCH_PATH $BRANCH_PATH
-    
-    # link it in the right place in the working copy
-    cd $ST_SRC_BASE/current/nlw
-    $ST_SRC_BASE/current/nlw/dev-bin/link-console  $BRANCH
     
     # check out reports
     echo Importing Reports from $BRANCH
@@ -55,14 +47,27 @@ then
     cd $ST_SRC_BASE/socialtext-skins/
     svn co https://repo.socialtext.net:8999/svn/socialtext-skins/$BRANCH_PATH $BRANCH_PATH
     
-    # link it in the right place in the working copy
-    cd $ST_SRC_BASE/current/nlw
-    $ST_SRC_BASE/current/nlw/dev-bin/create-skinlink $BRANCH
-    
 fi
+
+if [ ! -e ~/.nlw  ] || [ "$3"  != "" ]
+then
+    $ST_SRC_BASE/current/nlw/dev-bin/fresh-dev-env-from-scratch
+fi
+
+cd $ST_SRC_BASE/current/nlw/
+$ST_SRC_BASE/current/nlw/dev-bin/link-control-panel $BRANCH
+$ST_SRC_BASE/current/nlw/dev-bin/link-console  $BRANCH
+$ST_SRC_BASE/current/nlw/dev-bin/create-skinlink $BRANCH
+
+echo Removing all ceqlotron tasks to stop unnecessary indexing
+$ST_SRC_BASE/current/nlw/bin/ceq-rm /.+/
+
+echo Retrieving test data
+$ST_SRC_BASE/current/nlw/dev-bin/create-test-data-workspace
 
 echo Restarting apache server for control to take effect
 $ST_SRC_BASE/current/nlw/dev-bin/nlwctl  start
+
 
 cd $ST_SRC_BASE/current/
 echo plan-page is $1
