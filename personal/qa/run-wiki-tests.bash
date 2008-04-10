@@ -80,5 +80,5 @@ cd $ST_SRC_BASE/current/
 echo plan-page is $1
 echo plan-workspace is $PLAN_WORKSPACE
 
-$ST_SRC_BASE/stconfig/stbin/run-wiki-tests --plan-server "$PLAN_SERVER"  --plan-workspace "$PLAN_WORKSPACE"  --timeout 60000 --plan-page "$1" >& testcases.out&
+$ST_SRC_BASE/stconfig/stbin/run-wiki-tests --no-maximize --plan-server "$PLAN_SERVER" --plan-workspace "$PLAN_WORKSPACE" --timeout 60000 --plan-page "$1" >& testcases.out&
 echo RUNNING ... tail testcases.out to monitor progress
