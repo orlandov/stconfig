@@ -8,7 +8,9 @@ fi
 
 BRANCH=""
 BRANCH_PATH=""
+
 PLAN_WORKSPACE="regression-test"
+PLAN_SERVER="http://www2.socialtext.net"
 
 if [ "$2" != "" ]
 then
@@ -19,6 +21,11 @@ fi
 if [ "$SELENIUM_PLAN_WORKSPACE" != "" ]
 then
     PLAN_WORKSPACE="$SELENIUM_PLAN_WORKSPACE"
+fi
+
+if [ "$SELENIUM_PLAN_SERVER" != "" ]
+then
+    PLAN_SERVER="$SELENIUM_PLAN_SERVER"
 fi
 
 if [ "$BRANCH" != "" ]
@@ -73,5 +80,5 @@ cd $ST_SRC_BASE/current/
 echo plan-page is $1
 echo plan-workspace is $PLAN_WORKSPACE
 
-~/stbin/run-wiki-tests --plan-workspace "$PLAN_WORKSPACE"  --timeout 60000 --plan-page "$1" >& testcases.out&
+$ST_SRC_BASE/stconfig/stbin/run-wiki-tests --plan-server "$PLAN_SERVER"  --plan-workspace "$PLAN_WORKSPACE"  --timeout 60000 --plan-page "$1" >& testcases.out&
 echo RUNNING ... tail testcases.out to monitor progress
