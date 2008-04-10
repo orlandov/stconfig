@@ -21,7 +21,7 @@ if [ $2 ]
         BROWSER=*"$2"
 fi
                 
-if [ $2 ]
+if [ $3 ]
     then
         PLATFORM="$3"
 fi
