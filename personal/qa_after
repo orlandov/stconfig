@@ -41,6 +41,11 @@ alias rwt="$RWT $1 $2"
 alias rwta="$RWT 'All Testcases'" 
 alias rwti="$RWT 'IE Testcases'"
 alias rwto="$RWT 'OSR Testcases'"
+
+LWT=$ST_SRC_BASE/stconfig/personal/qa/run-local-wiki-tests.bash
+alias lwt="$LWT "
+
+
 SETSEL=$ST_SRC_BASE/stconfig/personal/qa/setup-selenium
 alias setsel="source $SETSEL"
 
