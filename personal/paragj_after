@@ -1,16 +1,16 @@
 alias ssh='ssh -A'
 set -o vi
 
-export TD=lukecloss@jervis.textdrive.com
+#export TD=paragcloss@jervis.textdrive.com
 
 function corpblog {
-    convrad -l "luke's blog"
+    convrad -l "parag's blog"
 }
 function blog {
-    wikrad -l "Luke's Dev Log"
+    wikrad -l "Parag's Dev Log"
 }
 
-alias lukerad='wikrad -w lukec'
+alias paragrad='wikrad -w paragj'
 
 # git aliases
 
