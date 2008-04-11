@@ -1,9 +1,15 @@
 #!/bin/bash -e
 
+if [ "$1" == "" ] ; then
+    echo Usage: run-local-wiki-tests.bash PLAN_PAGE NO_MAXIMMIZE
+    exit
+fi
+
 PORT=`perl -e 'print $> + 20000'`
 PLAN_SERVER=http://`hostname`:$PORT
 PLAN_WORKSPACE="wikitests"
-NOMAXIMIZE=""
+NOMAXIMIZE="--no-maximize"
+WITH_NOMAXIMIZE=" with --no-maximize"
 
 USERNAME="wikitester@ken.socialtext.net"
 USEREMAIL=$USERNAME
@@ -20,13 +26,14 @@ if  $ST_CURRENT/nlw/bin/st-admin give-accounts-admin  --e $USERNAME  >/dev/null 
      echo "rave accounts admin"
 fi
 
-if [ "$2" == "" ] ; then
-    NOMAXIMIZE="--no-maximize"
+if [ $2 ] ; then
+    NOMAXIMIZE=""
+    WITH_NOMAXIMIZE=""
 fi
 
 
 echo
-echo running $1 from $PLAN_SERVER/$PLAN_WORKSPACE with $NOMAXIMIZE
+echo running $1 from $PLAN_SERVER/$PLAN_WORKSPACE $WITH_NOMAXIMIZE
 echo
 $ST_SRC_BASE/stconfig/stbin/run-wiki-tests $NOMAXIMIZE  --test-username $USERNAME --test-email $USEREMAIL --plan-server "$PLAN_SERVER"  --plan-workspace "$PLAN_WORKSPACE"  --timeout 60000 --plan-page "$1"
 
