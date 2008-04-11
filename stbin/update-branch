@@ -4,6 +4,7 @@ use warnings;
 use lib "$ENV{HOME}/src/st/current/nlw/lib";
 use Socialtext::System qw/shell_run/;
 use Getopt::Long;
+use Socialtext::BuildUtils qw/display/;
 
 my %opts;
 GetOptions( \%opts,
@@ -30,6 +31,7 @@ for my $r (@repos) {
 $opts{message} ||= "update-branch $branch from $from_branch";
 $smerge_opts .= "-m '$opts{message}'";
 
+cowsay("Updating $branch from $from_branch");
 for my $repo (@repos) {
     my $svk_base = "//mirror/$repo";
     my $branch_path = "$svk_base/branches/$branch";
@@ -40,14 +42,17 @@ for my $repo (@repos) {
         $from_dir = "$repo/$from_branch";
         $r_branch = "$repo/branches/$branch";
     }
+
+    cowsay("Updating $repo repository.", 'magenta');
     map { shell_run($_) }
         "svk up -s ~/src/st/$from_dir",
         "svk up -s ~/src/st/$r_branch",
         "svk smerge $smerge_opts $svk_base/$from_branch $branch_path",
         "svk up -s ~/src/st/$r_branch",
-        "cowsay 'Branch $branch updated!'",
         ;
+    my $cowsay = qx(cowsay 'Branch $branch updated!');
 }
+cowsay("All done!");
 
 exit;
 
@@ -64,4 +69,11 @@ options:
   --from        branch to update from (default: trunk)
   --repo <repo> Specify the repo to use
 EOT
+}
+
+sub cowsay {
+    my $msg = shift;
+    my $colour = shift || 'green';
+    my $cowsay = qx(cowsay '$msg');
+    display($cowsay, $colour);
 }
