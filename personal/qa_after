@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # aliases when CWD is the top of a checkout e.g. trunk or usability-dev
-alias sta='$ST_SRC_BASE/current/nlw/bin/st-admin '
-alias freshdev='$ST_SRC_BASE/current/nlw/dev-bin/nlwctl stop; rm -rf ~/.nlw; ./nlw/dev-bin/fresh-dev-env-from-scratch'
-alias stopme='$ST_SRC_BASE/current/nlw/dev-bin/nlwctl stop'
-alias startme='$ST_SRC_BASE/current/nlw/dev-bin/nlwctl start'
-alias restartme='$ST_SRC_BASE/current/nlw/dev-bin/nlwctl restart'
+alias sta='$ST_CURRENT/nlw/bin/st-admin '
+alias freshdev='$ST_CURRENT/nlw/dev-bin/nlwctl stop; rm -rf ~/.nlw; ./nlw/dev-bin/fresh-dev-env-from-scratch'
+alias stopme='$ST_CURRENT/nlw/dev-bin/nlwctl stop'
+alias startme='$ST_CURRENT/nlw/dev-bin/nlwctl start'
+alias restartme='$ST_CURRENT/nlw/dev-bin/nlwctl restart'
 alias svnstatus='svn status --show-updates'
-alias ceqread='$ST_SRC_BASE/current/nlw/bin/ceq-read'
-alias ceqstat='$ST_SRC_BASE/current/nlw/bin/ceq-stat'
-alias ceqrm='$ST_SRC_BASE/current/nlw/bin/ceq-rm'
+alias ceqread='$ST_CURRENT/nlw/bin/ceq-read'
+alias ceqstat='$ST_CURRENT/nlw/bin/ceq-stat'
+alias ceqrm='$ST_CURRENT/nlw/bin/ceq-rm'
 
 # aliases for an installed NLW
 alias sww='sudo -u www-data '
@@ -23,14 +23,15 @@ alias cdroot='cd ~/.nlw/root'
 alias cddata='cd ~/.nlw/root/data'
 alias cdst='cd $ST_SRC_BASE'
 alias cdconf='cd ~/.nlw/etc/socialtext'
-alias cdfonts='cd $ST_SRC_BASE/current/nlw/share/fonts'
-alias cdwidgets='cd $ST_SRC_BASE/current/nlw/share/widgets'
+alias cdfonts='cd $ST_CURRENT/nlw/share/fonts'
+alias cdwidgets='cd $ST_CURRENT/nlw/share/widgets'
 alias cdpers='cd ~/personal'
+alias cdwt='cd $ST_CURRENT/nlw/share/workspaces/wikitests'
 
 # ssskin aliases
-alias cdskin='cd $ST_SRC_BASE/current/nlw/share/skin'
-alias cds2='cd $ST_SRC_BASE/current/nlw/share/skin/s2'
-alias cdjs='cd $ST_SRC_BASE/current/nlw/share/skin/s2/javascript'
+alias cdskin='cd $ST_CURRENT/nlw/share/skin'
+alias cds2='cd $ST_CURRENT/nlw/share/skin/s2'
+alias cdjs='cd $ST_CURRENT/nlw/share/skin/s2/javascript'
 
 alias svnall='cdcur; stopme; rb; freshdev; cdcur'
 
