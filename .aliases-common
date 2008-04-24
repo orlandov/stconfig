@@ -97,6 +97,7 @@ alias apmiter='apmedit -l iteration'
 
 # wikrad aliases
 alias rtrad='w2rad -w regression-test'
+alias dgrad='w2rad -w dev-guide'
 alias dtrad='w2rad -w dev-tasks'
 alias iterad='dtrad -l "current iteration"'
 alias projrad='dtrad -l project'
