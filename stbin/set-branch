@@ -55,11 +55,14 @@ sub create_repo_symlinks {
         next if $r eq 'socialtext';
         my $repo_branch = $branch eq 'trunk' 
             ? "$src_base/$r/trunk"
-            : "$src_base/$r/branches/$branch";
-        my $st_path = "$src_base/$branch/$r";
+            : $branch =~ m#^tags/# ? "$src_base/$r/$branch"
+                                   : "$src_base/$r/branches/$branch";
+        (my $just_branch = $branch) =~ s#^tags/##;
+        my $st_path = "$src_base/$just_branch/$r";
         unlink $st_path if -l $st_path;
         symlink $repo_branch => $st_path
-            or warn "Can't create repo symlink for $r - is it checked out?\n";
+            or warn "Can't create repo symlink for $r - is it checked out?\n"
+                    . "Trying to symlink $repo_branch to $st_path\n";
     }
 }
 
