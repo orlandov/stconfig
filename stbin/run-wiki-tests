@@ -15,12 +15,13 @@ $SIG{INT} = sub { warn "Caught SIGINT\n"; exit 255 };
 
 # Script to run wiki tests outside of `make test` harness.
 
-my $plan_server     = 'http://www2.socialtext.net',
-my $plan_workspace  = 'regression-test';
-my $plan_page       = 'Test Plan';
-
 my $dev_port = 20000 + $>;
 my $hostname = hostname();
+
+my $plan_server     = "http://$hostname:$dev_port";
+my $plan_workspace  = 'wikitests';
+my $plan_page       = 'Test Plan';
+
 my $test_server     = "http://$hostname:$dev_port";
 my $test_workspace  = 'test-data';
 my $test_username   = 'devnull1@socialtext.com';
