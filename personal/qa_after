@@ -64,7 +64,6 @@ export SVN_COMMAND='svn'
 
 # Miscellaneous
 alias lld='ls -ld'
-alias ll='ls -ld'
 
 alias psken='pstree -aAhlnp kenpier'
 alias psqa1='pstree -aAhlnp qa1'
