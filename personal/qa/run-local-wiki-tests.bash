@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 if [ "$1" == "" ] ; then
-    echo Usage: run-local-wiki-tests.bash PLAN_PAGE NO_MAXIMMIZE
+    echo Usage: run-local-wiki-tests.bash PLAN_PAGE  --maximize
     exit
 fi
 
@@ -26,6 +26,7 @@ if  $ST_CURRENT/nlw/bin/st-admin give-accounts-admin  --e $USERNAME  >/dev/null 
      echo "rave accounts admin"
 fi
 
+# any non-empty $2 will turn off no-maximize
 if [ $2 ] ; then
     NOMAXIMIZE=""
     WITH_NOMAXIMIZE=""
