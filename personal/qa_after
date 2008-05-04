@@ -21,12 +21,14 @@ alias findceq='ps x  | grep ceqlotron | grep -v grep'
 alias findwikis='ls ~/.nlw/root/data/'
 alias cdroot='cd ~/.nlw/root'
 alias cddata='cd ~/.nlw/root/data'
-alias cdst='cd $ST_SRC_BASE'
 alias cdconf='cd ~/.nlw/etc/socialtext'
+alias cdlog='cd ~/.nlw/log'
 alias cdfonts='cd $ST_CURRENT/nlw/share/fonts'
 alias cdwidgets='cd $ST_CURRENT/nlw/share/widgets'
 alias cdpers='cd ~/personal'
+alias cdqa='cd ~/personal/qa'
 alias cdwt='cd $ST_CURRENT/nlw/share/workspaces/wikitests'
+alias cdst='cd $ST_SRC_BASE'
 
 # ssskin aliases
 alias cdskin='cd $ST_CURRENT/nlw/share/skin'
@@ -38,14 +40,11 @@ alias svnall='cdcur; stopme; rb; freshdev; cdcur'
 # alias to run Wiki Tests
 # # requires stconfig dev setup and run-wiki-tests.bash
 RWT=$ST_SRC_BASE/stconfig/personal/qa/run-wiki-tests.bash
-alias rwt="$RWT $1 $2"
+alias rwt="$RWT $1 $2 $3"
 alias rwta="$RWT 'All Testcases'" 
 alias rwti="$RWT 'IE Testcases'"
 alias rwto="$RWT 'OSR Testcases'"
-
-LWT=$ST_SRC_BASE/stconfig/personal/qa/run-local-wiki-tests.bash
-alias lwt="$LWT "
-
+alias lwt="$RWT $1 $2 $3"
 
 SETSEL=$ST_SRC_BASE/stconfig/personal/qa/setup-selenium
 alias setsel="source $SETSEL"
