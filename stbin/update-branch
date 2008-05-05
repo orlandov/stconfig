@@ -34,13 +34,15 @@ $smerge_opts .= "-m '$opts{message}'";
 cowsay("Updating $branch from $from_branch");
 for my $repo (@repos) {
     my $svk_base = "//mirror/$repo";
-    my $branch_path = "$svk_base/branches/$branch";
+    my $branch_prefix = "branches/";
+    $branch_prefix = '' if $branch =~ m#tags/#;
+    my $branch_path = "$svk_base/$branch_prefix$branch";
     my $from_dir = $opts{from} || 'trunk';
 
     my $r_branch = $branch;
     if ($repo ne 'socialtext') {
         $from_dir = "$repo/$from_branch";
-        $r_branch = "$repo/branches/$branch";
+        $r_branch = "$repo/$branch_prefix$branch";
     }
 
     cowsay("Updating $repo repository.", 'magenta');
