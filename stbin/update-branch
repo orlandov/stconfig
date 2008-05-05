@@ -39,7 +39,7 @@ for my $repo (@repos) {
     my $branch_path = "$svk_base/$branch_prefix$branch";
     my $from_dir = $opts{from} || 'trunk';
 
-    my $r_branch = $branch;
+    (my $r_branch = $branch) =~ s#tags/##;
     if ($repo ne 'socialtext') {
         $from_dir = "$repo/$from_branch";
         $r_branch = "$repo/$branch_prefix$branch";
