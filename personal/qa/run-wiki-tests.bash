@@ -16,6 +16,7 @@ BRANCH_PATH=""
 PORT=`perl -e 'print $> + 20000'`
 PLAN_SERVER=http://`hostname`:$PORT
 PLAN_WORKSPACE="wikitests"
+USERNAME="wikitester@ken.socialtext.net"
 
 if [ "$2" != "" ]; then
     if [ "$2" == "trunk" ]; then
@@ -70,7 +71,6 @@ if [ ! -e ~/.nlw  ] || [ "$3"  != "" ]; then
     refresh-branch
     $ST_SRC_BASE/current/nlw/dev-bin/fresh-dev-env-from-scratch
     $ST_SRC_BASE/current/nlw/dev-bin/create-test-data-workspace
-    USERNAME="wikitester@ken.socialtext.net"
     $ST_CURRENT/nlw/bin/st-admin create-user --e $USERNAME >/dev/null 2>/dev/null || true
     $ST_CURRENT/nlw/bin/st-admin add-workspace-admin --w test-data --e $USERNAME >/dev/null 2>/dev/null || true
     $ST_CURRENT/nlw/bin/st-admin give-accounts-admin  --e $USERNAME  >/dev/null 2>/dev/null || true
@@ -112,5 +112,5 @@ echo plan-page is $1
 echo plan-workspace is $PLAN_WORKSPACE
 echo plan-server is $PLAN_SERVER
 
-$ST_SRC_BASE/stconfig/stbin/run-wiki-tests --no-maximize --plan-server "$PLAN_SERVER" --plan-workspace "$PLAN_WORKSPACE" --timeout 60000 --plan-page "$1" >& testcases.out&
+$ST_SRC_BASE/stconfig/stbin/run-wiki-tests --no-maximize --test-username "$USERNAME" --test-email "$USERNAME" --plan-server "$PLAN_SERVER" --plan-workspace "$PLAN_WORKSPACE" --timeout 60000 --plan-page "$1" >& testcases.out&
 echo RUNNING ... tail -f testcases.out to monitor progress
