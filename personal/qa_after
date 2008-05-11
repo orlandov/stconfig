@@ -50,7 +50,7 @@ SETSEL=$ST_SRC_BASE/stconfig/personal/qa/setup-selenium
 alias setsel="source $SETSEL"
 
 # execute wiki test
-alias xwt="lwt "
+alias xwt="run-wiki-tests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
 alias xwjst='export selenium_browser=*firefox; xwt "Test Case: JS Test"; unset selenium_browser;'
 alias xwjsti='export selenium_browser=*iexplore; xwt "Test Case: JS Test"; unset selenium_browser;'
 
