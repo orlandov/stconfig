@@ -40,17 +40,22 @@ alias svnall='cdcur; stopme; rb; freshdev; cdcur'
 # alias to run Wiki Tests
 # # requires stconfig dev setup and run-wiki-tests.bash
 RWT=$ST_SRC_BASE/stconfig/personal/qa/run-wiki-tests.bash
+LWT=$ST_SRC_BASE/stconfig/personal/qa/run-socialcalc-tests.bash
 alias rwt="$RWT $1 $2 $3"
 alias rwta="$RWT 'All Testcases'" 
 alias rwti="$RWT 'IE Testcases'"
 alias rwto="$RWT 'OSR Testcases'"
 alias lwt="$RWT $1 $2 $3"
+alias lct="$LWT $1 $2 $3"
+
 
 SETSEL=$ST_SRC_BASE/stconfig/personal/qa/setup-selenium
 alias setsel="source $SETSEL"
 
 # execute wiki test
 alias xwt="run-wiki-tests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
+alias xct="run-wiki-tests --plan-workspace calctests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
+
 alias xwjst='export selenium_browser=*firefox; xwt "Test Case: JS Test"; unset selenium_browser;'
 alias xwjsti='export selenium_browser=*iexplore; xwt "Test Case: JS Test"; unset selenium_browser;'
 
