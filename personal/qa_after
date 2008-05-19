@@ -28,6 +28,7 @@ alias cdwidgets='cd $ST_CURRENT/nlw/share/widgets'
 alias cdpers='cd ~/personal'
 alias cdqa='cd ~/personal/qa'
 alias cdwt='cd $ST_CURRENT/nlw/share/workspaces/wikitests'
+alias cdct='cd $ST_CURRENT/nlw/share/workspaces/calctests'
 alias cdst='cd $ST_SRC_BASE'
 
 # ssskin aliases
@@ -40,14 +41,14 @@ alias svnall='cdcur; stopme; rb; freshdev; cdcur'
 # alias to run Wiki Tests
 # # requires stconfig dev setup and run-wiki-tests.bash
 RWT=$ST_SRC_BASE/stconfig/personal/qa/run-wiki-tests.bash
-LWT=$ST_SRC_BASE/stconfig/personal/qa/run-socialcalc-tests.bash
+RCT=$ST_SRC_BASE/stconfig/personal/qa/run-socialcalc-tests.bash
 alias rwt="$RWT $1 $2 $3"
 alias rwta="$RWT 'All Testcases'" 
-alias rwti="$RWT 'IE Testcases'"
+alias rwti6="$RWT 'IE 6 Testcases'"
+alias rwti7="$RWT 'IE 7 Testcases'"
 alias rwto="$RWT 'OSR Testcases'"
 alias lwt="$RWT $1 $2 $3"
-alias lct="$LWT $1 $2 $3"
-
+alias lct="$RCT $1 $2 $3"
 
 SETSEL=$ST_SRC_BASE/stconfig/personal/qa/setup-selenium
 alias setsel="source $SETSEL"
