@@ -6,5 +6,6 @@ alias cls='clear'
 export EDITOR=vi
 export PAGER=less
 
-# personal PERLLIB
-export PERLLIB=/home/graham/lib/`perl -MConfig -e 'print $Config{archname}'`
+# add personal Perl stuff to @INC and $PATH
+export PERLLIB=/home/graham/perl/lib/perl5/`perl -MConfig -e 'print $Config{archname}'`
+export PATH=/home/graham/perl/bin:$PATH
