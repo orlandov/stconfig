@@ -25,3 +25,7 @@ env | grep SSH | perl -lne 'chomp; m/^(\w+)=(.+)$/; print qq{export $1="$2"}' > 
 # ssh-agent $SHELL
 # ssh-add
 # screen
+# ssskin aliases
+alias cdskin='cd $ST_CURRENT/nlw/share/skin'
+alias cds2='cd $ST_CURRENT/nlw/share/skin/s2'
+alias cdjs='cd $ST_CURRENT/nlw/share/skin/s2/javascript'
