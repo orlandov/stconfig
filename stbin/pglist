@@ -25,7 +25,6 @@ fi \
 	    system("psql -qtc\"select pg_get_viewdef(oid,true) from pg_class "which"\"")
 	}' A=\' \
 | sed '
-    s/\<'$SCHEMA'\>\.//g
     /^SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('.*'), 1,/d
     
     s/character varying/varchar/g
