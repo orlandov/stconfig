@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# aliases when CWD is the top of a checkout e.g. trunk or usability-dev
 alias sta='$ST_CURRENT/nlw/bin/st-admin '
-alias freshdev='$ST_CURRENT/nlw/dev-bin/nlwctl stop; rm -rf ~/.nlw; ./nlw/dev-bin/fresh-dev-env-from-scratch'
+alias freshdev='~/personal/qa/tests-to-tarballs.bash; $ST_CURRENT/nlw/dev-bin/fresh-dev-env-from-scratch'
+alias tests-from-tarballs='~/personal/qa/tests-from-tarballs.bash'
 alias stopme='$ST_CURRENT/nlw/dev-bin/nlwctl stop'
 alias startme='$ST_CURRENT/nlw/dev-bin/nlwctl start'
 alias restartme='$ST_CURRENT/nlw/dev-bin/nlwctl restart'
