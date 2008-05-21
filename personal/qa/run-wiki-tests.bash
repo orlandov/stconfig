@@ -65,6 +65,16 @@ if [ "$BRANCH" != "" ]; then
     echo Importing all of socialcalc
     cd $ST_SRC_BASE
     svn co https://repo.socialtext.net:8999/svn/socialcalc
+
+    # check out guanxi
+    echo Importing all of guanxi
+    cd $ST_SRC_BASE
+    svn co https://repo.socialtext.net:8999/svn/guanxi
+    
+    # check out plugins
+    echo Importing all of plugins
+    cd $ST_SRC_BASE
+    svn co https://repo.socialtext.net:8999/svn/plugins
 fi
 
 if [ ! -e ~/.nlw  ] || [ "$3"  != "" ]; then
