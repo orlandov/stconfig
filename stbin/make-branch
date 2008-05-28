@@ -72,7 +72,7 @@ for my $repo (@repos) {
         shell_run("svk co $branch_path $checkout_dir");
     }
     else {
-        shell_run("svk up -s $source_base/$repo");
+        shell_run("svk up -s $source_base/$repo/branches/$new_branch");
     }
 }
 
