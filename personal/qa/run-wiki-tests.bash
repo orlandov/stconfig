@@ -39,42 +39,39 @@ fi
 if [ "$BRANCH" != "" ]; then
     # check out control
     echo Importing Control from $BRANCH
-    if [ ! -e  $ST_SRC_BASE/control ] ; then mkdir $ST_SRC_BASE/control ; fi
+    mkdir -p  $ST_SRC_BASE/control
     cd $ST_SRC_BASE/control/
     svn co https://repo.socialtext.net:8999/svn/control/$BRANCH_PATH $BRANCH_PATH
     
     # check out console
     echo Importing Console from $BRANCH
-    if [ ! -e  $ST_SRC_BASE/appliance ] ; then mkdir $ST_SRC_BASE/appliance ; fi
+    mkdir -p $ST_SRC_BASE/appliance
     cd $ST_SRC_BASE/appliance/
     svn co https://repo.socialtext.net:8999/svn/appliance/$BRANCH_PATH $BRANCH_PATH
     
     # check out reports
     echo Importing Reports from $BRANCH
-    if [ ! -e  $ST_SRC_BASE/socialtext-reports ] ; then mkdir $ST_SRC_BASE/socialtext-reports ; fi
+    mkdir -p $ST_SRC_BASE/socialtext-reports
     cd $ST_SRC_BASE/socialtext-reports/
     svn co https://repo.socialtext.net:8999/svn/socialtext-reports/$BRANCH_PATH $BRANCH_PATH
     
     # check out skins
     echo Importing Socialtext Skins from $BRANCH
-    if [ ! -e  $ST_SRC_BASE/socialtext-skins ] ; then mkdir $ST_SRC_BASE/socialtext-skins ; fi
+    mkdir -p $ST_SRC_BASE/socialtext-skins
     cd $ST_SRC_BASE/socialtext-skins/
     svn co https://repo.socialtext.net:8999/svn/socialtext-skins/$BRANCH_PATH $BRANCH_PATH
 
-    # check out socialcalc
-    echo Importing all of socialcalc
-    cd $ST_SRC_BASE
-    svn co https://repo.socialtext.net:8999/svn/socialcalc
-
     # check out guanxi
-    echo Importing all of guanxi
-    cd $ST_SRC_BASE
-    svn co https://repo.socialtext.net:8999/svn/guanxi
+    echo Importing guanxi from $BRANCH
+    mkdir -p $ST_SRC_BASE/guanxi
+    cd $ST_SRC_BASE/guanxi/
+    svn co https://repo.socialtext.net:8999/svn/guanxi/$BRANCH_PATH $BRANCH_PATH
     
     # check out plugins
-    echo Importing all of plugins
-    cd $ST_SRC_BASE
-    svn co https://repo.socialtext.net:8999/svn/plugins
+    echo Importing plugins from $BRANCH
+    mkdir -p $ST_SRC_BASE/plugins
+    cd $ST_SRC_BASE/plugins/
+    svn co https://repo.socialtext.net:8999/svn/plugins/$BRANCH_PATH $BRANCH_PATH
 fi
 
 if [ ! -e ~/.nlw  ] || [ "$3"  != "" ]; then
