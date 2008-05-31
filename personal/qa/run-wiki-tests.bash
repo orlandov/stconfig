@@ -85,7 +85,8 @@ if [ ! -e ~/.nlw  ] || [ "$3"  != "" ]; then
     echo ""
     read -p  "Build wikitests wiki from scratch? y/n " wikitest
     if [ "$wikitest" == "y" ]; then
-        $ST_CURRENT/nlw/dev-bin/wikitests-to-wiki
+        $ST_CURRENT/nlw/dev-bin/st-setup-wikitests
+        $ST_CURRENT/nlw/dev-bin/st-populate-reports-db
     else
         echo ""
         read -p  "Build wikitests wiki from tarball? y/n " wikitest
