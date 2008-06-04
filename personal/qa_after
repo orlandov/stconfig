@@ -4,12 +4,22 @@ if [ -e /usr/share/stconfig/personal/qa_after ]; then
     alias swa='sudo -u www-data st-admin '
     alias cdwt='cd /usr/share/nlw/wikitests'
     alias cdpers='cd ~/personal'
+    alias cdqa='cd ~/personal/qa'
     alias grnok="grep  -C 6 'not ok' testcases.out"
     alias grtc="grep 'Loading test plan\|COMPLETED' testcases.out"
     alias ttc='tail -f testcases.out'
-
-
+    alias findwikis='ls /var/www/socialtext/data/'
+    alias restartme='sudo /etc/init.d/apache2 stop; sudo /etc/init.d/apache-perl stop; sleep 5; sudo /etc/init.d/apache-perl start; sudo /etc/init.d/apache2  start;'
+    alias ceqread='/usr/bin/ceq-read'
+    alias ceqstat='/usr/bin/ceq-stat'
+    alias ceqrm='/usr/bin/ceq-rm'
+    alias cdwt='cd /usr/share/nlw/wikitests'
+    alias cdskin='cd /usr/share/nlw/skin'
+    alias cds2='cd /usr/share/nlw/skin/s2'
+    alias cdjs='cd /usr/share/nlw//skin/s2/javascript'
+    
 else
+
 alias sta='$ST_CURRENT/nlw/bin/st-admin '
 alias freshdev='~/personal/qa/tests-to-tarballs.bash; $ST_CURRENT/nlw/dev-bin/fresh-dev-env-from-scratch'
 alias noplugins='rm $ST_CURRENT/nlw/share/plugin; restartme'
@@ -26,7 +36,6 @@ alias ceqrm='$ST_CURRENT/nlw/bin/ceq-rm'
 # aliases for an installed NLW
 alias sww='sudo -u www-data '
 alias swa='sudo -u www-data st-admin '
-
 
 # convenience aliases
 alias findceq='ps x  | grep ceqlotron | grep -v grep'
