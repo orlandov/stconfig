@@ -1,5 +1,15 @@
 #!/bin/bash
+if [ -e /usr/share/stconfig/personal/qa_after ]; then
+    alias sww='sudo -u www-data '
+    alias swa='sudo -u www-data st-admin '
+    alias cdwt='cd /usr/share/nlw/wikitests'
+    alias cdpers='cd ~/personal'
+    alias grnok="grep  -C 6 'not ok' testcases.out"
+    alias grtc="grep 'Loading test plan\|COMPLETED' testcases.out"
+    alias ttc='tail -f testcases.out'
 
+
+else
 alias sta='$ST_CURRENT/nlw/bin/st-admin '
 alias freshdev='~/personal/qa/tests-to-tarballs.bash; $ST_CURRENT/nlw/dev-bin/fresh-dev-env-from-scratch'
 alias noplugins='rm $ST_CURRENT/nlw/share/plugin; restartme'
@@ -100,3 +110,5 @@ trunkdiff () { svn diff https://repo.socialtext.net:8999/svn/socialtext/trunk ht
 alias brqa='branches qa*'
 alias ffx='ps auxww | grep firefox'
 alias fsel='ps auxww | grep selenium'
+
+fi

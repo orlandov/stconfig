@@ -1,1 +1,8 @@
-source $ST_SRC_BASE/stconfig/personal/qa_after
+if [ -e $ST_SRC_BASE/stconfig/personal/qa_after ]; then
+    source $ST_SRC_BASE/stconfig/personal/qa_after
+elif [ -e /usr/share/stconfig/personal/qa_after ]; then
+    source /usr/share/stconfig/personal/qa_after
+else
+    echo COULD NOT FIND file qa_after
+fi
+
