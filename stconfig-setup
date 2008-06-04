@@ -4,6 +4,12 @@ use warnings;
 use FindBin;
 use Cwd;
 use File::chdir;
+use Getopt::Long;
+
+my $force;
+GetOptions(
+    'f|force' => \$force,
+);
 
 make_symlinks();
 make_rtrc();
@@ -11,16 +17,18 @@ link_personal_config();
 exit;
 
 sub _stconfig_base {
-    return Cwd::abs_path($FindBin::Bin);
-}
-
-sub make_symlinks {
-    my $base = _stconfig_base();
+    my $base = Cwd::abs_path($FindBin::Bin);
 
     # A hack so this stuff works when packaged
     if ($base eq '/usr/bin') {
         $base = "/usr/share/stconfig";
     }
+
+    return $base;
+}
+
+sub make_symlinks {
+    my $base = _stconfig_base();
 
     die unless $ENV{HOME};
     chdir($ENV{HOME});
@@ -67,7 +75,7 @@ sub link_or_descend {
             local $CWD = $file;
             link_or_descend($dest, $_) for all_files($dest);
         }
-    } elsif (-e $file) {
+    } elsif (-e $file and !$force) {
         warn "    skipping $file, already exists.\n"
             # no need to warn if it's a known symlink
             if not(-l $file) or $dest ne readlink($file);
