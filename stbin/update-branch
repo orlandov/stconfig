@@ -12,6 +12,7 @@ GetOptions( \%opts,
     'message=s',
     'from=s',
     'repo=s',
+    'force',
 ) or usage();
 
 my $branch = shift;
@@ -46,13 +47,21 @@ for my $repo (@repos) {
     }
 
     cowsay("Updating $repo repository.", 'magenta');
-    map { shell_run($_) }
-        "svk up -s ~/src/st/$from_dir",
-        "svk up -s ~/src/st/$r_branch",
-        "svk smerge $smerge_opts $svk_base/$from_branch $branch_path",
-        "svk up -s ~/src/st/$r_branch",
-        ;
-    my $cowsay = qx(cowsay 'Branch $branch updated!');
+    eval {
+        map { shell_run($_) }
+            "svk up -s ~/src/st/$from_dir",
+            "svk up -s ~/src/st/$r_branch",
+            "svk smerge $smerge_opts $svk_base/$from_branch $branch_path",
+            "svk up -s ~/src/st/$r_branch",
+            ;
+    };
+    if ($@) {
+        warn "Error: $@\n";
+        exit unless $opts{force};
+    }
+    else {
+        cowsay("Branch $branch updated!", 'green');
+    }
 }
 cowsay("All done!");
 
@@ -70,6 +79,7 @@ options:
   --pretend     don't really do the merge (svk smerge -C)
   --from        branch to update from (default: trunk)
   --repo <repo> Specify the repo to use
+  --force       Don't ... give ... up ...
 EOT
 }
 
