@@ -11,17 +11,25 @@ function blog {
 }
 
 alias lukerad='wikrad -w lukec'
+alias sprv='stci-prove -p -v'
 
 # git aliases
-
 alias ga='git-add'
+alias gb='git-branch'
 alias gd='git-diff'
+alias gdc='git-diff --cached'
+alias gl='git-log'
+alias gam='git-ls-files -m | xargs git-add'
 alias gst='git-status'
 alias gci='git-commit'
+alias gco='git-checkout'
 
 # Always keep my latest ssh details, so I can source later
 env | grep SSH | perl -lne 'chomp; m/^(\w+)=(.+)$/; print qq{export $1="$2"}' > ~/.latest-ssh-rc;
 
-# ssh-agent $SHELL
-# ssh-add
-# screen
+# For ssh keychain
+KEYCHAIN=/home/lukec/.keychain/`hostname`-sh
+if [ -d $KEYCHAIN ]; then
+    source $KEYCHAIN
+fi
+
