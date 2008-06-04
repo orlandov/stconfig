@@ -59,6 +59,12 @@ sub create_repo_symlinks {
                                    : "$src_base/$r/branches/$branch";
         (my $just_branch = $branch) =~ s#^tags/##;
         my $st_path = "$src_base/$just_branch/$r";
+
+        unless (-d $st_path) {
+            (my $base = $repo_branch) =~ s#(.+)/.+#$1#;
+            system("scm up $base");
+        }
+
         unlink $st_path if -l $st_path;
         symlink $repo_branch => $st_path
             or warn "Can't create repo symlink for $r - is it checked out?\n"
