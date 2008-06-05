@@ -92,6 +92,17 @@ if [ ! -e ~/.nlw  ] || [ "$3"  != "" ]; then
         read -p  "Build wikitests wiki from tarball? y/n " wikitest
         [ "$wikitest" == "y" ] && $ST_CURRENT/nlw/bin/st-admin import-workspace --tarball $ST_CURRENT/nlw/share/workspaces/wikitests/wikitests.1.tar.gz  
     fi
+
+    echo ""
+    read -p  "Build calctests wiki from scratch? y/n " wikitest
+    if [ "$wikitest" == "y" ]; then
+        $ST_CURRENT/nlw/dev-bin/calctests-from-wiki
+    else
+        echo ""
+        read -p  "Build calctests wiki from tarball? y/n " wikitest
+        [ "$wikitest" == "y" ] && $ST_CURRENT/nlw/bin/st-admin import-workspace --tarball $ST_CURRENT/nlw/share/workspaces/calctests/calctests.1.tar.gz  
+    fi
+
 else
     if [ "$BRANCH" != "trunk" ]; then
         LINK=$BRANCH
