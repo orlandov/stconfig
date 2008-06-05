@@ -1,5 +1,6 @@
 #!/bin/bash
-if [ -e /usr/share/stconfig/personal/qa_after ]; then
+if [ -e /etc/socialtext/socialtext.conf ]; then
+    # aliases for an appliance
     alias sww='sudo -u www-data '
     alias swa='sudo -u www-data st-admin '
     alias cdwt='cd /usr/share/nlw/wikitests'
@@ -20,104 +21,95 @@ if [ -e /usr/share/stconfig/personal/qa_after ]; then
     
 else
 
-alias sta='$ST_CURRENT/nlw/bin/st-admin '
-alias freshdev='~/personal/qa/tests-to-tarballs.bash; $ST_CURRENT/nlw/dev-bin/fresh-dev-env-from-scratch'
-alias noplugins='rm $ST_CURRENT/nlw/share/plugin; restartme'
-alias yesplugins='ln -s $ST_CURRENT/nlw/share/../../plugins $ST_CURRENT/nlw/share/plugin; restartme'
-alias tests-from-tarballs='~/personal/qa/tests-from-tarballs.bash'
-alias stopme='$ST_CURRENT/nlw/dev-bin/nlwctl stop'
-alias startme='$ST_CURRENT/nlw/dev-bin/nlwctl start'
-alias restartme='$ST_CURRENT/nlw/dev-bin/nlwctl restart'
-alias svnstatus='svn status --show-updates'
-alias ceqread='$ST_CURRENT/nlw/bin/ceq-read'
-alias ceqstat='$ST_CURRENT/nlw/bin/ceq-stat'
-alias ceqrm='$ST_CURRENT/nlw/bin/ceq-rm'
+    # aliases for a dev env
 
-# aliases for an installed NLW
-alias sww='sudo -u www-data '
-alias swa='sudo -u www-data st-admin '
+    alias sta='$ST_CURRENT/nlw/bin/st-admin '
+    alias freshdev='~/personal/qa/tests-to-tarballs.bash; $ST_CURRENT/nlw/dev-bin/fresh-dev-env-from-scratch'
+    alias noplugins='rm $ST_CURRENT/nlw/share/plugin; restartme'
+    alias yesplugins='ln -s $ST_CURRENT/nlw/share/../../plugins $ST_CURRENT/nlw/share/plugin; restartme'
+    alias tests-from-tarballs='~/personal/qa/tests-from-tarballs.bash'
+    alias stopme='$ST_CURRENT/nlw/dev-bin/nlwctl stop'
+    alias startme='$ST_CURRENT/nlw/dev-bin/nlwctl start'
+    alias restartme='$ST_CURRENT/nlw/dev-bin/nlwctl restart'
+    alias svnstatus='svn status --show-updates'
+    alias ceqread='$ST_CURRENT/nlw/bin/ceq-read'
+    alias ceqstat='$ST_CURRENT/nlw/bin/ceq-stat'
+    alias ceqrm='$ST_CURRENT/nlw/bin/ceq-rm'
+    alias svnall='cdcur; stopme; rb; freshdev; cdcur'
+    alias findceq='ps x  | grep ceqlotron | grep -v grep'
+    alias findwikis='ls ~/.nlw/root/data/'
 
-# convenience aliases
-alias findceq='ps x  | grep ceqlotron | grep -v grep'
-alias findwikis='ls ~/.nlw/root/data/'
-alias cdroot='cd ~/.nlw/root'
-alias cddata='cd ~/.nlw/root/data'
-alias cdconf='cd ~/.nlw/etc/socialtext'
-alias cdlog='cd ~/.nlw/log'
-alias cdfonts='cd $ST_CURRENT/nlw/share/fonts'
-alias cdwidgets='cd $ST_CURRENT/nlw/share/widgets'
-alias cdpers='cd ~/personal'
-alias cdqa='cd ~/personal/qa'
-alias cdwt='cd $ST_CURRENT/nlw/share/workspaces/wikitests'
-alias cdct='cd $ST_CURRENT/nlw/share/workspaces/calctests'
-alias cdst='cd $ST_SRC_BASE'
+    alias cdroot='cd ~/.nlw/root'
+    alias cddata='cd ~/.nlw/root/data'
+    alias cdconf='cd ~/.nlw/etc/socialtext'
+    alias cdlog='cd ~/.nlw/log'
+    alias cdfonts='cd $ST_CURRENT/nlw/share/fonts'
+    alias cdwidgets='cd $ST_CURRENT/nlw/share/widgets'
+    alias cdpers='cd ~/personal'
+    alias cdqa='cd ~/personal/qa'
+    alias cdwt='cd $ST_CURRENT/nlw/share/workspaces/wikitests'
+    alias cdct='cd $ST_CURRENT/nlw/share/workspaces/calctests'
+    alias cdst='cd $ST_SRC_BASE'
+    alias cdskin='cd $ST_CURRENT/nlw/share/skin'
+    alias cds2='cd $ST_CURRENT/nlw/share/skin/s2'
+    alias cdjs='cd $ST_CURRENT/nlw/share/skin/s2/javascript'
 
-# ssskin aliases
-alias cdskin='cd $ST_CURRENT/nlw/share/skin'
-alias cds2='cd $ST_CURRENT/nlw/share/skin/s2'
-alias cdjs='cd $ST_CURRENT/nlw/share/skin/s2/javascript'
+    # aliases to run wikitests
+    RWT=$ST_SRC_BASE/stconfig/personal/qa/run-wiki-tests.bash
+    RCT=$ST_SRC_BASE/stconfig/personal/qa/run-socialcalc-tests.bash
 
-alias svnall='cdcur; stopme; rb; freshdev; cdcur'
+    alias rwt="$RWT $1 $2 $3"
+    alias rct="$RCT $1 $2 $3"
 
-# alias to run Wiki Tests
-# # requires stconfig dev setup and run-wiki-tests.bash
-RWT=$ST_SRC_BASE/stconfig/personal/qa/run-wiki-tests.bash
-RCT=$ST_SRC_BASE/stconfig/personal/qa/run-socialcalc-tests.bash
-alias rwt="$RWT $1 $2 $3"
-alias rwta="$RWT 'All Testcases'" 
-alias rwti6="$RWT 'IE 6 Testcases'"
-alias rwti7="$RWT 'IE 7 Testcases'"
-alias rwto="$RWT 'OSR Testcases'"
-alias lwt="$RWT $1 $2 $3"
-alias lct="$RCT $1 $2 $3"
+    alias rwta="$RWT 'All Testcases'" 
+    alias rwti6="$RWT 'IE 6 Testcases'"
+    alias rwti7="$RWT 'IE 7 Testcases'"
+    alias rwto="$RWT 'OSR Testcases'"
+    alias rcto="$RCT 'OSR Testcases'"
 
-SETSEL=$ST_SRC_BASE/stconfig/personal/qa/setup-selenium
-alias setsel="source $SETSEL"
+    alias xwt="run-wiki-tests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
+    alias xct="run-wiki-tests --plan-workspace calctests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
 
-# execute wiki test
-alias xwt="run-wiki-tests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
-alias xct="run-wiki-tests --plan-workspace calctests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
+    SETSEL=$ST_SRC_BASE/stconfig/personal/qa/setup-selenium
+    alias setsel="source $SETSEL"
 
-alias xwjst='export selenium_browser=*firefox; xwt "Test Case: JS Test"; unset selenium_browser;'
-alias xwjsti='export selenium_browser=*iexplore; xwt "Test Case: JS Test"; unset selenium_browser;'
+    alias xwjst='export selenium_browser=*firefox; xwt "Test Case: JS Test"; unset selenium_browser;'
+    alias xwjsti='export selenium_browser=*iexplore; xwt "Test Case: JS Test"; unset selenium_browser;'
 
-# aliases to evaluate wiki tests
-alias grnok="grep  -C 6 'not ok' testcases.out"
-alias grtc="grep 'Loading test plan\|COMPLETED' testcases.out"
-alias ttc='tail -f testcases.out'
+    # aliases to evaluate wikitests
+    alias grnok="grep  -C 6 'not ok' testcases.out"
+    alias grtc="grep 'Loading test plan\|COMPLETED' testcases.out"
+    alias ttc='tail -f testcases.out'
 
-export SVN_COMMAND='svn'
+    # aliases to find out what's running
+    alias psken='pstree -aAhlnp kenpier'
+    alias psqa1='pstree -aAhlnp qa1'
+    alias psqa2='pstree -aAhlnp qa2'
+    alias psqa3='pstree -aAhlnp qa3'
+    alias psqa4='pstree -aAhlnp qa4'
+    alias psqa5='pstree -aAhlnp qa5'
+    alias psqa6='pstree -aAhlnp qa6'
+    alias psqa7='pstree -aAhlnp qa7'
+    alias psqa8='pstree -aAhlnp qa8'
+    alias psqa9='pstree -aAhlnp qa9'
+    alias psqa10='pstree -aAhlnp qa10'
+    alias psqa11='pstree -aAhlnp qa11'
+    alias psqa12='pstree -aAhlnp qa12'
+    alias pslyssa='pstree -aAhlnp lyssa'
+    alias pssel='pstree -aAhlnp selenium'
+    alias pschris='pstree -aAhlnp cmcmahon'
+    alias psrick='pstree -aAhlnp rick'
+    alias psshahed='pstree -aAhlnp shahed'
+    alias psmatt='pstree -aAhlnp mheusser'
 
-# Miscellaneous
-alias lld='ls -ld'
+    # functions
+    branches() {  /bin/ls /home/$1/src/st ; }
+    sb()        { set-branch $1; cdnlw; cd ..; }
+    trunkdiff () { svn diff https://repo.socialtext.net:8999/svn/socialtext/trunk https://repo.socialtext.net:8999/svn/socialtext/branches/$1 ; }
 
-alias psken='pstree -aAhlnp kenpier'
-alias psqa1='pstree -aAhlnp qa1'
-alias psqa2='pstree -aAhlnp qa2'
-alias psqa3='pstree -aAhlnp qa3'
-alias psqa4='pstree -aAhlnp qa4'
-alias psqa5='pstree -aAhlnp qa5'
-alias psqa6='pstree -aAhlnp qa6'
-alias psqa7='pstree -aAhlnp qa7'
-alias psqa8='pstree -aAhlnp qa8'
-alias psqa9='pstree -aAhlnp qa9'
-alias psqa10='pstree -aAhlnp qa10'
-alias psqa11='pstree -aAhlnp qa11'
-alias psqa12='pstree -aAhlnp qa12'
-alias pslyssa='pstree -aAhlnp lyssa'
-alias pssel='pstree -aAhlnp selenium'
-alias pschris='pstree -aAhlnp cmcmahon'
-alias psrick='pstree -aAhlnp rick'
-alias psshahed='pstree -aAhlnp shahed'
-alias psmatt='pstree -aAhlnp mheusser'
+    alias brqa='branches qa*'
+    alias ffx='ps auxww | grep firefox'
+    alias fsel='ps auxww | grep selenium'
 
-# functions
-branches() {  /bin/ls /home/$1/src/st ; }
-sb()        { set-branch $1; cdnlw; cd ..; }
-trunkdiff () { svn diff https://repo.socialtext.net:8999/svn/socialtext/trunk https://repo.socialtext.net:8999/svn/socialtext/branches/$1 ; }
-
-alias brqa='branches qa*'
-alias ffx='ps auxww | grep firefox'
-alias fsel='ps auxww | grep selenium'
-
+    export SVN_COMMAND='svn'
 fi
