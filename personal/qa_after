@@ -28,6 +28,7 @@ else
     alias noplugins='rm $ST_CURRENT/nlw/share/plugin; restartme'
     alias yesplugins='ln -s $ST_CURRENT/nlw/share/../../plugins $ST_CURRENT/nlw/share/plugin; restartme'
     alias tests-from-tarballs='~/personal/qa/tests-from-tarballs.bash'
+    alias tests-to-tarballs='~/personal/qa/tests-to-tarballs.bash'
     alias stopme='$ST_CURRENT/nlw/dev-bin/nlwctl stop'
     alias startme='$ST_CURRENT/nlw/dev-bin/nlwctl start'
     alias restartme='$ST_CURRENT/nlw/dev-bin/nlwctl restart'
