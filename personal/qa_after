@@ -22,9 +22,8 @@ if [ -e /etc/socialtext/socialtext.conf ]; then
 else
 
     # aliases for a dev env
-
     alias sta='$ST_CURRENT/nlw/bin/st-admin '
-    alias freshdev='~/personal/qa/tests-to-tarballs.bash; $ST_CURRENT/nlw/dev-bin/fresh-dev-env-from-scratch'
+    alias freshdev='~/personal/qa/tests-to-tarballs.bash; $ST_CURRENT/nlw/dev-bin/fresh-dev-env-from-scratch; $ST_CURRENT/nlw/bin/ceq-rm /.+/'
     alias noplugins='rm $ST_CURRENT/nlw/share/plugin; restartme'
     alias yesplugins='ln -s $ST_CURRENT/nlw/share/../../plugins $ST_CURRENT/nlw/share/plugin; restartme'
     alias tests-from-tarballs='~/personal/qa/tests-from-tarballs.bash'
