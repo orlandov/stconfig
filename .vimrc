@@ -19,6 +19,8 @@ set encoding=utf-8
 set fileencoding=utf-8
 set pastetoggle=<F13>
 
+set exrc
+
 " ============================================
 " lookupfile.vim
 " ============================================
