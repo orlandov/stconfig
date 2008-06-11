@@ -55,6 +55,8 @@ cdnlw()   { cd `abs_path $ST_CURRENT/nlw`; }
 CDnlw()   { scmcd `abs_path $ST_CURRENT/nlw`; }
 cdtrunk() { cd $ST_TRUNK; }
 CDtrunk() { scmcd $ST_TRUNK; }
+cds2()    { cd `abs_path $ST_CURRENT/nlw/share/skin/s2`; }
+CDs2()    { scmcd `abs_path $ST_CURRENT/nlw/share/skin/s2`; }
 cdcur()   { cd `abs_path $ST_CURRENT`; }
 CDcur()   { scmcd `abs_path $ST_CURRENT`; }
 cdcfg()   { cd `abs_path $ST_CURRENT/../stconfig`; }
