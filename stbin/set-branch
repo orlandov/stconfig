@@ -5,6 +5,7 @@ use File::Path qw/mkpath/;
 use Fatal qw/:void mkpath chdir unlink symlink/;
 use English;
 
+my @repos = split /\s+/, qx(st-repo-list);
 my $branch = shift || '';
 my $private = shift;
 
@@ -44,13 +45,24 @@ exit;
 sub checkout {
     my $branch_path = shift;
     chdir $src_base;
-    my $cmd = "scm checkout '$ENV{ST_CODE_REPO}/$branch_path'";
-    print "Running $cmd\n";
-    system($cmd);
+    for my $r (@repos) {
+        my $cmd;
+        if ($r eq 'socialtext') {
+            $cmd = "scm checkout '$ENV{ST_CODE_REPO}/$branch_path'";
+        }
+        elsif (-d $r) {
+            $cmd = "scm up -s '$r/$branch_path'";
+        }
+        else {
+            warn "Not updating the $r repo since it doesn't exist!\n";
+            next;
+        }
+        print "Running $cmd\n";
+        system($cmd);
+    }
 }
 
 sub create_repo_symlinks {
-    my @repos = split /\s+/, qx(st-repo-list);
     for my $r (@repos) {
         next if $r eq 'socialtext';
         my $repo_branch = $branch eq 'trunk' 
@@ -59,11 +71,6 @@ sub create_repo_symlinks {
                                    : "$src_base/$r/branches/$branch";
         (my $just_branch = $branch) =~ s#^tags/##;
         my $st_path = "$src_base/$just_branch/$r";
-
-        unless (-d $st_path) {
-            (my $base = $repo_branch) =~ s#(.+)/.+#$1#;
-            system("scm up $base");
-        }
 
         unlink $st_path if -l $st_path;
         symlink $repo_branch => $st_path
