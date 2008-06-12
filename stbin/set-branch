@@ -46,19 +46,18 @@ sub checkout {
     my $branch_path = shift;
     chdir $src_base;
     for my $r (@repos) {
-        my $cmd;
         if ($r eq 'socialtext') {
-            $cmd = "scm checkout '$ENV{ST_CODE_REPO}/$branch_path'";
-        }
-        elsif (-d $r) {
-            $cmd = "scm up -s '$r/$branch_path'";
+            warn "Checking out the branch";
+            system("scm sync //mirror/socialtext") if $ENV{SVN_COMMAND} eq 'svk';
+            my $rc = system("scm checkout '$ENV{ST_CODE_REPO}/$branch_path'");
+            exit $rc if $rc != 0;
         }
         else {
-            warn "Not updating the $r repo since it doesn't exist!\n";
-            next;
+            # check out the new branch in the repo, but not if the repo isn't
+            # there or we've already checked this branch out.
+            next if !-d $r or -d "$r/$branch_path";
+            system("scm up -s '$r/$branch_path'");
         }
-        print "Running $cmd\n";
-        system($cmd);
     }
 }
 
@@ -75,7 +74,7 @@ sub create_repo_symlinks {
         unlink $st_path if -l $st_path;
         symlink $repo_branch => $st_path
             or warn "Can't create repo symlink for $r - is it checked out?\n"
-                    . "Trying to symlink $repo_branch to $st_path\n";
+                    . "Trying to symlink $repo_branch to $st_path: $!\n";
     }
 }
 
