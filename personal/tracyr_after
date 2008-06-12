@@ -1,2 +1,3 @@
 source $ST_SRC_BASE/stconfig/personal/qa_after
 alias ll="ls -alF"
+alias screen='TERM=screen screen'
