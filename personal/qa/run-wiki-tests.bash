@@ -110,7 +110,7 @@ else
         LINK=""
     fi
 
-    echo Creating symbolic links
+    echo Linking additional modules ...
     echo ""
     cd $ST_CURRENT/nlw/
     $ST_CURRENT/nlw/dev-bin/link-control-panel $LINK
@@ -118,6 +118,10 @@ else
     $ST_CURRENT/nlw/dev-bin/link-console  $LINK
     echo ""
     $ST_CURRENT/nlw/dev-bin/create-skinlink $LINK
+    echo ""
+    $ST_CURRENT/nlw/dev-bin/link-reports
+    echo ""
+    $ST_CURRENT/nlw/dev-bin/link-people
 fi
 
 echo Removing all ceqlotron tasks to stop unnecessary indexing
