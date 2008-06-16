@@ -50,10 +50,12 @@ sub update_or_checkout {
     chdir $src_base;
     my $dir = $repo eq 'socialtext' ? $branch : "$repo/$path";
     return if -d $dir;
-    shell_run("scm sync //mirror/$repo") if $ENV{SVN_COMMAND} eq 'svk';
+    if ($ENV{SVN_COMMAND} eq 'svk') {
+        shell_run("-scm sync //mirror/$repo") || return;
+    }
     
-    if (!-d $repo or system("scm info $repo") != 0) {
-        shell_run("scm checkout $ENV{ST_CODE_REPO}/$path $dir");
+    if (!-d $repo or shell_run("-scm info $repo")) {
+        shell_run("scm checkout $ENV{ST_SVN}/$repo/$path $dir");
     }
     else {
         shell_run("scm up $dir");
@@ -62,8 +64,11 @@ sub update_or_checkout {
 
 sub shell_run {
     my $cmd = shift;
+    my $nodie = $cmd =~ s/^-//;
+    warn $cmd;
     my $rc = system $cmd;
-    exit if $rc != 0;
+    exit unless $nodie or $rc == 0;
+    return $rc == 0;
 }
 
 sub create_repo_symlinks {
