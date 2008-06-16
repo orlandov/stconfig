@@ -66,15 +66,9 @@ for my $repo (@repos) {
 
     # sync again
     sync_mirror($repo);
-
-    if ($repo eq 'socialtext') {
-        my $checkout_dir = "$source_base/$new_branch";
-        shell_run("svk co $branch_path $checkout_dir");
-    }
-    else {
-        shell_run("svk up -s $source_base/$repo/branches/$new_branch");
-    }
 }
+
+shell_run("set-branch $new_branch");
 
 # then adding it to testrunner (maybe not required),
 # -- not supported yet --
