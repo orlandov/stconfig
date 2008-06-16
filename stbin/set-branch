@@ -18,19 +18,17 @@ $branch = num_to_name($branch) if $branch =~ m/^\d+$/;
 usage() unless $branch;
 
 my $branch_dir = "$src_base/$branch";
-unless ( -d $branch_dir ) {
-    if ( $branch eq 'trunk' ) {
-        checkout($branch);
-    }
-    elsif ($branch =~ m#^tags/#) {
-        checkout($branch);
-    }
-    elsif ($private) {
-        checkout("private-branches/$branch");
-    }
-    else {
-        checkout("branches/$branch");
-    }
+if ( $branch eq 'trunk' ) {
+    checkout($branch);
+}
+elsif ($branch =~ m#^tags/#) {
+    checkout($branch);
+}
+elsif ($private) {
+    checkout("private-branches/$branch");
+}
+else {
+    checkout("branches/$branch");
 }
 
 if (-d $branch_dir) {
@@ -43,22 +41,29 @@ create_repo_symlinks();
 exit;
 
 sub checkout {
-    my $branch_path = shift;
+    my $path = shift;
+    update_or_checkout($_, $path) for @repos;    
+}
+
+sub update_or_checkout {
+    my ($repo, $path) = @_;
     chdir $src_base;
-    for my $r (@repos) {
-        if ($r eq 'socialtext') {
-            warn "Checking out the branch";
-            system("scm sync //mirror/socialtext") if $ENV{SVN_COMMAND} eq 'svk';
-            my $rc = system("scm checkout '$ENV{ST_CODE_REPO}/$branch_path'");
-            exit $rc if $rc != 0;
-        }
-        else {
-            # check out the new branch in the repo, but not if the repo isn't
-            # there or we've already checked this branch out.
-            next if !-d $r or -d "$r/$branch_path";
-            system("scm up -s '$r/$branch_path'");
-        }
+    my $dir = $repo eq 'socialtext' ? $branch : "$repo/$path";
+    return if -d $dir;
+    shell_run("scm sync //mirror/$repo") if $ENV{SVN_COMMAND} eq 'svk';
+    
+    if (!-d $repo or system("scm info $repo") != 0) {
+        shell_run("scm checkout $ENV{ST_CODE_REPO}/$path $dir");
     }
+    else {
+        shell_run("scm up $dir");
+    }
+}
+
+sub shell_run {
+    my $cmd = shift;
+    my $rc = system $cmd;
+    exit if $rc != 0;
 }
 
 sub create_repo_symlinks {
