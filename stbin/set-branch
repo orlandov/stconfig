@@ -54,7 +54,7 @@ sub update_or_checkout {
         shell_run("-scm sync //mirror/$repo") || return;
     }
     
-    if (!-d $repo or shell_run("-scm info $repo")) {
+    if (!-d $repo or !shell_run("-scm info $repo")) {
         shell_run("scm checkout $ENV{ST_SVN}/$repo/$path $dir");
     }
     else {
