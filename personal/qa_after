@@ -71,6 +71,9 @@ else
 
     alias xwt="run-wiki-tests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
     alias xct="run-wiki-tests --plan-workspace calctests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
+    
+    alias xlwt="run-wiki-tests --no-maximize --test-username devnull3 --test-password Ko013344  --test-email devnull3@socialtext.com  --timeout 60000 --plan-page  "
+    alias xlct="run-wiki-tests --no-maximize --test-username devnull3 --test-password Ko013344  --test-email devnull3@socialtext.com  --timeout 60000 --plan-workspace calctests --plan-page  "
 
     SETSEL=$ST_SRC_BASE/stconfig/personal/qa/setup-selenium
     alias setsel="source $SETSEL"
