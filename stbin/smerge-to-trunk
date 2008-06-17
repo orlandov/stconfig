@@ -10,6 +10,7 @@ use Getopt::Long;
 my %opts;
 GetOptions( \%opts,
     'repo=s',
+    'force',
 ) or usage();
 
 $opts{repo} ||= 'socialtext'; # Default to avoid changing behaviour
@@ -44,9 +45,12 @@ for my $repo (@repos) {
                      . "$branch_path $trunk_path";
     my $output = qx($smerge_cmd --check-only);
     if ($output =~ m/conflicts? found/) {
-        color_print('red', "Conflict found merging $branch to trunk in $repo\n"
-        . "Please fix this, probably by merging trunk up into this branch!\n");
-        exit;
+        color_print('red', "Conflict found merging $branch to trunk in $repo\n");
+        unless ($opts{force}) {
+            color_print('red', "Please fix this, either by merging trunk up into this branch,\n"
+                             . "or run this command with --force to solve merge conflicts yourself!\n");
+            exit;
+        }
     }
 
     color_print('magenta', "Smerging $branch to trunk - $repo FOR REAL\n");
