@@ -47,7 +47,7 @@ exit;
 sub print_stories {
     my $stories = shift;
     for my $s (@$stories) {
-        display("  $s->[0]", 'blue');
+        display("  " . join(', ', grep { $_ } $s->[0], $s->[3], $s->[4], $s->[5], $s->[7]), 'cyan');
     }
 }
 
