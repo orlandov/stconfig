@@ -1,0 +1,53 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Socialtext::Resting::Getopt qw/get_rester/;
+use Socialtext::WikiObject;
+use Socialtext::BuildUtils qw/display/;
+
+my $r = get_rester(
+    server => 'https://www2.socialtext.net',
+    workspace => 'dev-tasks',
+);
+
+$r->accept('text/plain');
+my @iterations = $r->get_taggedpages('current iteration');
+my $page_name = shift @iterations || die "No iterations found!";
+$r->accept('text/x.socialtext-wiki');
+my $page = Socialtext::WikiObject->new(
+    rester => $r,
+    page => $page_name,
+);
+
+delete $page->{rester};
+my $stories = $page->{stories};
+
+my $not_started = $stories->{text}{table};
+if ($not_started and @$not_started) {
+    my ($headings, @stories) = @$not_started;
+    display("Stories Not Started", 'yellow');
+    print_stories(\@stories);
+}
+
+# Figure out what the headings are
+for my $k (keys %$stories) {
+    delete $stories->{$k} if $k eq lc($k);
+}
+
+for my $category (keys %$stories) {
+    my ($headings, @stories) = @{ $stories->{$category} };
+    if (@stories) {
+        display($category, 'green');
+        print_stories(\@stories);
+    }
+}
+exit;
+
+
+sub print_stories {
+    my $stories = shift;
+    for my $s (@$stories) {
+        display("  $s->[0]", 'blue');
+    }
+}
+
