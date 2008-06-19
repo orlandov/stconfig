@@ -1,0 +1,108 @@
+#!/usr/bin/perl
+use warnings;
+use strict;
+
+use Getopt::Long;
+use Term::ANSIColor;
+use lib "$ENV{ST_SRC_BASE}/current/nlw/lib";
+use Socialtext::System qw/shell_run/;
+use Fatal qw(:void open rename);
+
+my $bump = 'bugfix';
+my $check = 0;
+
+GetOptions(
+    "major" => sub { $bump = 'major' },
+    "minor" => sub { $bump = 'minor' },
+    "point" => sub { $bump = 'point' },
+    "bugfix" => sub { $bump = 'bugfix' },
+    "check!" => \$check,
+);
+my $branch = shift or usage();
+
+display('green', "Bumping '$bump' in '$branch'");
+
+my $basedir = $ENV{ST_SRC_BASE};
+my @VERSION_FILES = (
+    "$basedir/$branch/nlw/lib/Socialtext.pm",
+    "$basedir/$branch/guanxi/python_guanxi/build_templates/development.ini.template",
+    "$basedir/$branch/guanxi/socialtext_people/etc/socialtext-people/development.ini",
+);
+my %BUMP_POS = ( major => 0, minor => 1, point => 2, bugfix => 3 );
+
+my $cur_ver = get_current_version($VERSION_FILES[0]);
+display('yellow', "Cur Version: ", $cur_ver);
+my $bumped_ver = bump_version($cur_ver, $bump);
+display('yellow', "Bumped Version: ", $bumped_ver);
+
+exit 0 if $check;
+
+replace_version($cur_ver => $bumped_ver, $_) for @VERSION_FILES;
+
+display('bold green', "Done!");
+
+####
+
+sub get_current_version {
+    my $file = shift;
+    open my $ver_file, '<', $file;
+    (my $ver_line) = grep /our \$VERSION =.+?(\d+\.\d+\.\d+\.\d+)/, <$ver_file>;
+    close $ver_file;
+    die "couldn't find version number in $file"
+        unless $ver_line;
+    (my $cur_ver_num) = ($ver_line =~ /(\d+\.\d+\.\d+\.\d+)/);
+    die "couldn't find version number in $file"
+        unless $cur_ver_num;
+    return $cur_ver_num;
+}
+
+sub bump_version {
+    my ($cur_ver, $bump) = @_;
+    my @parts = split(m#\.#,$cur_ver,4);
+    my $pos = $BUMP_POS{$bump};
+
+    $#parts = $pos; # chomp
+    $parts[-1] += 1;
+    @parts = (@parts, 0,0,0,0)[0 .. 3]; # zero fill
+
+    my $bumped_ver = join('.',@parts);
+    return $bumped_ver;
+}
+
+sub replace_version {
+    my ($old_ver, $new_ver, $file) = @_;
+
+    display('blue', "Editing $file ...");
+
+    open my $in, '<', $file;
+    open my $out, '>', "$file.tmp";
+
+    while (my $line = <$in>) {
+        $line =~ s/\Q$old_ver\E/$new_ver/g;
+        print $out $line;
+    }
+
+    close $in;
+    close $out;
+
+    rename $file => "$file.bak";
+    rename "$file.tmp" => $file;
+}
+
+sub display {
+    my $color = shift;
+    my $msg = join('',@_);
+    print color($color), $msg, color('reset'), "\n";
+}
+
+sub usage {
+    print STDERR <<"EUSAGE";
+USAGE: $0 (--major|--minor|--point|--bugfix) branchname
+Example: 2.20.3.4
+    after --major:  3.0.0.0
+    after --minor:  2.21.0.0
+    after --point:  2.20.4.0
+    after --bugfix: 2.20.3.5
+EUSAGE
+    exit 1;
+}
