@@ -68,6 +68,9 @@ cdcon()   { cd `abs_path $ST_CURRENT/appliance/libsocialtext-appliance-perl`; }
 cdctrl()  { cd `abs_path $ST_CURRENT/control`; }
 cdskins()  { cd `abs_path $ST_CURRENT/socialtext-skins`; }
 cdppl() { cd `abs_path $ST_CURRENT/guanxi`; }
+cdplug() { cd `abs_path $ST_CURRENT/plugins`; }
+cdgad() { cd `abs_path $ST_CURRENT/plugins/gadgets`; }
+cdsc() { cd `abs_path $ST_CURRENT/plugins/socialcalc`; }
 
 MAC_FILE="~/.nlw/etc/Socialtext/MAC.secret"
 alias muckmac="rm $MAC_FILE; echo bemucked > $MAC_FILE"
