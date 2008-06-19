@@ -16,8 +16,9 @@ GetOptions(
     "minor" => sub { $bump = 'minor' },
     "point" => sub { $bump = 'point' },
     "bugfix" => sub { $bump = 'bugfix' },
+    "help" => \&usage,
     "check!" => \$check,
-);
+) or usage();
 my $branch = shift or usage();
 
 display('green', "Bumping '$bump' in '$branch'");
@@ -97,12 +98,18 @@ sub display {
 
 sub usage {
     print STDERR <<"EUSAGE";
-USAGE: $0 (--major|--minor|--point|--bugfix) branchname
-Example: 2.20.3.4
-    after --major:  3.0.0.0
-    after --minor:  2.21.0.0
-    after --point:  2.20.4.0
-    after --bugfix: 2.20.3.5
+USAGE: $0 (type) [--check] branchname
+Options:
+    --help      Show this message
+    --check     Show the ver change but don't do anything
+    (type)      One of --major, --minor, --point, or --bugfix (the default)
+        Example: 
+            if the current version is 2.20.3.4 then
+            ... after --major:  3.0.0.0
+            ... after --minor:  2.21.0.0
+            ... after --point:  2.20.4.0
+            ... after --bugfix: 2.20.3.5
+    branchname  A branch name under ~/src/st 
 EUSAGE
     exit 1;
 }
