@@ -13,7 +13,7 @@ GetOptions( \%opts,
     'force',
 ) or usage();
 
-$opts{repo} ||= 'all'
+$opts{repo} ||= 'all';
 
 my %repo_names = map { $_ => 1 } split /\s+/, qx(st-repo-list);
 $opts{repo} = join(',', keys %repo_names) if $opts{repo} =~ m/^all$/i;
