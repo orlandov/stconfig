@@ -24,6 +24,7 @@ my $plan_page       = 'Test Plan';
 
 my $test_server     = "http://$hostname:$dev_port";
 my $test_workspace  = 'test-data';
+my $test_title      = 'Canonical Test Data Set';
 my $test_username   = 'devnull1@socialtext.com';
 my $test_email      = $test_username;
 my $test_password   = 'd3vnu11l';
@@ -39,6 +40,7 @@ GetOptions(
     'plan-page=s'       => \$plan_page,
     'test-server=s'     => \$test_server,
     'test-workspace=s'  => \$test_workspace,
+    'test-title=s'      => \$test_title,
     'test-username=s'   => \$test_username,
     'test-email=s'      => \$test_email,
     'test-password=s'   => \$test_password,
@@ -134,6 +136,7 @@ my $test_plan = Socialtext::WikiObject::TestPlan->new(
         browser => $ENV{selenium_browser} || '*firefox',
         browser_url => $test_server,
         workspace => $test_workspace,
+        title => $test_title,
         username => $test_username,
         password => $test_password,
         email => $test_email,
@@ -163,6 +166,8 @@ Options:
                         Default '$test_server'
  --test-workspace [ws]  Specify which workspace the testing should occur on
                         Default: '$test_workspace'
+ --test-title [name]    Specify the title of the test workspace
+                        Default: '$test_title''
  --test-username [user] Specify which username the testing should use
                         Default: '$test_username'
  --test-password [pass] Specify which password the testing should use
@@ -176,9 +181,11 @@ Options:
  --nomaximize           Don't remove the selenium-rc frame in the browser
 
 Environment Variables:
-  selenium_host    => machine running the Selenium RC server
-  selenium_port    => Selenium RC port
-  selenium_browser => browser string to pass to server
+  selenium_host            => machine running the Selenium RC server
+  selenium_port            => Selenium RC port
+  selenium_browser         => browser string to pass to server
+  selenium_client_platform => platform running NLW (linux)
+  selenium_server_platform => platform running Selenium RC server [linux|windows|osx]
 EOT
     exit -1;
 }
