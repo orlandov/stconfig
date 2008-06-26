@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use Term::ANSIColor 'color';
 use File::Path qw/mkpath/;
 use Fatal qw/:void mkpath chdir unlink symlink/;
 use English;
@@ -51,23 +52,28 @@ sub update_or_checkout {
     my $dir = $repo eq 'socialtext' ? $branch : "$repo/$path";
     return if -d $dir;
     if ($ENV{SVN_COMMAND} eq 'svk') {
+        color_print('green', "syncing $repo\n");
         shell_run("-scm sync //mirror/$repo") || return;
     }
     
-    if (!-d $repo or !shell_run("-scm info $repo")) {
-        shell_run("scm checkout $ENV{ST_SVN}/$repo/$path $dir");
+    if (!-d $repo or !shell_run("-scm info $repo 2>/dev/null")) {
+        color_print('green', "checking out $repo/$path\n");
+        shell_run("scm checkout $ENV{ST_SVN}/$repo/$path $dir >/dev/null");
     }
     else {
-        shell_run("scm up $dir");
+        color_print('green', "updating $dir");
+        shell_run("scm up $dir >/dev/null");
     }
 }
 
 sub shell_run {
     my $cmd = shift;
     my $nodie = $cmd =~ s/^-//;
-    warn $cmd;
     my $rc = system $cmd;
-    exit unless $nodie or $rc == 0;
+    unless ($nodie or $rc == 0) {
+        color_print('red', "Error running $cmd\n");
+        exit $rc;
+    }
     return $rc == 0;
 }
 
@@ -109,6 +115,12 @@ USAGE: set-branch <branch>
 Existing branches:
 @branches
 EOT
+}
+
+sub color_print {
+    my $color = shift;
+    my $msg = shift;
+    print color($color), $msg, color('reset');
 }
 
 sub branch_list {
