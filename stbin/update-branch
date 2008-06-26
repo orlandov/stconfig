@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 use lib "$ENV{HOME}/src/st/current/nlw/lib";
+use Term::ANSIColor;
 use Socialtext::System qw/shell_run/;
 use Getopt::Long;
 use Socialtext::BuildUtils qw/display/;
@@ -35,7 +36,7 @@ $smerge_opts .= "-m '$opts{message}'";
 shell_run("refresh-branch $opts{from}");
 shell_run("refresh-branch $branch");
 
-cowsay("Updating $branch from $from_branch");
+color_print('green', "Updating $branch from $from_branch\n");
 for my $repo (@repos) {
     my $svk_base = "//mirror/$repo";
     my $branch_prefix = "branches/";
@@ -49,22 +50,22 @@ for my $repo (@repos) {
         $r_branch = "$repo/$branch_prefix$branch";
     }
 
-    cowsay("Updating $repo repository.", 'magenta');
+    color_print('magenta', "Updating $repo repository.\n");
     eval {
         shell_run(
             "svk smerge $smerge_opts $svk_base/$from_branch $branch_path"
         );
     };
     if ($@) {
-        warn "Error: $@\n";
+        color_print('red', "Error: $@\n");
         exit unless $opts{force};
     }
     else {
-        cowsay("Branch $branch updated!", 'green');
+        color_print('green', "Branch $branch updated!\n");
     }
 }
 shell_run("refresh-branch $branch");
-cowsay("All done!");
+color_print('green', "All done!\n");
 
 exit;
 
@@ -84,9 +85,8 @@ options:
 EOT
 }
 
-sub cowsay {
+sub color_print {
+    my $color = shift;
     my $msg = shift;
-    my $colour = shift || 'green';
-    my $cowsay = qx(cowsay '$msg');
-    display($cowsay, $colour);
+    print color($color), $msg, color('reset');
 }
