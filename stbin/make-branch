@@ -21,7 +21,7 @@ GetOptions( \%opts,
     'repo=s',
 ) or usage();
 
-$opts{repo} ||= 'socialtext'; # Default to avoid changing behaviour
+$opts{repo} ||= 'all';
 $opts{repo} = join(',', keys %repo_names) if $opts{repo} =~ m/^all$/i;
 my @repos = split ',', $opts{repo};
 for my $r (@repos) {
