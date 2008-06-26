@@ -28,9 +28,14 @@ for my $r (@repos) {
         run("$SCM_up $src_base/$branch_name");
     }
     else {
-        my $branch_path = $branch_name eq 'trunk'
-                        ? "$src_base/$r/trunk"
-                        : "$src_base/$r/branches/$branch_name";
+        my $branch_path = "$src_base/$r/branches/$branch_name";
+        if ($branch_name eq 'trunk') {
+            $branch_path = "$src_base/$r/trunk";
+        }
+        elsif ($branch_name =~ m{^(tags|branches)/}) {
+            $branch_path = "$src_base/$r/$branch_name";
+        }
+
         if (-d $branch_path) {
             run("$SCM_up $branch_path");
         }

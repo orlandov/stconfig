@@ -32,6 +32,9 @@ for my $r (@repos) {
 $opts{message} ||= "update-branch $branch from $from_branch";
 $smerge_opts .= "-m '$opts{message}'";
 
+shell_run("refresh-branch $opts{from}");
+shell_run("refresh-branch $branch");
+
 cowsay("Updating $branch from $from_branch");
 for my $repo (@repos) {
     my $svk_base = "//mirror/$repo";
@@ -48,12 +51,9 @@ for my $repo (@repos) {
 
     cowsay("Updating $repo repository.", 'magenta');
     eval {
-        map { shell_run($_) }
-            "svk up -s ~/src/st/$from_dir",
-            "svk up -s ~/src/st/$r_branch",
-            "svk smerge $smerge_opts $svk_base/$from_branch $branch_path",
-            "svk up -s ~/src/st/$r_branch",
-            ;
+        shell_run(
+            "svk smerge $smerge_opts $svk_base/$from_branch $branch_path"
+        );
     };
     if ($@) {
         warn "Error: $@\n";
@@ -63,6 +63,7 @@ for my $repo (@repos) {
         cowsay("Branch $branch updated!", 'green');
     }
 }
+shell_run("refresh-branch $branch");
 cowsay("All done!");
 
 exit;
