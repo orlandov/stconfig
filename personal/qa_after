@@ -47,7 +47,6 @@ else
     alias cdpers='cd ~/personal'
     alias cdqa='cd ~/personal/qa'
     alias cdwt='cd $ST_CURRENT/nlw/share/workspaces/wikitests'
-    alias cdct='cd $ST_CURRENT/nlw/share/workspaces/calctests'
     alias cdst='cd $ST_SRC_BASE'
     alias cdshare='cd $ST_CURRENT/nlw/share'
     alias cdskin='cd $ST_CURRENT/nlw/share/skin'
@@ -58,7 +57,6 @@ else
     
     # aliases to run wikitests
     RWT=$ST_SRC_BASE/stconfig/personal/qa/run-wiki-tests.bash
-    RCT=$ST_SRC_BASE/stconfig/personal/qa/run-socialcalc-tests.bash
 
     alias rwt="$RWT $1 $2 $3"
     alias rct="$RCT $1 $2 $3"
@@ -70,10 +68,8 @@ else
     alias rcto="$RCT 'OSR Testcases'"
 
     alias xwt="run-wiki-tests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
-    alias xct="run-wiki-tests --plan-workspace calctests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
     
-    alias xlwt="run-wiki-tests --no-maximize --test-username devnull3 --test-password Ko013344  --test-email devnull3@socialtext.com  --timeout 60000 --plan-page  "
-    alias xlct="run-wiki-tests --no-maximize --test-username devnull3 --test-password Ko013344  --test-email devnull3@socialtext.com  --timeout 60000 --plan-workspace calctests --plan-page  "
+    alias xlwt="run-wiki-tests --no-maximize --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-page  "
 
     SETSEL=$ST_SRC_BASE/stconfig/personal/qa/setup-selenium
     alias setsel="source $SETSEL"

@@ -66,16 +66,6 @@ if [ $FRESHDEV ]; then
         [ "$wikitest" == "y" ] && $NLW_BIN/st-admin import-workspace --tarball $ST_CURRENT/nlw/share/workspaces/wikitests/wikitests.1.tar.gz  
     fi
 
-    echo ""
-    read -p  "Build calctests wiki from scratch? y/n " wikitest
-    if [ "$wikitest" == "y" ]; then
-        $NLW_DEVBIN/calctests-to-wiki
-    else
-        echo ""
-        read -p  "Build calctests wiki from tarball? y/n " wikitest
-        [ "$wikitest" == "y" ] && $NLW_BIN/st-admin import-workspace --tarball $ST_CURRENT/nlw/share/workspaces/calctests/calctests.1.tar.gz  
-    fi
-
 fi
 
 echo Removing all ceqlotron tasks to stop unnecessary indexing
