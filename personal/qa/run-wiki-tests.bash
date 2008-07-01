@@ -55,6 +55,9 @@ if [ $FRESHDEV ]; then
     $NLW_BIN/st-admin give-system-admin  --e $USERNAME  >/dev/null 2>/dev/null || true
     echo Populating reports DB
     $NLW_DEVBIN/st-populate-reports-db
+    # run report populater again because that seems to be necessary for the
+    # report tests to pass
+    $NLW_DEVBIN/st-populate-reports-db
     
     echo ""
     read -p  "Build wikitests wiki from scratch? y/n " wikitest
@@ -65,7 +68,8 @@ if [ $FRESHDEV ]; then
         read -p  "Build wikitests wiki from tarball? y/n " wikitest
         [ "$wikitest" == "y" ] && $NLW_BIN/st-admin import-workspace --tarball $ST_CURRENT/nlw/share/workspaces/wikitests/wikitests.1.tar.gz  
     fi
-
+    echo ENABLING Socialcalc for all workspaces
+    $NLW_DEVBIN/st-socialcalc enable
 fi
 
 echo Removing all ceqlotron tasks to stop unnecessary indexing
