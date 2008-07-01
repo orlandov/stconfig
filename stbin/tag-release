@@ -1,15 +1,13 @@
 #!/bin/sh
 set -e
 
-DRY_RUN=""
-VERBOSE=""
 
 BRANCH=$1
 KIND=${2:-"release"}
 MSG=${3:-""}
 
 if [ -z "$BRANCH" ]; then
-    echo "Usage: $0 branch [prefix [message [version]]]"
+    echo "Usage: $0 branch [prefix [message [version [verbose [dry-run]]]]]"
     exit 1
 fi
 
@@ -24,6 +22,9 @@ if [ -z "$TAG" ]; then
     echo "Error: Could not determine next $KIND tag for $BRANCH";
     exit 1;
 fi
+
+DRY_RUN=${6:-""}
+VERBOSE=${5:-""}
 
 for REPO in `st-repo-list` ; 
 do
