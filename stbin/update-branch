@@ -33,8 +33,8 @@ for my $r (@repos) {
 $opts{message} ||= "update-branch $branch from $from_branch";
 $smerge_opts .= "-m '$opts{message}'";
 
-shell_run("refresh-branch $opts{from}");
-shell_run("refresh-branch $branch");
+shell_run("refresh-branch --quiet $opts{from}");
+shell_run("refresh-branch --quiet $branch");
 
 color_print('green', "Updating $branch from $from_branch\n");
 for my $repo (@repos) {
@@ -64,7 +64,7 @@ for my $repo (@repos) {
         color_print('green', "Branch $branch updated!\n");
     }
 }
-shell_run("refresh-branch $branch");
+shell_run("refresh-branch --quiet $branch");
 color_print('green', "All done!\n");
 
 exit;
