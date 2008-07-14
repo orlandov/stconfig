@@ -31,7 +31,6 @@ my %default_env = (
     SF_CODE_REPO      => 'https://svn.sourceforge.net/svnroot/socialtext',
     ST_CODE_REPO      => 'https://repo.socialtext.net:8999/svn/socialtext',
     ST_SVN            => 'https://repo.socialtext.net:8999/svn',
-    WCNP_SERVER       => "'http://panacea.canonical.org/~matthew/cgi-bin/wcnp_server.cgi?who=$ENV{USER}'",
     STB               => '//mirror/socialtext/branches',
     STT               => '//mirror/socialtext/tags',
 );
