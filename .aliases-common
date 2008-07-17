@@ -11,6 +11,7 @@ alias POSTf='POST -UseS'
 alias HEADf='HEAD -UseS'
 alias rc="rcontract-create"
 alias rq='stedit -w dev-tasks "Release Queue"'
+alias i=clear
 
 alias ..='cd ..'
 alias ..1='cd ..'
@@ -57,6 +58,10 @@ cdtrunk() { cd $ST_TRUNK; }
 CDtrunk() { scmcd $ST_TRUNK; }
 cds2()    { cd `abs_path $ST_CURRENT/nlw/share/skin/s2`; }
 CDs2()    { scmcd `abs_path $ST_CURRENT/nlw/share/skin/s2`; }
+cdjs()    { cd `abs_path $ST_CURRENT/nlw/share/skin/s2/javascript`; }
+CDjs()    { scmcd `abs_path $ST_CURRENT/nlw/share/skin/s2/javascript`; }
+cdjstest() { cd `abs_path $ST_CURRENT/nlw/share/skin/s2/javascript/test`; }
+CDjstest() { scmcd `abs_path $ST_CURRENT/nlw/share/skin/s2/javascript/test`; }
 cdcur()   { cd `abs_path $ST_CURRENT`; }
 CDcur()   { scmcd `abs_path $ST_CURRENT`; }
 cdcfg()   { cd `abs_path $ST_CURRENT/../stconfig`; }
