@@ -81,12 +81,17 @@ function precmd
 	export PS1
 #	print -Pn "\e]2;%m:%~\a"
 #	print -Pn "\e]0;%3~\a"
+
+        if [[ "$TERM" == "screen" ]]; then
+            print -Pn "\ek${USER}\@%m\e\\"
+        else
+            print -Pn "\e]2;%m: %v\a"
+        fi
 }
 
 preexec()
 {
 	psvar[1]=${(V)2}
-	print -Pn "\e]2;%m: %v\a"
 }
 
 # function precmd
