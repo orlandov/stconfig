@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+my $paren_tightness = $ENV{ST_LOOSE_PARENS} ? 1 : 2;
+
 sub tidy {
     my $file = shift;
     my @cmd = (
@@ -17,7 +19,7 @@ sub tidy {
         '-vt=0',
         '-vtc=0',
         '-cti=0',
-        '-pt=1',
+        "-pt=$paren_tightness",
         '-bt=1',
         '-sbt=1',
         '-bbt=1',
