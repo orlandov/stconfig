@@ -34,6 +34,7 @@ my $version;
 my $verbose;
 my $time_out        = '10000';
 my $fake_content_file;
+my $perf_summary;
 GetOptions(
     'plan-server=s'     => \$plan_server,
     'plan-workspace=s'  => \$plan_workspace,
@@ -49,6 +50,7 @@ GetOptions(
     'maximize!'         => \$maximize,
     'verbose'           => \$verbose,
     'version'           => \$version,
+    'perf-summary'      => \$perf_summary,
 ) or usage();
 
 # Add current branch's lib to our include path
@@ -58,7 +60,6 @@ unshift @INC, "$nlw_path/lib";
 diag "Added $nlw_path/lib to \@INC...";
 
 if ($version) {
-
     my @libs = qw(
         WWW::Selenium
         Test::WWW::Selenium
@@ -123,6 +124,8 @@ my $wikitest_files_dir = {
     osx => '/private/wikitest_files/',
 }->{$ENV{selenium_server_platform} || 'linux'};
 
+my $test_start_time = _epoch_to_timpstamp(time);
+
 diag "Testing $test_server\n";
 my $test_plan = Socialtext::WikiObject::TestPlan->new(
     rester => $rester,
@@ -146,6 +149,40 @@ my $test_plan = Socialtext::WikiObject::TestPlan->new(
     },
 );
 $test_plan->run_tests;
+
+if ($perf_summary) {
+    my $test_end_time = _epoch_to_timpstamp(time);
+    my $perf_script = '/usr/sbin/st-appliance-summarize-perf';
+    require Socialtext::System;
+    if (-x $perf_script) {
+        warn "Ass-u-ming appliance, as $perf_script is found.\n";
+        Socialtext::System::shell_run(
+            $perf_script, '--log-file', '/var/log/nlw.log', 
+            '--start-time', $test_start_time,
+            '--end-time', $test_end_time,
+        );
+    }
+    else {
+        my $console_dir = "$nlw_path/../appliance/libsocialtext-appliance-perl";
+        my $perf_script = "$console_dir/sbin/st-appliance-summarize-perf";
+        die "Can't find $perf_script" unless -x $perf_script;
+
+        # In a dev-env, we need to grep our log lines out of the global
+        # nlw.log file, as it is shared.
+        my $tmp_file = "/tmp/run-wiki-test-nlw.log.$$";
+        Socialtext::System::shell_run(
+            "grep '\\[$>\\]' /var/log/nlw.log > $tmp_file",
+        );
+
+        Socialtext::System::shell_run(
+            $^X, '-I', "$console_dir/lib",
+            $perf_script, '--log-file', $tmp_file, 
+            '--start-time', $test_start_time,
+            '--end-time', $test_end_time,
+        );
+    }
+}
+
 exit;
 
 
@@ -179,6 +216,7 @@ Options:
  --fake-content-file [file] Specify a file to read from instead of the wiki.
  --verbose              Show debugging information
  --nomaximize           Don't remove the selenium-rc frame in the browser
+ --perf-summary         Output a summary of the performance timings
 
 Environment Variables:
   selenium_host            => machine running the Selenium RC server
@@ -188,4 +226,11 @@ Environment Variables:
   selenium_server_platform => platform running Selenium RC server [linux|windows|osx]
 EOT
     exit -1;
+}
+
+sub _epoch_to_timpstamp {
+    my $time = shift;
+    my ($sec,$min,$hour,$mday,$mon,$year) = localtime($time);
+    return sprintf '%d-%02d-%dT%d:%02d:%02d', $year + 1900, $mon + 1, $mday,
+                $hour, $min, $sec;
 }
