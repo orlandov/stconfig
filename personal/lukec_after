@@ -29,7 +29,7 @@ env | grep SSH | perl -lne 'chomp; m/^(\w+)=(.+)$/; print qq{export $1="$2"}' > 
 
 # For ssh keychain
 KEYCHAIN=/home/lukec/.keychain/`hostname`-sh
-if [ -d $KEYCHAIN ]; then
+if [ -e $KEYCHAIN ]; then
     source $KEYCHAIN
 fi
 
