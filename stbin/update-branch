@@ -33,7 +33,7 @@ for my $r (@repos) {
 $opts{message} ||= "update-branch $branch from $from_branch";
 $smerge_opts .= "-m '$opts{message}'";
 
-shell_run("refresh-branch --quiet $opts{from}");
+shell_run("refresh-branch --quiet $from_branch");
 shell_run("refresh-branch --quiet $branch");
 
 color_print('green', "Updating $branch from $from_branch\n");
@@ -42,7 +42,7 @@ for my $repo (@repos) {
     my $branch_prefix = "branches/";
     $branch_prefix = '' if $branch =~ m#tags/#;
     my $branch_path = "$svk_base/$branch_prefix$branch";
-    my $from_dir = $opts{from} || 'trunk';
+    my $from_dir = $from_branch;
 
     (my $r_branch = $branch) =~ s#tags/##;
     if ($repo ne 'socialtext') {
