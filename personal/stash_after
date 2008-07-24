@@ -1,2 +1,1 @@
-# lame:
-# set -o vi
+alias fdefs='fresh-dev-env-from-scratch'
