@@ -1,0 +1,34 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Getopt::Long;
+use lib "$ENV{ST_CURRENT}/nlw/lib";
+use Socialtext::System qw/shell_run/;
+
+my $ve_host = 'zircon.socialtext.net' || $ENV{ST_VE_HOST};
+my $ve_name;
+my $repo;
+GetOptions(
+    'v|ve-name=s' => \$ve_name,
+    'r|repo=s'    => \$repo,
+) or usage ();
+usage('repo is mandatory!') unless $repo;
+usage('ve-name is mandatory!') unless $ve_name;
+
+shell_run("ssh $ve_host sudo setup-qa-ve rebuild --ve $ve_name --repo $repo");
+exit;
+
+sub usage {
+    my $msg = shift ||'';
+    die <<EOT;
+$msg
+
+USAGE: $0 <opts> command
+
+Options:
+  -v --ve-name  Name of the VE to operate on
+  -r --repo     Name of the debian repo to install
+EOT
+}
+
+
