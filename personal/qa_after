@@ -59,16 +59,7 @@ else
     RWT=$ST_SRC_BASE/stconfig/personal/qa/run-wiki-tests.bash
 
     alias rwt="$RWT $1 $2 $3"
-    alias rct="$RCT $1 $2 $3"
-
-    alias rwta="$RWT 'All Testcases'" 
-    alias rwti6="$RWT 'IE 6 Testcases'"
-    alias rwti7="$RWT 'IE 7 Testcases'"
-    alias rwto="$RWT 'OSR Testcases'"
-    alias rcto="$RCT 'OSR Testcases'"
-
     alias xwt="run-wiki-tests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
-    
     alias xlwt="run-wiki-tests --no-maximize --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-page  "
 
     SETSEL=$ST_SRC_BASE/stconfig/personal/qa/setup-selenium
