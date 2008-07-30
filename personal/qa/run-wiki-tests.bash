@@ -81,5 +81,7 @@ echo plan-page is $1
 echo plan-workspace is $PLAN_WORKSPACE
 echo plan-server is $PLAN_SERVER
 
+$NLW_DEVBIN/st-socialcalc enable
+
 ~/stbin/run-wiki-tests --no-maximize --test-username "$USERNAME" --test-email "$USERNAME" --plan-server "$PLAN_SERVER" --plan-workspace "$PLAN_WORKSPACE" --timeout 60000 --plan-page "$1" >& testcases.out&
 echo RUNNING ... tail -f $ST_CURRENT/testcases.out to monitor progress
