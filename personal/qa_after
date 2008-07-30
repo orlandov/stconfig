@@ -16,7 +16,7 @@ if [ -e /etc/socialtext/socialtext.conf ]; then
     alias ceqrm='/usr/bin/ceq-rm'
     alias cdwt='cd /usr/share/nlw/wikitests'
     alias cdskin='cd /usr/share/nlw/skin'
-#    alias cdjs='cd /usr/share/nlw//skin/s2/javascript'
+    alias cds2js='cd /usr/share/nlw//skin/s2/javascript'
     
 else
 
@@ -50,7 +50,7 @@ else
     alias cdst='cd $ST_SRC_BASE'
     alias cdshare='cd $ST_CURRENT/nlw/share'
     alias cdskin='cd $ST_CURRENT/nlw/share/skin'
-#    alias cdjs='cd $ST_CURRENT/nlw/share/skin/s2/javascript'
+    alias cds2js='cd $ST_CURRENT/nlw/share/skin/s2/javascript'
     alias cdcalc='cd $ST_CURRENT/nlw/../plugins/socialcalc'
     alias cdndb='cd $ST_CURRENT/nlw/dev-bin'
     alias cdnb='cd $ST_CURRENT/nlw/bin'
@@ -61,6 +61,10 @@ else
     alias rwt="$RWT $1 $2 $3"
     alias xwt="run-wiki-tests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
     alias xlwt="run-wiki-tests --no-maximize --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-page  "
+
+    # S3 wikitest aliases
+    alias 3wt="run-wiki-tests --no-maximize --plan-server http://www2.socialtext.net --plan-workspace s3wt --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
+    alias 3lwt="run-wiki-tests --no-maximize --plan-server http://www2.socialtext.net --plan-workspace s3wt --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-page  "
 
     SETSEL=$ST_SRC_BASE/stconfig/personal/qa/setup-selenium
     alias setsel="source $SETSEL"
