@@ -58,13 +58,14 @@ else
     # aliases to run wikitests
     RWT=$ST_SRC_BASE/stconfig/personal/qa/run-wiki-tests.bash
 
-    alias rwt="$RWT $1 $2 $3"
-    alias xwt="run-wiki-tests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
-    alias xlwt="run-wiki-tests --no-maximize --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-page  "
+    alias rwt="export ST_SKIN_NAME='s2'; $RWT $1 $2 $3"
+    alias xwt="export ST_SKIN_NAME='s2'; run-wiki-tests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
+    alias xlwt="export ST_SKIN_NAME='s2'; run-wiki-tests --no-maximize --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-page  "
 
     # S3 wikitest aliases
-    alias 3wt="run-wiki-tests --no-maximize --plan-server http://www2.socialtext.net --plan-workspace s3wt --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
-    alias 3lwt="run-wiki-tests --no-maximize --plan-server http://www2.socialtext.net --plan-workspace s3wt --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-page  "
+    alias setskin="st-admin set-workspace-config --w test-data skin_name "
+    alias 3wt="export ST_SKIN_NAME='s3'; run-wiki-tests --no-maximize --plan-server http://www2.socialtext.net --plan-workspace s3wt --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
+    alias 3lwt="export ST_SKIN_NAME='s3'; run-wiki-tests --no-maximize --plan-server http://www2.socialtext.net --plan-workspace s3wt --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-page  "
 
     SETSEL=$ST_SRC_BASE/stconfig/personal/qa/setup-selenium
     alias setsel="source $SETSEL"
