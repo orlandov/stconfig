@@ -26,8 +26,8 @@ display('green', "Bumping '$bump' in '$branch'");
 my $basedir = $ENV{ST_SRC_BASE};
 my @VERSION_FILES = (
     "$basedir/$branch/nlw/lib/Socialtext.pm",
-    "$basedir/$branch/guanxi/python_guanxi/build_templates/development.ini.template",
-    "$basedir/$branch/guanxi/socialtext_people/etc/socialtext-people/development.ini",
+#   "$basedir/$branch/guanxi/python_guanxi/build_templates/development.ini.template",
+#   "$basedir/$branch/guanxi/socialtext_people/etc/socialtext-people/development.ini",
 );
 my %BUMP_POS = ( major => 0, minor => 1, point => 2, bugfix => 3 );
 
