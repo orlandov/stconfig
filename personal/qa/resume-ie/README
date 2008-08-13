@@ -1,0 +1,24 @@
+This is "resume-ie", a small hacky way to get IE to ignore its Javascript
+errors when running under Selenium.
+
+Directory content:
+
+    resume-ie.exe - Main executable
+    resume-ie.pl  - Source file (not required to run)
+    scd10en.exe   - Microsoft Scripting Debugger (install this first)
+
+Instructions:
+
+    1. Run sdc10en.exe if you havn't already installed it on the
+       current Windows machine.
+
+    2. Before starting Selenium tests for IE, run resume-ie.exe.
+       It will create a console window and keep printing this message:
+           Waiting for the [Error] window
+
+    3. Run IE Selenium tests as usual.  When the "Invalid argument" error
+       dialog box appears, expect it be auto-closed within 15 seconds.
+
+Notes:
+
+    * You don't need to restart resume-ie.exe between Selenium test runs.
