@@ -69,8 +69,6 @@ if [ $FRESHDEV ]; then
         read -p  "Build wikitests wiki from tarball? y/n " wikitest
         [ "$wikitest" == "y" ] && $NLW_BIN/st-admin import-workspace --tarball $ST_CURRENT/nlw/share/workspaces/wikitests/wikitests.1.tar.gz  
     fi
-    echo ENABLING Socialcalc for all workspaces
-    $NLW_DEVBIN/st-socialcalc enable
 fi
 
 echo Removing all ceqlotron tasks to stop unnecessary indexing
