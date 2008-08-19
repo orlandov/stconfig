@@ -57,17 +57,19 @@ CDnlw()   { scmcd `abs_path $ST_CURRENT/nlw`; }
 cdtrunk() { cd $ST_TRUNK; }
 CDtrunk() { scmcd $ST_TRUNK; }
 cds2()    { cd `abs_path $ST_CURRENT/nlw/share/skin/s2`; }
-cds3()    { cd `abs_path $ST_CURRENT/nlw/share/skin/s3`; }
 CDs2()    { scmcd `abs_path $ST_CURRENT/nlw/share/skin/s2`; }
+cds3()    { cd `abs_path $ST_CURRENT/nlw/share/skin/s3`; }
 CDs3()    { scmcd `abs_path $ST_CURRENT/nlw/share/skin/s3`; }
 cdjs()    { cd `abs_path $ST_CURRENT/nlw/share/skin/s2/javascript`; }
 CDjs()    { scmcd `abs_path $ST_CURRENT/nlw/share/skin/s2/javascript`; }
-cdjstest() { cd `abs_path $ST_CURRENT/nlw/share/skin/s2/javascript/test`; }
-CDjstest() { scmcd `abs_path $ST_CURRENT/nlw/share/skin/s2/javascript/test`; }
+cdjs3()   { cd `abs_path $ST_CURRENT/nlw/share/skin/s3/javascript`; }
+CDjs3()   { scmcd `abs_path $ST_CURRENT/nlw/share/skin/s3/javascript`; }
+cdjstest() { cd `abs_path $ST_CURRENT/nlw/share/skin/js-test`; }
+CDjstest() { scmcd `abs_path $ST_CURRENT/nlw/share/skin/js-test`; }
 cdcur()   { cd `abs_path $ST_CURRENT`; }
 CDcur()   { scmcd `abs_path $ST_CURRENT`; }
-cdcfg()   { cd `abs_path $ST_CURRENT/../stconfig`; }
-CDcfg()   { scmcd `abs_path $ST_CURRENT/../stconfig` && ./stconfig-setup; }
+cdcfg()   { cd `abs_path $ST_CURRENT/../stconfig/trunk`; }
+CDcfg()   { scmcd `abs_path $ST_CURRENT/../stconfig/trunk` && ./stconfig-setup; }
 cdcrp()   { cd `abs_path $ST_CURRENT/../clients/rest/perl`; }
 cdrpt()   { cd `abs_path $ST_CURRENT/socialtext-reports`; }
 cdapp()   { cd `abs_path $ST_CURRENT/appliance`; }
