@@ -32,7 +32,7 @@ PLAN_WORKSPACE="wikitests"
 if [ "$BRANCH" ]; then
     echo "set-branch $BRANCH"
     ~/stbin/set-branch $BRANCH
-    REPOS=`~/stbin/st-repo-list | sed 's/socialtext //'` # all repos except socialtext
+    REPOS=`/usr/bin/st-repo-list | sed 's/socialtext //'` # all repos except socialtext
 
     for REPO in $REPOS; do
         echo Checking out $REPO/$BRANCH ;
