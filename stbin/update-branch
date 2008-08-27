@@ -19,7 +19,7 @@ GetOptions( \%opts,
 my $branch = shift;
 usage() unless $branch;
 
-my $from_branch = $opts{from} ? "branches/$opts{from}" : "trunk";
+my $from_branch = $opts{from} || "trunk";
 my $smerge_opts  = $opts{pretend} ? '-C ' : '';
 
 my %repo_names = map { $_ => 1 } split /\s+/, qx(st-repo-list);
@@ -41,19 +41,13 @@ for my $repo (@repos) {
     my $svk_base = "//mirror/$repo";
     my $branch_prefix = "branches/";
     $branch_prefix = '' if $branch =~ m#tags/#;
-    my $branch_path = "$svk_base/$branch_prefix$branch";
-    my $from_dir = $from_branch;
-
-    (my $r_branch = $branch) =~ s#tags/##;
-    if ($repo ne 'socialtext') {
-        $from_dir = "$repo/$from_branch";
-        $r_branch = "$repo/$branch_prefix$branch";
-    }
+    my $branch_path      = "$svk_base/$branch_prefix$branch";
+    my $from_branch_path = "$svk_base/$branch_prefix$from_branch";
 
     color_print('magenta', "Updating $repo repository.\n");
     eval {
         shell_run(
-            "svk smerge $smerge_opts $svk_base/$from_branch $branch_path"
+            "svk smerge $smerge_opts $from_branch_path $branch_path"
         );
     };
     if ($@) {
