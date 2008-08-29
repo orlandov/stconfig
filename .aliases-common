@@ -122,6 +122,7 @@ alias stprad='w2rad -w socialpedia'
 alias tigrad='wikrad -w tigger'
 alias stdrad='wikrad -w stdev'
 alias staxrad='w2rad -w stax'
+alias ves='dtrad "Zircon VE Assignment"'
 
 provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
