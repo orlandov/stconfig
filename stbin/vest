@@ -8,19 +8,32 @@ use Socialtext::System qw/shell_run/;
 my $ve_host = 'zircon.socialtext.net' || $ENV{ST_VE_HOST};
 my $ve_name;
 my $repo;
+my $upgrade_to;
 GetOptions(
     'v|ve-name=s' => \$ve_name,
     'r|repo=s'    => \$repo,
+    'u|upgrade-to=s' => \$upgrade_to,
 ) or usage ();
-usage('repo is mandatory!') unless $repo;
+usage('repo or upgrade-to is mandatory!') unless $repo or $upgrade_to;
 usage('ve-name is mandatory!') unless $ve_name;
 
-shell_run("ssh $ve_host sudo setup-qa-ve rebuild --ve $ve_name --repo $repo");
-shell_run(qq{ssh $ve_host "sudo vzctl exec $ve_name '}
-    . 'apt-get update;'
-    . 'apt-get install stconfig --yes;'
-    . qq{echo "$ENV{USER} ALL=NOPASSWD: ALL" >> /etc/sudoers;}
-    . q{'"});
+my $ssh = "ssh $ve_host";
+if ($upgrade_to) {
+    exec_on_ve( 
+        qq{echo "deb https://apt.socialtext.net/socialtext $upgrade_to }
+          . 'main alien" >> /etc/apt/sources.list',
+        'st-appliance-update',
+        'st-appliance-tests --upgrade',
+    );
+    exit;
+}
+
+shell_run(qq{$ssh "sudo setup-qa-ve rebuild --ve $ve_name --repo $repo"});
+exec_on_ve( 
+    'apt-get update',
+    'apt-get install stconfig --yes',
+    qq{echo "$ENV{USER} ALL=NOPASSWD: ALL" >> /etc/sudoers},
+);
 exit;
 
 sub usage {
@@ -36,4 +49,7 @@ Options:
 EOT
 }
 
-
+sub exec_on_ve {
+    my $cmd = join '; ', @_;
+    shell_run(qq{$ssh "sudo vzctl exec $ve_name '$cmd'"});
+}
