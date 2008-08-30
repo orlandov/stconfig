@@ -10,8 +10,9 @@ use Fatal qw(:void open rename);
 
 my $bump = 'bugfix';
 my $check = 0;
-
+my $current;
 GetOptions(
+    "c|current" => \$current,
     "major" => sub { $bump = 'major' },
     "minor" => sub { $bump = 'minor' },
     "point" => sub { $bump = 'point' },
@@ -19,7 +20,9 @@ GetOptions(
     "help" => \&usage,
     "check!" => \$check,
 ) or usage();
-my $branch = shift or usage();
+my $branch = shift;
+$branch = 'current' if $current;
+usage() unless $branch;
 
 display('green', "Bumping '$bump' in '$branch'");
 
