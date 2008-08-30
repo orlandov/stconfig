@@ -28,11 +28,13 @@ alias acsh='apt-cache show'
 
 alias rb='refresh-branch'
 
-for cmd in `find $HOME/stbin/ -name 'svn*'`; do
-    svn_cmd=`basename $cmd`
-    svk_cmd=`echo $svn_cmd | sed s/svn/svk/`
-    alias $svk_cmd=$svn_cmd
-done
+if [ -d $HOME/stbin ]; then
+    for cmd in `find $HOME/stbin/ -name 'svn*'`; do
+        svn_cmd=`basename $cmd`
+        svk_cmd=`echo $svn_cmd | sed s/svn/svk/`
+        alias $svk_cmd=$svn_cmd
+    done
+fi
 
 # Extract fields from output
 f() {
