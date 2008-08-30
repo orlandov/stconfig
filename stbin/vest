@@ -16,6 +16,11 @@ usage('repo is mandatory!') unless $repo;
 usage('ve-name is mandatory!') unless $ve_name;
 
 shell_run("ssh $ve_host sudo setup-qa-ve rebuild --ve $ve_name --repo $repo");
+shell_run(qq{ssh $ve_host "sudo vzctl exec $ve_name '}
+    . 'apt-get update;'
+    . 'apt-get install stconfig --yes;'
+    . qq{echo "$ENV{USER} ALL=NOPASSWD: ALL" >> /etc/sudoers;}
+    . q{'"});
 exit;
 
 sub usage {

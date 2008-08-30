@@ -7,3 +7,8 @@ that get sourced by the per-user aliases.
 Format:
   <username>-before
   <username>-after
+
+
+Also, stick your ssh public key in <username>/pub.key and then when this stconfig
+package is installed on an appliance, it will be appended to 
+~<username>/.ssh/authorized_keys.
