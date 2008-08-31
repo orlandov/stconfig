@@ -32,6 +32,7 @@ my @from_versions = qw(
 
 local $Socialtext::System::SILENT_RUN = 1;
 for my $base_version (@from_versions) {
+    next if $base_version eq $upgrade_to;
     print "Testing upgrade from $base_version to $upgrade_to ... ";
     my $log_file = "$log_dir/upgrade--$base_version--to--$upgrade_to.log";
     shell_run("date > $log_file");
