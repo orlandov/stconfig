@@ -9,10 +9,12 @@ my $ve_host = 'zircon.socialtext.net' || $ENV{ST_VE_HOST};
 my $ve_name;
 my $repo;
 my $upgrade_to;
+my $plugins;
 GetOptions(
     'v|ve-name=s' => \$ve_name,
     'r|repo=s'    => \$repo,
     'u|upgrade-to=s' => \$upgrade_to,
+    'p|plugins'   => \$plugins,
 ) or usage ();
 usage('repo or upgrade-to is mandatory!') unless $repo or $upgrade_to;
 usage('ve-name is mandatory!') unless $ve_name;
@@ -25,6 +27,7 @@ if ($upgrade_to) {
         'st-appliance-update',
         'st-appliance-tests --upgrade',
     );
+    install_plugins() if $plugins;
     exit;
 }
 
@@ -33,7 +36,11 @@ exec_on_ve(
     'apt-get update',
     'apt-get install stconfig --yes',
     qq{echo "$ENV{USER} ALL=NOPASSWD: ALL" >> /etc/sudoers},
+    'if [ -e /usr/sbin/st-appliance-tests ]; then st-appliance-tests -i; fi',
 );
+
+install_plugins() if $plugins;
+
 exit;
 
 sub usage {
@@ -44,12 +51,21 @@ $msg
 USAGE: $0 <opts> command
 
 Options:
-  -v --ve-name  Name of the VE to operate on
-  -r --repo     Name of the debian repo to install
+  -v --ve-name    Name of the VE to operate on
+  -r --repo       Name of the debian repo to install
+  -u --upgrade-to Name of the repo to upgrade the VE to.
+  -p --plugins    Specifies that plugins should be installed
 EOT
 }
 
 sub exec_on_ve {
     my $cmd = join '; ', @_;
     shell_run(qq{$ssh "sudo vzctl exec $ve_name '$cmd'"});
+}
+
+sub install_plugins {
+    exec_on_ve( 
+        'apt-get install socialtext-plugin-people socialtext-plugin-gadgets'
+        . ' socialtext-plugin-socialcalc',
+    );
 }
