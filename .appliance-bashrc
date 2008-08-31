@@ -1,2 +1,4 @@
 source /usr/share/stconfig/.commonrc
 source /usr/share/stconfig/.aliases-common
+export PGDATABASE=NLW
+export PGUSER=nlw
