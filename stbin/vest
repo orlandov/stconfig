@@ -35,7 +35,7 @@ shell_run(qq{$ssh "sudo setup-qa-ve rebuild --ve $ve_name --repo $repo"});
 exec_on_ve( 
     'apt-get update',
     'apt-get install stconfig --yes',
-    qq{echo "$ENV{USER} ALL=NOPASSWD: ALL" >> /etc/sudoers},
+    qq{echo "$ENV{USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers},
     'if [ -e /usr/sbin/st-appliance-tests ]; then st-appliance-tests -i; fi',
 );
 
