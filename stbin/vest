@@ -5,7 +5,7 @@ use Getopt::Long;
 use lib "$ENV{ST_CURRENT}/nlw/lib";
 use Socialtext::System qw/shell_run/;
 
-my $ve_host = 'zircon.socialtext.net' || $ENV{ST_VE_HOST};
+my $ve_host = $ENV{ST_VE_HOST} || 'zircon.socialtext.net';
 my $ve_name;
 my $repo;
 my $upgrade_to;
@@ -18,6 +18,10 @@ GetOptions(
 ) or usage ();
 usage('repo or upgrade-to is mandatory!') unless $repo or $upgrade_to;
 usage('ve-name is mandatory!') unless $ve_name;
+
+if ($ve_name =~ m/^qa\d$/) {
+    $ve_host =~ s/^zircon/willemite/;
+}
 
 my $ssh = "ssh $ve_host";
 if ($upgrade_to) {
