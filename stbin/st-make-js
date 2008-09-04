@@ -1,5 +1,8 @@
 #!/bin/bash
 
-MAKEFILES="$ST_CURRENT/nlw/share/skin/s2/javascript/Makefile $ST_CURRENT/nlw/share/skin/s3/javascript/Makefile $ST_CURRENT/nlw/share/skin/wikiwyg/javascript/Makefile $ST_CURRENT/plugins/socialcalc/share/javascript/Makefile $ST_CURRENT/nlw/share/skin/js-test/Makefile"
+MAKEFILES="$ST_CURRENT/nlw/share/skin/s2/javascript/Makefile $ST_CURRENT/nlw/share/skin/s3/javascript/Makefile $ST_CURRENT/nlw/share/skin/wikiwyg/javascript/Makefile $ST_CURRENT/plugins/socialcalc/share/javascript/Makefile"
+
+# REMOVED MAKING JS-TEST SINCE IT SEEMS TO BREAK SUBSEQUENT rb COMMANDS:
+# $ST_CURRENT/nlw/share/skin/js-test/Makefile
 
 for i in $MAKEFILES ; do echo Making $i ; pushd `dirname $i` ; make clean all ; popd ; done ;
