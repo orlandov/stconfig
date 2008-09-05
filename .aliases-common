@@ -63,6 +63,8 @@ cdnlw()   { cd `abs_path $ST_CURRENT/nlw`; }
 CDnlw()   { scmcd `abs_path $ST_CURRENT/nlw`; }
 cdtrunk() { cd $ST_TRUNK; }
 CDtrunk() { scmcd $ST_TRUNK; }
+cdskin()  { cd `abs_path $ST_CURRENT/nlw/share/skin`; }
+CDskin()  { scmcd `abs_path $ST_CURRENT/nlw/share/skin`; }
 cds2()    { cd `abs_path $ST_CURRENT/nlw/share/skin/s2`; }
 CDs2()    { scmcd `abs_path $ST_CURRENT/nlw/share/skin/s2`; }
 cds3()    { cd `abs_path $ST_CURRENT/nlw/share/skin/s3`; }
