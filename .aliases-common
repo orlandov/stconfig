@@ -19,6 +19,11 @@ alias ..2='cd ../..'
 alias ..3='cd ../../..'
 alias ..4='cd ../../../..'
 alias ..5='cd ../../../../..'
+alias ..6='cd ../../../../../..'
+alias ..6='cd ../../../../../../..'
+alias ..7='cd ../../../../../../../..'
+alias ..8='cd ../../../../../../../../..'
+alias ..9='cd ../../../../../../../../../..'
 
 alias agu='sudo apt-get update'
 alias agdu='sudo apt-get update; sudo apt-get dist-upgrade'
@@ -68,6 +73,8 @@ cdjs3()   { cd `abs_path $ST_CURRENT/nlw/share/skin/s3/javascript`; }
 CDjs3()   { scmcd `abs_path $ST_CURRENT/nlw/share/skin/s3/javascript`; }
 cdjstest() { cd `abs_path $ST_CURRENT/nlw/share/skin/js-test`; }
 CDjstest() { scmcd `abs_path $ST_CURRENT/nlw/share/skin/js-test`; }
+cdwikiwyg() { cd `abs_path $ST_CURRENT/nlw/share/skin/wikiwyg/javascript`; }
+CDwikiwyg() { scmcd `abs_path $ST_CURRENT/nlw/share/skin/wikiwyg/javascript`; }
 cdcur()   { cd `abs_path $ST_CURRENT`; }
 CDcur()   { scmcd `abs_path $ST_CURRENT`; }
 cdcfg()   { cd `abs_path $ST_CURRENT/../stconfig/trunk`; }
