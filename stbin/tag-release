@@ -11,6 +11,10 @@ if [ -z "$BRANCH" ]; then
     exit 1
 fi
 
+if [ "$BRANCH" = "-c" ]; then
+    BRANCH=`perl -le '$b = readlink("$ENV{HOME}/src/st/current"); $b =~ s(.+/)(); print $b'`
+fi
+
 VERSION=${4:-$(st-version $BRANCH)}
 if [ -z "$VERSION" ]; then
     echo "Error: Could not determine version for $BRANCH";
