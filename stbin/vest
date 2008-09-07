@@ -10,11 +10,14 @@ my $ve_name;
 my $repo;
 my $upgrade_to;
 my $plugins;
+my ($test_data, $test_data_only);
 GetOptions(
     'v|ve-name=s' => \$ve_name,
     'r|repo=s'    => \$repo,
     'u|upgrade-to=s' => \$upgrade_to,
     'p|plugins'   => \$plugins,
+    't|test-data' => \$test_data,
+    'test-data-only' => \$test_data_only,
 ) or usage ();
 usage('repo or upgrade-to is mandatory!') unless $repo or $upgrade_to;
 usage('ve-name is mandatory!') unless $ve_name;
@@ -23,34 +26,47 @@ if ($ve_name =~ m/^qa\d$/) {
     $ve_host =~ s/^zircon/willemite/;
 }
 
-my $ssh = "ssh $ve_host";
+if ($test_data_only) {
+    install_test_data();
+    exit 0;
+}
+
 if ($upgrade_to) {
     exec_on_ve( 
         qq{echo "deb https://apt.socialtext.net/socialtext $upgrade_to }
           . 'main alien" >> /etc/apt/sources.list',
         'st-appliance-update',
-        'st-appliance-tests --upgrade',
     );
-    install_plugins() if $plugins;
-    exit;
 }
-
-eval {
-    shell_run(qq{$ssh "sudo setup-qa-ve rebuild --ve $ve_name --repo $repo"});
-};
-if ($@) {
-    shell_run(qq{$ssh "sudo setup-qa-ve create --ve $ve_name --repo $repo"});
+else {
+    my $ssh = "ssh $ve_host";
+    eval {
+        shell_run(qq{$ssh "sudo setup-qa-ve rebuild --ve $ve_name --repo $repo"});
+    };
+    if ($@) {
+        shell_run(qq{$ssh "sudo setup-qa-ve create --ve $ve_name --repo $repo"});
+    }
+    exec_on_ve( 
+        'apt-get update',
+        'apt-get install stconfig --yes',
+        qq{echo \\"$ENV{USER} ALL=(ALL) NOPASSWD: ALL\\" >> /etc/sudoers},
+    );
 }
-exec_on_ve( 
-    'apt-get update',
-    'apt-get install stconfig --yes',
-    qq{echo \\"$ENV{USER} ALL=(ALL) NOPASSWD: ALL\\" >> /etc/sudoers},
-    'if [ -e /usr/sbin/st-appliance-tests ]; then st-appliance-tests -i; fi',
-);
 
 install_plugins() if $plugins;
+install_test_data() if $test_data;
+run_tests();
 
 exit;
+
+sub run_tests {
+    my $flag = $upgrade_to ? '--upgrade' : '--install';
+    exec_on_ve(<<EOT);
+if [ -e /usr/sbin/st-appliance-tests ]; then 
+    st-appliance-tests $flag
+fi
+EOT
+}
 
 sub usage {
     my $msg = shift ||'';
@@ -69,12 +85,26 @@ EOT
 
 sub exec_on_ve {
     my $cmd = join '; ', @_;
-    shell_run(qq{$ssh "sudo vzctl exec $ve_name '$cmd'"});
+    shell_run(qq{ssh $ve_host "sudo vzctl exec $ve_name '$cmd'"});
 }
 
 sub install_plugins {
     exec_on_ve( 
         'apt-get install socialtext-plugin-people socialtext-plugin-gadgets'
         . ' socialtext-plugin-socialcalc',
+        'st-admin enable-plugin people',
+        'st-admin enable-plugin dashboard',
+        'st-admin enable-plugin socialcalc',
+        'st-admin enable-plugin agile',
+        '/etc/init.d/apache-perl stop; sleep 5; /etc/init.d/apache-perl start',
+    );
+}
+
+sub install_test_data {
+    my $email = '--email devnull1@socialtext.com';
+    exec_on_ve( 
+        "st-admin create-user $email --password d3vnu11l",
+        "st-admin add-workspace-admin $email --workspace admin",
+        "st-admin give-accounts-admin $email",
     );
 }
