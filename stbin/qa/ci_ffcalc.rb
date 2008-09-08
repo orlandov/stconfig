@@ -20,10 +20,15 @@ sync=true
 
 @page_locs = ["/data/workspaces/wikitests/pages/calc_testcases/frontlinks",
     "/data/workspaces/wikitests/pages/file_testcases/frontlinks",
+    "/data/workspaces/wikitests/pages/default_user_testcases/frontlinks",
     "/data/workspaces/wikitests/pages/ldap_testcases/frontlinks",
     "/data/workspaces/wikitests/pages/localization_testcases/frontlinks",
     "/data/workspaces/wikitests/pages/report_testcases/frontlinks",
-    "/data/workspaces/wikitests/pages/core_testcases/frontlinks"]
+    "/data/workspaces/wikitests/pages/core_testcases/frontlinks",
+    "/data/workspaces/wikitests/pages/test_case_miki_authentication/frontlinks",
+    "/data/workspaces/wikitests/pages/test_case_rss_icons/frontlinks",
+    "/data/workspaces/wikitests/pages/test_case_redirect_logout_uri/frontlinks",
+    "/data/workspaces/wikitests/pages/test_case_business_control_panel"]
 
 #@page_loc = "/data/workspaces/wikitests/pages/osr_testcases/frontlinks"
 #@page_loc = "/data/workspaces/feb22-test/pages/chris_small_set/frontlinks"
@@ -118,7 +123,7 @@ while 1 do #INFINITE LOOP
 
                rmsocialcalc = `rm -rf ~/src/st/socialcalc`
                puts rmsocialcalc
-               getsocialcalc = `scm checkout https://repo.socialtext.net:8999/svn/socialcalc/#{@branch} ~/src/st/socialcalc`
+               getsocialcalc = `scm checkout https://repo.socialtext.net:8999/svn/plugins/#{@branch}/socialcalc ~/src/st/socialcalc`
                puts getsocialcalc
 
                remove = `rm -rf ~/src/st/#{@branch}`
@@ -175,7 +180,8 @@ while 1 do #INFINITE LOOP
                   print  "running #{@testcase} at "
                   puts Time.now.to_s
 
-                  @content = `~/stbin/run-wiki-tests --timeout 60000 --test-username "#{@wikitest_user}" --test-email #{@wikitest_user}""  --plan-page "#{@testcase}" 2>&1`
+                  #@content = `~/stbin/run-wiki-tests --timeout 60000 --test-username "#{@wikitest_user}" --test-email #{@wikitest_user}""  --plan-page "#{@testcase}" 2>&1`
+                  @content = `~/stbin/run-wiki-tests --no-maximize --test-username "#{@wikitest_user}" --test-email #{@wikitest_user}""  --timeout 60000 --plan-page "#{@testcase}" 2>&1`
 
                   #puts @content
 
