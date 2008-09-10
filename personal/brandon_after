@@ -1,1 +1,2 @@
-alias fdefs='~/src/st/current/nlw/dev-bin/fresh-dev-env-from-scratch'
+alias s3cfg='st-admin set-workspace-config -w admin skin_name s3'
+alias s2cfg='st-admin set-workspace-config -w admin skin_name s2'
