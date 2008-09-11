@@ -134,6 +134,10 @@ while 1 do #INFINITE LOOP
                puts "CHECKING OUT #{@dev_user}"
                setbranch = `~/stbin/set-branch #{@branch}\n`
                puts setbranch
+               
+               brutal_hack = `sed -i 's/$ENV{NLW_DEV_MODE}/0/' ~/src/st/current/nlw/lib/Socialtext/InitHandler.pm`
+               puts brutal_hack
+
 
                freshdev = system("~/src/st/current/nlw/dev-bin/fresh-dev-env-from-scratch")
                puts freshdev
