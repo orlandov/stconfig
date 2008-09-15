@@ -71,7 +71,7 @@ if [ $FRESHDEV ]; then
     fi
     echo "Setting benchmark mode to prevent JS make on every page load"
     echo "Use st-make-js after every rb to make JS once"
-    st-config set benchmark_mode 1
+    $NLW_BIN/st-config set benchmark_mode 1
 
 fi
 
