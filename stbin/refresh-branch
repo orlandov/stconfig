@@ -46,6 +46,8 @@ for my $r (@repos) {
 }
 
 color_print('green', "All repositories of $branch_name updated!\n");
+
+run("nlwctl restart");
 exit;
 
 sub run {
