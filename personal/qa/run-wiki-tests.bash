@@ -69,6 +69,10 @@ if [ $FRESHDEV ]; then
         read -p  "Build wikitests wiki from tarball? y/n " wikitest
         [ "$wikitest" == "y" ] && $NLW_BIN/st-admin import-workspace --tarball $ST_CURRENT/nlw/share/workspaces/wikitests/wikitests.1.tar.gz  
     fi
+    echo "Setting benchmark mode to prevent JS make on every page load"
+    echo "Use st-make-js after every rb to make JS once"
+    st-config set benchmark_mode 1
+
 fi
 
 echo Removing all ceqlotron tasks to stop unnecessary indexing
