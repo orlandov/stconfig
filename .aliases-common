@@ -32,6 +32,7 @@ alias acs='apt-cache search'
 alias acsh='apt-cache show'
 
 alias rb='refresh-branch'
+alias fdefs='fresh-dev-env-from-scratch'
 
 if [ -d $HOME/stbin ]; then
     for cmd in `find $HOME/stbin/ -name 'svn*'`; do
