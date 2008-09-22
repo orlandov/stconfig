@@ -10,7 +10,14 @@ for (grep {$_} @windows) {
 print "Found window $_\n";
 SetForegroundWindow($_);
 SendKeys("%y");
-sleep 5;
+sleep 3;
 SendKeys("~");
+sleep 5;
+my @remaining = WaitWindow('^Microsoft Script Debugger$', 5) or next;
+if (my ($last) = grep {$_} @remaining) {
+SetForegroundWindow($last);
+SendKeys("~%fx");
+}
+
 }
 }
