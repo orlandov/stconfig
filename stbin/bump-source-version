@@ -8,7 +8,9 @@ use lib "$ENV{ST_SRC_BASE}/current/nlw/lib";
 use Socialtext::System qw/shell_run/;
 use Fatal qw(:void open rename);
 
-my $bump = 'bugfix';
+my %BUMP_POS = ( major => 0, minor => 1, point => 2, bugfix => 3 );
+my $basedir = $ENV{ST_SRC_BASE};
+my $bump;
 my $check = 0;
 my $current;
 GetOptions(
@@ -20,28 +22,22 @@ GetOptions(
     "help" => \&usage,
     "check!" => \$check,
 ) or usage();
-my $branch = shift;
-$branch = 'current' if $current;
-usage() unless $branch;
+
+my $branch = shift || 'current';
+my $VERSION_FILE = "$basedir/$branch/nlw/lib/Socialtext.pm";
+
+usage() unless $bump;
 
 display('green', "Bumping '$bump' in '$branch'");
 
-my $basedir = $ENV{ST_SRC_BASE};
-my @VERSION_FILES = (
-    "$basedir/$branch/nlw/lib/Socialtext.pm",
-#   "$basedir/$branch/guanxi/python_guanxi/build_templates/development.ini.template",
-#   "$basedir/$branch/guanxi/socialtext_people/etc/socialtext-people/development.ini",
-);
-my %BUMP_POS = ( major => 0, minor => 1, point => 2, bugfix => 3 );
-
-my $cur_ver = get_current_version($VERSION_FILES[0]);
+my $cur_ver = get_current_version($VERSION_FILE);
 display('yellow', "Cur Version: ", $cur_ver);
 my $bumped_ver = bump_version($cur_ver, $bump);
 display('yellow', "Bumped Version: ", $bumped_ver);
 
 exit 0 if $check;
 
-replace_version($cur_ver => $bumped_ver, $_) for @VERSION_FILES;
+replace_version($cur_ver => $bumped_ver, $VERSION_FILE);
 
 display('bold green', "Done!");
 
@@ -100,6 +96,13 @@ sub display {
 }
 
 sub usage {
+    my $cur_ver = get_current_version(
+        $VERSION_FILE || "$basedir/current/nlw/lib/Socialtext.pm"
+    );
+    my $major = bump_version($cur_ver, 'major');
+    my $minor = bump_version($cur_ver, 'minor');
+    my $point = bump_version($cur_ver, 'point');
+    my $bugfix = bump_version($cur_ver, 'bugfix');
     print STDERR <<"EUSAGE";
 USAGE: $0 (type) [--check] branchname
 Options:
@@ -107,11 +110,11 @@ Options:
     --check     Show the ver change but don't do anything
     (type)      One of --major, --minor, --point, or --bugfix (the default)
         Example: 
-            if the current version is 2.20.3.4 then
-            ... after --major:  3.0.0.0
-            ... after --minor:  2.21.0.0
-            ... after --point:  2.20.4.0
-            ... after --bugfix: 2.20.3.5
+            if the current version is $cur_ver then
+            ... after --major:  $major
+            ... after --minor:  $minor
+            ... after --point:  $point
+            ... after --bugfix: $bugfix
     branchname  A branch name under ~/src/st 
 EUSAGE
     exit 1;
