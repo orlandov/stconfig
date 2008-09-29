@@ -69,6 +69,8 @@ syntax match stwikiHR             /^----.*$/
 
 " Tables. Each line starts and ends with '|'; each cell is separated by '|'
 syntax match stwikiTable          /|/
+" Table continuations are a '|' with whitespace after them
+syntax match stwikiTableContinue  /|\s\+$/
 
 " Bulleted list items start with one or tabs, followed by whitespace, then '*'
 " Numeric  list items start with one or tabs, followed by whitespace, then '1.'
@@ -101,6 +103,7 @@ hi def link stwikiPre                   PreProc
 hi def link stwikiLink                  Underlined
 hi def link stwikiList                  Type
 hi def link stwikiTable                 Type
+hi def link stwikiTableContinue         Error
 hi def link stwikiDelText               Comment
 
 hi def link stwikiSingleLineProperty    Identifier

@@ -62,4 +62,9 @@ Block of text with no *special* punctuation
 
 {{*this text is not bold*}}
 
-.. vim:set ft=stwiki:
+| row zer0 | 1 | 2. | 3.. |
+| Table | cell | continuation: | 
+| still row 1 |
+| now row 2 | . | .. | ... |
+
+.. vim:set ft=wiki:
