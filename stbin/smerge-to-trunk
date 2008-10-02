@@ -27,8 +27,8 @@ usage() unless $branch;
 my $svn_prefix = 'branches/';
 $svn_prefix = 'tags/' if $branch =~ s#^tags/##;
 
-shell_run("refresh-branch --quiet trunk");
-shell_run("refresh-branch --quiet $branch");
+shell_run("refresh-branch --quiet --no-restart trunk");
+shell_run("refresh-branch --quiet --no-restart $branch");
 
 my $svk_mirror_base = '//mirror';
 for my $repo (@repos) {

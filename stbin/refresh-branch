@@ -9,6 +9,7 @@ use Getopt::Long;
 my %opts;
 GetOptions( \%opts,
     'quiet',
+    'no-restart'
 ) or usage();
 
 my $what_to_refresh = shift;
@@ -47,7 +48,8 @@ for my $r (@repos) {
 
 color_print('green', "All repositories of $branch_name updated!\n");
 
-run("nlwctl restart");
+run("nlwctl restart")
+    unless $opts{'no-restart'};
 exit;
 
 sub run {
