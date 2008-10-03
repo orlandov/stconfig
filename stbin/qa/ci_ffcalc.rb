@@ -5,7 +5,6 @@ sync=true
 #LOGON TO wikitests  WORKSPACE
 @user = 'devnull1@socialtext.com'
 @wikitest_user = 'wikitester@ken.socialtext.net'
-@test_user = 'devnull1@socialtext.com'
 @pass = 'd3vnu11l'
 @host = 'localhost'
 @port = (20000 + Process.euid).to_s 
@@ -25,10 +24,7 @@ sync=true
     "/data/workspaces/wikitests/pages/localization_testcases/frontlinks",
     "/data/workspaces/wikitests/pages/report_testcases/frontlinks",
     "/data/workspaces/wikitests/pages/core_testcases/frontlinks",
-    "/data/workspaces/wikitests/pages/test_case_miki_authentication/frontlinks",
-    "/data/workspaces/wikitests/pages/test_case_rss_icons/frontlinks",
-    "/data/workspaces/wikitests/pages/test_case_redirect_logout_uri/frontlinks",
-    "/data/workspaces/wikitests/pages/test_case_business_control_panel"]
+    "/data/workspaces/wikitests/pages/miscellaneous_testcases/frontlinks"]
 
 #@page_loc = "/data/workspaces/wikitests/pages/osr_testcases/frontlinks"
 #@page_loc = "/data/workspaces/feb22-test/pages/chris_small_set/frontlinks"
@@ -165,6 +161,12 @@ while 1 do #INFINITE LOOP
                mk_3 = `mkdir ~/.nlw/etc/socialtext/workspace_options/wikitests`
                touch = `touch ~/.nlw/etc/socialtext/workspace_options/test-data/enable_spreadsheet`
                touch_2 = `touch ~/.nlw/etc/socialtext/workspace_options/wikitests/enable_spreadsheet`
+
+               set_s2 = `~/src/st/current/nlw/bin/st-admin set-workspace-config --workspace test-data skin_name s2`
+               puts set_s2
+
+               makejs = `~/stbin/st-make-js`
+               puts makejs
 
                start_ldap = `~/scre/st/current/nlw/dev-bin/st-bootstrap-openldap --daemonize start`
                puts start_ldap
