@@ -91,10 +91,10 @@ sub exec_on_ve {
 sub install_plugins {
     exec_on_ve( 
         'st-appliance-install-plugin people dashboard socialcalc agile',
-        'st-admin enable-plugin people',
-        'st-admin enable-plugin dashboard',
-        'st-admin enable-plugin socialcalc',
-        'st-admin enable-plugin agile',
+        'st-admin enable-plugin --all-accounts --plugin people',
+        'st-admin enable-plugin --all-accounts --plugin dashboard',
+        'st-admin enable-plugin --all-accounts --plugin socialcalc',
+        'st-admin enable-plugin --all-accounts --plugin agile',
     );
 }
 
