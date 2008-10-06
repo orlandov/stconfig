@@ -90,13 +90,11 @@ sub exec_on_ve {
 
 sub install_plugins {
     exec_on_ve( 
-        'apt-get install socialtext-plugin-people socialtext-plugin-gadgets'
-        . ' socialtext-plugin-socialcalc',
+        'st-appliance-install-plugin people dashboard socialcalc agile',
         'st-admin enable-plugin people',
         'st-admin enable-plugin dashboard',
         'st-admin enable-plugin socialcalc',
         'st-admin enable-plugin agile',
-        '/etc/init.d/apache-perl stop; sleep 5; /etc/init.d/apache-perl start',
     );
 }
 
