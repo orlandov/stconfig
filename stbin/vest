@@ -50,6 +50,7 @@ else {
         'apt-get update',
         'apt-get install stconfig --yes',
         qq{echo \\"$ENV{USER} ALL=(ALL) NOPASSWD: ALL\\" >> /etc/sudoers},
+        'touch /etc/socialtext/reports-test',
     );
 }
 
