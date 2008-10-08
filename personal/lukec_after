@@ -2,6 +2,7 @@ alias ssh='ssh -A'
 set -o vi
 
 export TD=lukecloss@jervis.textdrive.com
+export VHS='thehackery.ca -p2249'
 
 function corpblog {
     convrad -l "luke's blog"
