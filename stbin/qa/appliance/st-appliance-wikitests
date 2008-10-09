@@ -1,0 +1,51 @@
+#!/bin/bash
+# @COPYRIGHT@
+
+WIKITESTS="$HOME/stbin/qa/appliance"
+WIKITAR='/usr/share/nlw/wikitests/wikitest.1.tar.gz'
+
+echo SETTING TIME
+source $WIKITESTS/set-time
+
+echo INSTALLING wikitest_files
+if [ ! -e /opt/wikitest_files ]; then
+    sudo mkdir /opt/wikitest_files
+fi
+sudo unzip $WIKITESTS/wikitestfiles.zip -d /opt/wikitest_files/
+
+if [ -e /var/www/socialtext/data/test-data ]; then
+    echo "DELETING old test-data workspace"
+    sudo -u www-data /usr/bin/st-admin delete-workspace --w test-data  --no-export
+fi
+echo "IMPORTING  test-data  WORKSPACE"
+sudo -u www-data /usr/bin/st-admin import-workspace --tarball $WIKITESTS/test-data.tar.gz
+
+if [ -e /var/www/socialtext/data/wikitests ]; then
+    echo DELETING old wikitests workspace
+    sudo -u www-data /usr/bin/st-admin delete-workspace --w wikitests --no-export
+fi
+echo IMPORTING wikitests WORKSPACE
+sudo -u www-data /usr/bin/st-admin import-workspace --tarball $WIKITAR
+
+echo GRANTING Accounts and System admin to devnull1
+sudo -u www-data /usr/bin/st-admin give-system-admin --e devnull1@socialtext.com
+sudo -u www-data /usr/bin/st-admin give-accounts-admin --e devnull1@socialtext.com
+
+echo INSTALLING slapd
+sudo apt-get install slapd
+
+echo ENABLING Socialcalc for all workspaces
+sudo $WIKITESTS/st-socialcalc enable
+
+# Make www-data own /etc/socialtext/ files so st-bootstrap-openldap will
+# succeed from wikitests.
+sudo chown -R www-data:www-data /etc/socialtext/
+
+# link appliance wikitest files into the path
+
+sudo rm /usr/bin/st-bootstrap-openldap /usr/bin/st-appliance-socialcalc
+sudo ln -s $WIKITESTS/st-bootstrap-openldap /usr/bin/
+sudo ln -s $WIKITESTS/st-appliance-socialcalc /usr/bin/
+sudo ln -s $WIKITESTS/st-appliance-wikitests  /usr/bin/
+
+echo ""
