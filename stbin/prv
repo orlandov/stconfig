@@ -31,7 +31,7 @@ if [[ $shuffle == 1 ]] {
 
 # Find some tests to run if the user didn't give us any.
 if [[ -z "$*" ]] {
-    tests=${(z)$(find t -name \*.t -not -regex '^t/live.*')}
+    tests=${(z)$(find t -name \*.t -not -regex '^t/live/.*')}
 } else {
     if [[ $recurse == 1 ]] {
         switches+=-r
