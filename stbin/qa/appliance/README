@@ -1,19 +1,34 @@
 
 This is a set of scripts for running wikitests on an appliance.
 
-1. install the wikitests DEB:  sudo dpkg --install wikitests_VERSION.deb
-2. prep-wiki-tests
-3. cd /usr/share/nlw/wikitests/
-4. source ./setup-selenium PORT BROWSER SERVER_PLATFORM if you are not using the defaults: 4444 firefox linux
-examples:
-    source ./setup-selenium 4321 firefox linux
-    source ./setup-selenium 4321 iexplore windows
-    source ./setup-selenium 4321 safari osx
+This wikitest infrastructure is part of the stconfig package.  Install it on an appliance using 'sudo apt-get install stconfig'.  This will install files in /usr/share/nlw/stconfig/stbin/qa/appliance and in /usr/share/nlw/workspaces/wikitests.
+
+cd /usr/share/stconfig/stbin/qa/appliance
+
+Execute 'st-appliance-wikitests' to set up an appliance for wikitests.  You will need sudo.
     
-"source ./do-wiki-tests" will run OSR Testcases with output to file testcases.out from a local /wikitests wiki.
+'source ./do-wiki-tests' will run Firefox Testcases with output to file testcases.out from the local wikitests wiki.
 
 Use tail -f testcases.out to observe the run.
 
-"source ./one-wiki-test TESTCASE"   will run one testcase in the current shell
+'source ./one-wiki-test TESTCASE'   will run one testcase in the current shell
 
+----
+
+HOWTO: observe wikitests running on a custom Selenium platform
+
+Pick a port number (e.g. 5321) and run Selenium 1.0 or later using that port on your Selenium platform. Build an ssh tunnel from your Selenium platform to your appliance:
+e.g. 'ssh -R 5321:localhost:5321 qa3.socialtext.net' from your Linux or Mac OSX box, or use Putty to build the tunnel from a Windows box, using port 5321.
+
+in the shell that comes up on your Selenium platform:
+
+'cd /usr/share/stconfig/stbin/qa/appliance'
+'source ./setup-selenium PORT BROWSER SERVER_PLATFORM'
+examples:
+    source ./setup-selenium 5321 firefox linux
+    source ./setup-selenium 5321 iexplore windows
+    source ./setup-selenium 5321 safari osx
+
+
+More information on running wikitests can be found at www2.socialtext.net/regression-test
 
