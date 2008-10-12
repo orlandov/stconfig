@@ -7,6 +7,15 @@ WIKITAR='/usr/share/nlw/wikitests/wikitest.1.tar.gz'
 echo SETTING TIME
 source $WIKITESTS/set-time
 
+echo set-default-account Socialtext
+sudo -u www-data st-admin set-default-account --account  Socialtext
+
+echo INSTALLING and ENABLING  all plugins
+sudo st-appliance-install-plugin dashboard people socialcalc
+sudo -u www-data st-admin enable-plugin --account Socialtext --plugin dashboard
+sudo -u www-data st-admin enable-plugin --account Socialtext --plugin people
+sudo -u www-data st-admin enable-plugin --account Socialtext --plugin socialcalc
+
 echo INSTALLING wikitest_files
 if [ ! -e /opt/wikitest_files ]; then
     sudo mkdir /opt/wikitest_files
@@ -27,6 +36,10 @@ fi
 echo IMPORTING wikitests WORKSPACE
 sudo -u www-data /usr/bin/st-admin import-workspace --tarball $WIKITAR
 
+echo "SETTING user accounts to Socialtext"
+sudo -u www-data st-admin set-user-account --e wikitester@ken.socialtext.net --account Socialtext
+sudo -u www-data st-admin set-user-account --e devnull1@socialtext.com --account Socialtext
+
 echo GRANTING Accounts and System admin to devnull1
 sudo -u www-data /usr/bin/st-admin give-system-admin --e devnull1@socialtext.com
 sudo -u www-data /usr/bin/st-admin give-accounts-admin --e devnull1@socialtext.com
@@ -34,7 +47,6 @@ sudo -u www-data /usr/bin/st-admin give-accounts-admin --e devnull1@socialtext.c
 echo INSTALLING slapd
 sudo apt-get install slapd
 
-echo ENABLING Socialcalc for all workspaces
 sudo $WIKITESTS/st-appliance-socialcalc enable
 
 # Make www-data own /etc/socialtext/ files so st-bootstrap-openldap will
@@ -48,4 +60,4 @@ sudo ln -s $WIKITESTS/st-bootstrap-openldap /usr/bin/
 sudo ln -s $WIKITESTS/st-appliance-socialcalc /usr/bin/
 sudo ln -s $WIKITESTS/st-appliance-wikitests  /usr/bin/
 
-echo ""
+echo "DONE"
