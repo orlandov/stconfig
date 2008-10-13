@@ -3,8 +3,8 @@ if [ -e /etc/socialtext/socialtext.conf ]; then
     # aliases for an appliance
     alias sww='sudo -u www-data '
     alias swa='sudo -u www-data st-admin '
-    alias cdwt='cd /usr/share/nlw/wikitests'
-    alias cdpers='cd ~/personal'
+    alias cdwt='cd /usr/share/nlw/workspaces/wikitests'
+    alias cdappwt='cd /usr/share/stconfig/stbin/qa/appliance'
     alias cdqa='cd ~/personal/qa'
     alias grnok="grep  -C 6 'not ok' testcases.out"
     alias grtc="grep 'Loading test plan\|COMPLETED' testcases.out"
@@ -45,6 +45,8 @@ else
     alias cdwidgets='cd $ST_CURRENT/nlw/share/widgets'
     alias cdpers='cd ~/personal'
     alias cdqa='cd ~/personal/qa'
+    alias cdstbin='cd ~/stbin'
+    alias cdappwt='cd ~stbin/qa/appliance'
     alias cdwt='cd $ST_CURRENT/nlw/share/workspaces/wikitests'
     alias cdst='cd $ST_SRC_BASE'
     alias cdshare='cd $ST_CURRENT/nlw/share'
