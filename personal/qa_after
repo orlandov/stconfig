@@ -46,7 +46,7 @@ else
     alias cdpers='cd ~/personal'
     alias cdqa='cd ~/personal/qa'
     alias cdstbin='cd ~/stbin'
-    alias cdappwt='cd ~stbin/qa/appliance'
+    alias cdappwt='cd ~/stbin/qa/appliance'
     alias cdwt='cd $ST_CURRENT/nlw/share/workspaces/wikitests'
     alias cdst='cd $ST_SRC_BASE'
     alias cdshare='cd $ST_CURRENT/nlw/share'
