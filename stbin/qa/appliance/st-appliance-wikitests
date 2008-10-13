@@ -1,20 +1,20 @@
 #!/bin/bash
 # @COPYRIGHT@
 
-WIKITESTS="$HOME/stbin/qa/appliance"
-WIKITAR='/usr/share/nlw/wikitests/wikitest.1.tar.gz'
+WIKITESTS="/usr/share/stconfig/stbin/qa/appliance"
+WIKITAR='/usr/share/nlw/workspaces/wikitests/wikitest.1.tar.gz'
 
 echo SETTING TIME
 source $WIKITESTS/set-time
 
 echo set-default-account Socialtext
-sudo -u www-data st-admin set-default-account --account  Socialtext
+sudo st-admin set-default-account --account  Socialtext
 
 echo INSTALLING and ENABLING  all plugins
 sudo st-appliance-install-plugin dashboard people socialcalc
-sudo -u www-data st-admin enable-plugin --account Socialtext --plugin dashboard
-sudo -u www-data st-admin enable-plugin --account Socialtext --plugin people
-sudo -u www-data st-admin enable-plugin --account Socialtext --plugin socialcalc
+sudo st-admin enable-plugin --account Socialtext --plugin dashboard
+sudo st-admin enable-plugin --account Socialtext --plugin people
+sudo st-admin enable-plugin --account Socialtext --plugin socialcalc
 
 echo INSTALLING wikitest_files
 if [ ! -e /opt/wikitest_files ]; then
@@ -24,25 +24,25 @@ sudo unzip $WIKITESTS/wikitestfiles.zip -d /opt/wikitest_files/
 
 if [ -e /var/www/socialtext/data/test-data ]; then
     echo "DELETING old test-data workspace"
-    sudo -u www-data /usr/bin/st-admin delete-workspace --w test-data  --no-export
+    sudo st-admin delete-workspace --w test-data  --no-export
 fi
 echo "IMPORTING  test-data  WORKSPACE"
-sudo -u www-data /usr/bin/st-admin import-workspace --tarball $WIKITESTS/test-data.tar.gz
+sudo st-admin import-workspace --tarball $WIKITESTS/test-data.tar.gz
 
 if [ -e /var/www/socialtext/data/wikitests ]; then
     echo DELETING old wikitests workspace
-    sudo -u www-data /usr/bin/st-admin delete-workspace --w wikitests --no-export
+    sudo st-admin delete-workspace --w wikitests --no-export
 fi
 echo IMPORTING wikitests WORKSPACE
-sudo -u www-data /usr/bin/st-admin import-workspace --tarball $WIKITAR
+sudo st-admin import-workspace --tarball $WIKITAR
 
 echo "SETTING user accounts to Socialtext"
-sudo -u www-data st-admin set-user-account --e wikitester@ken.socialtext.net --account Socialtext
-sudo -u www-data st-admin set-user-account --e devnull1@socialtext.com --account Socialtext
+sudo st-admin set-user-account --e wikitester@ken.socialtext.net --account Socialtext
+sudo st-admin set-user-account --e devnull1@socialtext.com --account Socialtext
 
 echo GRANTING Accounts and System admin to devnull1
-sudo -u www-data /usr/bin/st-admin give-system-admin --e devnull1@socialtext.com
-sudo -u www-data /usr/bin/st-admin give-accounts-admin --e devnull1@socialtext.com
+sudo st-admin give-system-admin --e devnull1@socialtext.com
+sudo st-admin give-accounts-admin --e devnull1@socialtext.com
 
 echo INSTALLING slapd
 sudo apt-get install slapd

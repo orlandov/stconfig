@@ -1,8 +1,9 @@
 if [ "$1" == "" ]; then
     echo USAGE: source one-wiki-test "TESTCASE"  
 else
+    RWT="/usr/share/stconfig/stbin/run-wiki-tests"
     export WIKIEMAIL=$HOSTNAME
     USERNAME="wikitester@ken.socialtext.net"
     alias tail='tail'
-    sudo -u www-data  $HOME/stbin/qa/appliance/run-wiki-tests --no-maximize --test-username $USERNAME --test-email $USERNAME  --plan-server http://$HOSTNAME  --test-server http://$HOSTNAME  --timeout 60000 --plan-page "$1"   
+    sudo -u www-data  $RWT  --no-maximize --test-username $USERNAME --test-email $USERNAME  --plan-server http://$HOSTNAME  --test-server http://$HOSTNAME  --timeout 60000 --plan-page "$1"   
 fi
