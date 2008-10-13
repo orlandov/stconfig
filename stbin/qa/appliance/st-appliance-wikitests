@@ -2,7 +2,7 @@
 # @COPYRIGHT@
 
 WIKITESTS="/usr/share/stconfig/stbin/qa/appliance"
-WIKITAR='/usr/share/nlw/workspaces/wikitests/wikitest.1.tar.gz'
+WIKITAR='/usr/share/nlw/workspaces/wikitests/wikitests.1.tar.gz'
 
 echo SETTING TIME
 source $WIKITESTS/set-time
@@ -55,7 +55,7 @@ sudo chown -R www-data:www-data /etc/socialtext/
 
 # link appliance wikitest files into the path
 
-sudo rm /usr/bin/st-bootstrap-openldap /usr/bin/st-appliance-socialcalc
+sudo rm /usr/bin/st-bootstrap-openldap /usr/bin/st-appliance-socialcalc /usr/bin/st-appliance-wikitests
 sudo ln -s $WIKITESTS/st-bootstrap-openldap /usr/bin/
 sudo ln -s $WIKITESTS/st-appliance-socialcalc /usr/bin/
 sudo ln -s $WIKITESTS/st-appliance-wikitests  /usr/bin/
