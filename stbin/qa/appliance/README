@@ -1,11 +1,13 @@
 INSTALLING WIKITESTS ON AN APPLIANCE
 
-The wikitest infrastructure is part of the stconfig package.
+'sudo apt-get update'  might be necessary to get the latest versions of packages
+
+The wikitest infrastructure is part of the stconfig package in the stqa archive.
 Install it on an appliance using 'sudo apt-get install stconfig'
 This will install files in /usr/share/nlw/stconfig/stbin/qa/appliance.
 
 The wikitests are in a branch-specific tarball (wikitests.1.tar.gz) checked in to a branch by a developer/tester.
-Install it on an appliance using 'sudo apt-get install st-static-file-wikitests'
+Install it on an appliance using 'sudo apt-get install st-static-files-wikitests'
 This will install files in /usr/share/nlw/workspaces/wikitests.
 
 RUNNING WIKITESTS ON AN APPLIANCE
