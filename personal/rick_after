@@ -1,1 +1,3 @@
 source $ST_SRC_BASE/stconfig/personal/qa_after
+
+export LANG=en_US.UTF-8
