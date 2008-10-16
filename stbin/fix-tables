@@ -69,18 +69,19 @@ sub rows {
 sub widths {
     my @rows = @_;
 
-        my $rotate = sub {
-            my $max_idx = $#{ $_[0] };
-            map {
-                my $n = $_;
-                [ map { $_->[$n] } @_ ];
-            } 0 .. $max_idx;
-        };
-    my @columns = $rotate->(@rows);
+    my $max_idx = 0;
+    for my $row (@rows) {
+        $max_idx = $#$row if $#$row > $max_idx;
+    }
 
-        my $max_width = sub {
-            reduce { max $a, $b } map {length} @$_;
-        };
+    my @columns = map {
+        my $n = $_;
+        [ map { $_->[$n] } @rows ];
+    } 0 .. $max_idx;
+
+    my $max_width = sub {
+        reduce { max $a, $b } map {length} @$_;
+    };
     return map &$max_width, @columns;
 }
 
