@@ -19,16 +19,17 @@ GetOptions(
     't|test-data' => \$test_data,
     'test-data-only' => \$test_data_only,
 ) or usage ();
+
+if ($test_data_only) {
+    install_test_data();
+    exit 0;
+}
+
 usage('repo or upgrade-to is mandatory!') unless $repo or $upgrade_to;
 usage('ve-name is mandatory!') unless $ve_name;
 
 if ($ve_name =~ m/^qa\d$/) {
     $ve_host =~ s/^zircon/willemite/;
-}
-
-if ($test_data_only) {
-    install_test_data();
-    exit 0;
 }
 
 if ($upgrade_to) {
@@ -46,11 +47,18 @@ else {
     if ($@) {
         shell_run(qq{$ssh "sudo setup-qa-ve create --ve $ve_name --repo $repo"});
     }
+
+    # Runs as root on the VE
     exec_on_ve( 
         'apt-get update',
         'apt-get install stconfig --yes',
-        qq{echo \\"$ENV{USER} ALL=(ALL) NOPASSWD: ALL\\" >> /etc/sudoers},
+        qq{echo "$ENV{USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers},
         'touch /etc/socialtext/reports-test',
+        # Set up stconfig for the root user
+        q{su - -c "cd /root; rm .bashrc; stconfig-setup"},
+        # Set up local backups
+        q{perl -pi -e "s#^local_archivedir: .+#local_archivedir: /tmp/backup#" /etc/socialtext/appliance.conf},
+        'mkdir /tmp/backup',
     );
 }
 
@@ -86,6 +94,7 @@ EOT
 
 sub exec_on_ve {
     my $cmd = join '; ', @_;
+    $cmd =~ s/([^\\])"/$1\\"/g;
     shell_run(qq{ssh $ve_host "sudo vzctl exec $ve_name '$cmd'"});
 }
 
@@ -105,5 +114,6 @@ sub install_test_data {
         "st-admin create-user $email --password d3vnu11l",
         "st-admin add-workspace-admin $email --workspace admin",
         "st-admin give-accounts-admin $email",
+        "st-admin give-system-admin $email",
     );
 }
