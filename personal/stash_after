@@ -1,1 +1,2 @@
 alias fdefs='fresh-dev-env-from-scratch'
+alias run-all-wikitests='for t in `find -L t/wikitests/ -name "*.wiki"`; do echo $t; run-wiki-tests -f $t 2>&1 | grep "not ok"; done'
