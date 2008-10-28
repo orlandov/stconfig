@@ -55,9 +55,12 @@ sudo chown -R www-data:www-data /etc/socialtext/
 
 # link appliance wikitest files into the path
 
-sudo rm /usr/bin/st-bootstrap-openldap /usr/bin/st-appliance-socialcalc /usr/bin/st-appliance-wikitests
+sudo rm -f /usr/bin/st-bootstrap-openldap /usr/bin/st-appliance-socialcalc /usr/bin/st-appliance-wikitests
 sudo ln -s $WIKITESTS/st-bootstrap-openldap /usr/bin/
 sudo ln -s $WIKITESTS/st-appliance-socialcalc /usr/bin/
 sudo ln -s $WIKITESTS/st-appliance-wikitests  /usr/bin/
 
+# make all skins s3
+sudo st-admin set-account-config --account Socialtext skin_name s3
+sudo st-admin reset-account-skin --account Socialtext --skin s3
 echo "DONE"
