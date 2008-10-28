@@ -17,18 +17,14 @@ if [ -e /etc/socialtext/socialtext.conf ]; then
     alias ceqrm='/usr/bin/ceq-rm'
     alias cdwt='cd /usr/share/nlw/wikitests'
     alias cdskin='cd /usr/share/nlw/skin'
-    alias cds2js='cd /usr/share/nlw/skin/s2/javascript'
     alias cdplugins='cd /usr/share/nlw/plugins'
     alias noplugins='sudo /etc/init.d/apache-perl stop; sudo apt-get remove --purge  socialtext-plugin-people socialtext-plugin-gadgets; sudo /etc/init.d/apache-perl start'
 
 	RWT='/usr/share/stconfig/stbin/qa/appliance/run-wiki-tests'
 
-	alias xwt='export ST_SKIN_NAME='\''s2'\''; sudo -u www-data st-admin set-account-config --account Socialtext skin_name s2; sudo -u www-data st-admin set-workspace-config --w test-data skin_name s2; export WIKIEMAIL=$HOSTNAME; sudo -u www-data $RWT --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-server http://$HOSTNAME --test-server http://$HOSTNAME --plan-page  '
+	alias xwt='export ST_SKIN_NAME='\''s3'\''; sudo -u www-data st-admin set-account-config --account Socialtext skin_name s3; sudo -u www-data st-admin set-workspace-config --w test-data skin_name s3; export WIKIEMAIL=$HOSTNAME; sudo -u www-data $RWT --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-server http://$HOSTNAME --test-server http://$HOSTNAME --plan-page  '
 
-    alias xlwt='export ST_SKIN_NAME='\''s2'\''; sudo -u www-data st-admin set-account-config --account Socialtext skin_name s2; sudo -u www-data st-admin set-workspace-config --w test-data skin_name s2; export WIKIEMAIL=$HOSTNAME; sudo -u www-data $RWT  --no-maximize --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-server http://$HOSTNAME --test-server http://$HOSTNAME  0 --plan-page  '
-
-    alias 3wt='export ST_SKIN_NAME='\''s3'\''; sudo -u www-data st-admin set-account-config --account Socialtext skin_name s3; sudo -u www-data st-admin set-workspace-config --w test-data skin_name s3; export WIKIEMAIL=$HOSTNAME; sudo -u www-data $RWT  --no-maximize --plan-server http://www2.socialtext.net --plan-workspace s3wt --test-server http://$HOSTNAME --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  '
-
+    alias xlwt='export ST_SKIN_NAME='\''s3'\''; sudo -u www-data st-admin set-account-config --account Socialtext skin_name s3; sudo -u www-data st-admin set-workspace-config --w test-data skin_name s3; export WIKIEMAIL=$HOSTNAME; sudo -u www-data $RWT  --no-maximize --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-server http://$HOSTNAME --test-server http://$HOSTNAME  0 --plan-page  '
  
 else
 
@@ -63,7 +59,6 @@ else
     alias cdwt='cd $ST_CURRENT/nlw/share/workspaces/wikitests'
     alias cdst='cd $ST_SRC_BASE'
     alias cdshare='cd $ST_CURRENT/nlw/share'
-    alias cds2js='cd $ST_CURRENT/nlw/share/skin/s2/javascript'
     alias cdcalc='cd $ST_CURRENT/nlw/../plugins/socialcalc'
     alias cdndb='cd $ST_CURRENT/nlw/dev-bin'
     alias cdnb='cd $ST_CURRENT/nlw/bin'
@@ -71,20 +66,12 @@ else
     # aliases to run wikitests
     RWT=$ST_SRC_BASE/stconfig/personal/qa/run-wiki-tests.bash
 
-    alias rwt="export ST_SKIN_NAME='s2'; $RWT $1 $2 $3"
-    alias xwt="export ST_SKIN_NAME='s2'; run-wiki-tests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
-    alias xlwt="export ST_SKIN_NAME='s2'; run-wiki-tests --no-maximize --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-page  "
-
-    # S3 wikitest aliases
-    alias setskin="st-admin set-workspace-config --w test-data skin_name "
-    alias 3wt="export ST_SKIN_NAME='s3'; run-wiki-tests --no-maximize --plan-server http://www2.socialtext.net --plan-workspace s3wt --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
-    alias 3lwt="export ST_SKIN_NAME='s3'; run-wiki-tests --no-maximize --plan-server http://www2.socialtext.net --plan-workspace s3wt --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-page  "
+    alias rwt="export ST_SKIN_NAME='s3'; $RWT $1 $2 $3"
+    alias xwt="export ST_SKIN_NAME='s3'; st-admin set-account-config --account Socialtext skin_name s3; st-admin set-workspace-config --w test-data skin_name s3; run-wiki-tests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
+    alias xlwt="export ST_SKIN_NAME='s3'; st-admin set-account-config --account Socialtext skin_name s3; st-admin set-workspace-config --w test-data skin_name s3run-wiki-tests --no-maximize --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-page  "
 
     SETSEL=$ST_SRC_BASE/stconfig/personal/qa/setup-selenium
     alias setsel="source $SETSEL"
-
-    alias xwjst='export selenium_browser=*firefox; xwt "Test Case: JS Test"; unset selenium_browser;'
-    alias xwjsti='export selenium_browser=*iexplore; xwt "Test Case: JS Test"; unset selenium_browser;'
 
     # aliases to evaluate wikitests
     alias grnok="grep  -C 6 'not ok' testcases.out"
