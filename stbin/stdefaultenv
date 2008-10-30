@@ -45,7 +45,7 @@ for my $name (keys %default_env) {
 
 # path is special because it depends on $ST_TRUNK, and is an array, so it fits
 # better outside the above loop.
-if ($ENV{PATH} !~ /stbin/) {
+if ($ENV{PATH} !~ /stdefaultenv-done/) {
     printf "export PATH=%s; ", join ':', qw(
       ~/stbin
       ~/bin
@@ -56,6 +56,7 @@ if ($ENV{PATH} !~ /stbin/) {
       $ST_TRUNK/nlw/bin
       $ST_TRUNK/nlw/dev-bin
       $PATH
+      /.stdefaultenv-done
     );
 }
 make_current_link();
