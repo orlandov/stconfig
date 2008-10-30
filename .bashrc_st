@@ -1,3 +1,6 @@
 [ -e ~/.stconfig-before ] && source ~/.stconfig-before
 source ~/.commonrc 
 source ~/.aliases-common
+
+# Keep this on topaz for gabew for now.
+export SVN_COMMAND=svk
