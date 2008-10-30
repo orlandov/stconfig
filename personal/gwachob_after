@@ -1,2 +1,4 @@
 alias screen='TERM=screen screen'
 alias wikrad='TERM=xterm-color wikrad'
+alias dtrad='TERM=xterm-color dtrad'
+
