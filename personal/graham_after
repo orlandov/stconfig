@@ -3,7 +3,7 @@ alias dir='ls -l'
 alias cls='clear'
 
 # exports
-export EDITOR=vi
+export EDITOR=vim
 export PAGER=less
 
 # add personal Perl stuff to @INC and $PATH
