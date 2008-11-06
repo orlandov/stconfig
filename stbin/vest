@@ -89,6 +89,10 @@ Options:
   -r --repo       Name of the debian repo to install
   -u --upgrade-to Name of the repo to upgrade the VE to.
   -p --plugins    Specifies that plugins should be installed
+
+Passwordless SSH
+  If you'd like an SSH key set up on the VE, commit a public 
+  ssh key to svn:stconfig/trunk/personal/<your username>/pub.key
 EOT
 }
 
