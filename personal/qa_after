@@ -68,7 +68,7 @@ else
 
     alias rwt="export ST_SKIN_NAME='s3'; $RWT $1 $2 $3"
     alias xwt="export ST_SKIN_NAME='s3'; st-admin set-account-config --account Socialtext skin_name s3; st-admin set-workspace-config --w test-data skin_name s3; run-wiki-tests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
-    alias xlwt="export ST_SKIN_NAME='s3'; st-admin set-account-config --account Socialtext skin_name s3; st-admin set-workspace-config --w test-data skin_name s3run-wiki-tests --no-maximize --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-page  "
+    alias xlwt="export ST_SKIN_NAME='s3'; st-admin set-account-config --account Socialtext skin_name s3; st-admin set-workspace-config --w test-data skin_name s3; run-wiki-tests --no-maximize --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-page  "
 
     SETSEL=$ST_SRC_BASE/stconfig/personal/qa/setup-selenium
     alias setsel="source $SETSEL"
