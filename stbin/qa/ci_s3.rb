@@ -6,10 +6,10 @@ sync=true
 @user = 'devnull1@socialtext.com'
 @wikitest_user = 'wikitester@ken.socialtext.net'
 @pass = 'd3vnu11l'
-#@host = 'localhost'
-@host = 'www2.socialtext.net'
-#@port = (20000 + Process.euid).to_s 
-@port = '80'
+@host = 'localhost'
+#@host = 'www2.socialtext.net'
+@port = (20000 + Process.euid).to_s 
+#@port = '80'
 
 #LOGON TO TEST ENV
 @test_user = 'christopher.mcmahon@gmail.com'
@@ -19,11 +19,11 @@ sync=true
 
 @branch = 'trunk'
 
-@workspace = 's3wt'
+@workspace = 'wikitests'
 
-puts "STOPPING LDAP"
-stop_ldap = `~/src/st/current/nlw/dev-bin/st-ldap disable`
-puts stop_ldap
+#puts "STOPPING LDAP"
+#stop_ldap = `~/src/st/current/nlw/dev-bin/st-ldap disable`
+#puts stop_ldap
 
 @page_locs = ["/data/workspaces/#{@workspace}/pages/calc_testcases/frontlinks",
     "/data/workspaces/#{@workspace}/pages/default_user_testcases/frontlinks",
@@ -32,7 +32,8 @@ puts stop_ldap
     "/data/workspaces/#{@workspace}/pages/file_testcases/frontlinks",
     "/data/workspaces/#{@workspace}/pages/localization_testcases/frontlinks",
     "/data/workspaces/#{@workspace}/pages/report_testcases/frontlinks",
-    "/data/workspaces/#{@workspace}/pages/miscellaneous_testcases/frontlinks"]
+    "/data/workspaces/#{@workspace}/pages/miscellaneous_testcases/frontlinks",
+    "/data/workspaces/#{@workspace}/pages/widgets_testcases"]
 
 #@page_loc = "/data/workspaces/wikitests/pages/osr_testcases/frontlinks"
 #@page_loc = "/data/workspaces/feb22-test/pages/chris_small_set/frontlinks"
@@ -60,7 +61,7 @@ while 1 do #INFINITE LOOP
          http.start do |http|
             request =
             Net::HTTP::Get.new(loc,initheader = {'Accept' => 'text/x.socialtext-wiki'})
-             request.basic_auth @test_user, @pass
+             request.basic_auth @user, @pass
             response = http.request(request)
             response.value
             @page = response.body
@@ -129,6 +130,16 @@ while 1 do #INFINITE LOOP
                getsocialcalc = `scm checkout https://repo.socialtext.net:8999/svn/plugins/#{@branch}/socialcalc ~/src/st/socialcalc`
                puts getsocialcalc
 
+               rmcontrol = `rm -rf ~/src/st/control#{@branch}/`
+               puts rmcontrol
+               getcontrol = `scm checkout https://repo.socialtext.net:8999/svn/control/#{@branch} ~/src/st/control/#{@branch}`
+               puts getcontrol
+
+               rmappliance = `rm -rf ~/src/st/appliance/#{@branch}`
+               puts rmappliance
+               getappliance = `scm checkout https://repo.socialtext.net:8999/svn/appliance/#{@branch} ~/src/st/appliance/#{@branch}`
+               puts getappliance
+
                remove = `rm -rf ~/src/st/#{@branch}`
                puts remove
                checkout = `scm checkout https://repo.socialtext.net:8999/svn/socialtext/#{@branch} ~/src/st/#{@branch}`
@@ -138,35 +149,31 @@ while 1 do #INFINITE LOOP
                setbranch = `~/stbin/set-branch #{@branch}\n`
                puts setbranch
                
-               #brutal_hack = `sed -i 's/$ENV{NLW_DEV_MODE}/0/' ~/src/st/current/nlw/lib/Socialtext/InitHandler.pm`
-              # puts brutal_hack
-
-
                freshdev = system("~/src/st/current/nlw/dev-bin/fresh-dev-env-from-scratch")
                puts freshdev
+
+               puts "DOING CREATE-TEST-DATA-WORKSPACE"
                createtest = `~/src/st/current/nlw/dev-bin/create-test-data-workspace`
                puts createtest
 
+               puts "SETTING BENCHMARK MODE"
+               set_benchmark = `~/src/st/current/nlw/bin/st-config set benchmark_mode 1`
+               puts set_benchmark
+
+               puts "DOING ST-MAKE-JS"
                makejs = `~/stbin/st-make-js`
                puts makejs
-puts "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-               makejs2 = `~/stbin/st-make-js`
-               puts makejs2
                
                clearceq = system("~/src/st/current/nlw/bin/ceq-rm /.+/")
                puts clearceq
-               #import_wikitests = `~/src/st/current/nlw/dev-bin/wikitests-to-wiki`
-               #puts import_wikitests
-               #
+               import_wikitests = `~/src/st/current/nlw/dev-bin/wikitests-to-wiki`
+               puts import_wikitests
                              
+               import_reports_data = `~/src/st/current/nlw/dev-bin/st-populate-reports-db`
+               puts import_reports_data
+               
                import_reports_data2 = `~/src/st/current/nlw/dev-bin/st-populate-reports-db`
                puts import_reports_data2
-               
- #hack to reports data to get around the fact that sometimes
-               #st-populate-reports-db thinks the workspace was created twice
-               #within 5 minutes 
-              # nlw_user = "qa" +  Process.euid.to_s[-1..-1]
-              # force_tally_to_one = `psql NLW_reports_#{nlw_user} "update nlw_log_actions set tally=1"`
 
                mk_1 = `mkdir ~/.nlw/etc/socialtext/workspace_options`
                puts mk_1
@@ -197,8 +204,8 @@ puts "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                   print  "running #{@testcase} at "
                   puts Time.now.to_s
 
-                  #@content = `~/stbin/run-wiki-tests --timeout 60000 --test-username "#{@wikitest_user}" --test-email #{@wikitest_user}""  --plan-page "#{@testcase}" 2>&1`
-                  @content = `~/stbin/run-wiki-tests --no-maximize --test-username "#{@wikitest_user}" --test-email #{@wikitest_user}""  --timeout 60000 --plan-server "http://www2.socialtext.net"  --plan-workspace "s3wt" --plan-page "#{@testcase}" 2>&1`
+                  @content = `export ST_SKIN_NAME=s3; ~/stbin/run-wiki-tests --no-maximize --timeout 60000 --test-username "#{@wikitest_user}" --test-email #{@wikitest_user}""  --plan-page "#{@testcase}" 2>&1`
+                 # @content = `~/stbin/run-wiki-tests --no-maximize --test-username "#{@wikitest_user}" --test-email #{@wikitest_user}""  --timeout 60000 --plan-server "http://www2.socialtext.net"  --plan-workspace "s3wt" --plan-page "#{@testcase}" 2>&1`
 
                   #puts @content
 
