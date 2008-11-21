@@ -111,30 +111,24 @@ alias tail=multitail
 # stedit aliases
 alias dgedit='stedit -p -w dev-guide'
 alias dtedit='stedit -w dev-tasks'
-alias rtedit='stedit -w regression-test'
-alias stdedit='stedit -p -w stdev'
-
-# Appliance project aliases
-alias apm='wikrad -w appliance-manual "Appliance Project Plan"'
-alias apprad='wikrad -w appliance-project'
-alias appedit='stedit -p -w appliance-project'
-alias apmedit='stedit -p -w appliance-manual'
-alias appiter='appedit -l iteration'
-alias apmiter='apmedit -l iteration'
 
 # wikrad aliases
-alias rtrad='w2rad -w regression-test'
 alias dgrad='w2rad -w dev-guide'
 alias dtrad='w2rad -w dev-tasks'
 alias iterad='dtrad -l "current iteration"'
-alias projrad='dtrad -l project'
-alias rqrad='dtrad "Release Queue"'
 alias convrad='w2rad -w conversation'
 alias stprad='w2rad -w socialpedia'
-alias tigrad='wikrad -w tigger'
-alias stdrad='wikrad -w stdev'
-alias staxrad='w2rad -w stax'
 alias ves='dtrad "Zircon VE Assignment"'
+
+##############
+# GIT Section
+##############
+export ST_GIT=ssh://shale.socialtext.net/var/lib/git
+alias gst='git status'
+alias gd='git diff'
+alias gdc='git diff --cached'
+alias ga='git add'
+alias gci='git commit'
 
 provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
@@ -253,4 +247,5 @@ function jhc() {
     when=${*:-now}
     wikedit -w stdev -temp "JHC Standup Template" "JHC Standup, `date -d $when +%Y-%m-%d`"
 }
+
 
