@@ -123,7 +123,6 @@ alias ves='dtrad "Zircon VE Assignment"'
 ##############
 # GIT Section
 ##############
-export ST_GIT=ssh://shale.socialtext.net/var/lib/git
 alias gst='git status'
 alias gd='git diff'
 alias gdc='git diff --cached'
