@@ -31,7 +31,7 @@ my %default_env = (
     SF_CODE_REPO      => 'https://svn.sourceforge.net/svnroot/socialtext',
     ST_CODE_REPO      => 'https://repo.socialtext.net:8999/svn/socialtext',
     ST_SVN            => 'https://repo.socialtext.net:8999/svn',
-    ST_GIT            => 'ssh://shale.socialtext.net/var/lib/git',
+    ST_GIT            => 'ssh://topaz.socialtext.net/g',
     STB               => '//mirror/socialtext/branches',
     STT               => '//mirror/socialtext/tags',
 );
