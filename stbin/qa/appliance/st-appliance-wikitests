@@ -1,20 +1,26 @@
 #!/bin/bash
 # @COPYRIGHT@
 
+DA=`sudo st-admin get-default-account | grep  -o $HOSTNAME`
+if [ "$DA"  != '' ]; then
+    echo default account matches $DA
+else
+    echo  `sudo st-admin get-default-account`
+    echo "The default account should be the hostname, $HOSTNAME.  Exiting"
+    exit 1
+fi
+
 WIKITESTS="/usr/share/stconfig/stbin/qa/appliance"
 WIKITAR='/usr/share/nlw/workspaces/wikitests/wikitests.1.tar.gz'
 
 echo SETTING TIME
 source $WIKITESTS/set-time
 
-echo set-default-account Socialtext
-sudo st-admin set-default-account --account  Socialtext
-
-echo INSTALLING and ENABLING  all plugins
+echo INSTALLING and ENABLING all plugins for all accounts
 sudo st-appliance-install-plugin dashboard people socialcalc
-sudo st-admin enable-plugin --account Socialtext --plugin dashboard
-sudo st-admin enable-plugin --account Socialtext --plugin people
-sudo st-admin enable-plugin --account Socialtext --plugin socialcalc
+sudo st-admin enable-plugin --all-accounts --plugin dashboard
+sudo st-admin enable-plugin --all-accounts --plugin people
+sudo st-admin enable-plugin --all-accounts --plugin socialcalc
 
 echo INSTALLING wikitest_files
 if [ ! -e /opt/wikitest_files ]; then
@@ -33,34 +39,37 @@ if [ -e /var/www/socialtext/data/wikitests ]; then
     echo DELETING old wikitests workspace
     sudo st-admin delete-workspace --w wikitests --no-export
 fi
-echo IMPORTING wikitests WORKSPACE
+echo "IMPORTING wikitests WORKSPACE"
 sudo st-admin import-workspace --tarball $WIKITAR
 
-echo "SETTING user accounts to Socialtext"
-sudo st-admin set-user-account --e wikitester@ken.socialtext.net --account Socialtext
-sudo st-admin set-user-account --e devnull1@socialtext.com --account Socialtext
+echo "SETTING user accounts to $HOSTNAME, which is supposed to be the default account"
+sudo st-admin set-user-account --e wikitester@ken.socialtext.net --account $HOSTNAME
+sudo st-admin set-user-account --e devnull1@socialtext.com --account $HOSTNAME
 
-echo GRANTING Accounts and System admin to devnull1
+echo "GRANTING Accounts and System admin to devnull1"
 sudo st-admin give-system-admin --e devnull1@socialtext.com
 sudo st-admin give-accounts-admin --e devnull1@socialtext.com
 
-echo INSTALLING slapd
+echo "INSTALLING slapd"
 sudo apt-get install slapd
 
+echo "ENABLING Socialcalc for all workspaces"
 sudo $WIKITESTS/st-appliance-socialcalc enable
+
+echo "SETTING all skins TO s3"
+sudo st-admin set-account-config --account Socialtext skin_name s3
+sudo st-admin reset-account-skin --account Socialtext --skin s3
+sudo st-admin set-account-config --account $HOSTNAME skin_name s3
+sudo st-admin reset-account-skin --account $HOSTNAME  --skin s3
 
 # Make www-data own /etc/socialtext/ files so st-bootstrap-openldap will
 # succeed from wikitests.
 sudo chown -R www-data:www-data /etc/socialtext/
 
 # link appliance wikitest files into the path
-
 sudo rm -f /usr/bin/st-bootstrap-openldap /usr/bin/st-appliance-socialcalc /usr/bin/st-appliance-wikitests
 sudo ln -s $WIKITESTS/st-bootstrap-openldap /usr/bin/
 sudo ln -s $WIKITESTS/st-appliance-socialcalc /usr/bin/
 sudo ln -s $WIKITESTS/st-appliance-wikitests  /usr/bin/
 
-# make all skins s3
-sudo st-admin set-account-config --account Socialtext skin_name s3
-sudo st-admin reset-account-skin --account Socialtext --skin s3
 echo "DONE"
