@@ -146,6 +146,7 @@ my $test_plan = Socialtext::WikiObject::TestPlan->new(
         selenium_timeout => $time_out,
         wikitest_files => $wikitest_files_dir,
         wikitest_client_files => $wikitest_client_files_dir,
+        hostname => $hostname,
     },
 );
 $test_plan->run_tests;
