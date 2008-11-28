@@ -1,4 +1,4 @@
-alias screen='TERM=screen screen'
+alias screen='TERM=screen screen -U'
 alias wikrad='TERM=xterm-color wikrad'
-alias dtrad='TERM=xterm-color dtrad'
+alias dtrad='TERM=xterm-color w2rad -w dev-tasks'
 
