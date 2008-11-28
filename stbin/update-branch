@@ -41,8 +41,11 @@ for my $repo (@repos) {
     my $svk_base = "//mirror/$repo";
     my $branch_prefix = "branches/";
     $branch_prefix = '' if $branch =~ m#tags/#;
+    my $from_branch_prefix = "branches/";
+    $from_branch_prefix = '' if $from_branch =~ m#tags/#;
+    $from_branch_prefix = '' if $from_branch eq 'trunk';
     my $branch_path      = "$svk_base/$branch_prefix$branch";
-    my $from_branch_path = "$svk_base/$branch_prefix$from_branch";
+    my $from_branch_path = "$svk_base/$from_branch_prefix$from_branch";
 
     color_print('magenta', "Updating $repo repository.\n");
     eval {
