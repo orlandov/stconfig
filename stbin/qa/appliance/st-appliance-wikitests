@@ -40,6 +40,7 @@ if [ -e /var/www/socialtext/data/wikitests ]; then
     sudo st-admin delete-workspace --w wikitests --no-export
 fi
 echo "IMPORTING wikitests WORKSPACE"
+sudo apt-get install st-static-wikitest-files
 sudo st-admin import-workspace --tarball $WIKITAR
 
 echo "SETTING user accounts to $HOSTNAME, which is supposed to be the default account"
