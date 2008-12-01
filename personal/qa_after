@@ -20,7 +20,7 @@ if [ -e /etc/socialtext/socialtext.conf ]; then
     alias cdplugins='cd /usr/share/nlw/plugins'
     alias noplugins='sudo /etc/init.d/apache-perl stop; sudo apt-get remove --purge  socialtext-plugin-people socialtext-plugin-gadgets; sudo /etc/init.d/apache-perl start'
 
-	RWT='/usr/share/stconfig/stbin/qa/appliance/run-wiki-tests'
+	RWT='/usr/share/stconfig/stbin/run-wiki-tests'
 
 	alias xwt='export ST_SKIN_NAME='\''s3'\''; sudo -u www-data st-admin set-account-config --account Socialtext skin_name s3; sudo -u www-data st-admin set-workspace-config --w test-data skin_name s3; export WIKIEMAIL=$HOSTNAME; sudo -u www-data $RWT --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-server http://$HOSTNAME --test-server http://$HOSTNAME --plan-page  '
 
