@@ -26,7 +26,7 @@ echo INSTALLING wikitest_files
 if [ ! -e /opt/wikitest_files ]; then
     sudo mkdir /opt/wikitest_files
 fi
-sudo unzip $WIKITESTS/wikitestfiles.zip -d /opt/wikitest_files/
+sudo unzip -f $WIKITESTS/wikitestfiles.zip  -d /opt/wikitest_files/
 
 if [ -e /var/www/socialtext/data/test-data ]; then
     echo "DELETING old test-data workspace"
@@ -40,7 +40,7 @@ if [ -e /var/www/socialtext/data/wikitests ]; then
     sudo st-admin delete-workspace --w wikitests --no-export
 fi
 echo "IMPORTING wikitests WORKSPACE"
-sudo apt-get install st-static-wikitest-files
+sudo apt-get install --yes st-static-files-wikitests
 sudo st-admin import-workspace --tarball $WIKITAR
 
 echo "SETTING user accounts to $HOSTNAME, which is supposed to be the default account"
@@ -52,7 +52,7 @@ sudo st-admin give-system-admin --e devnull1@socialtext.com
 sudo st-admin give-accounts-admin --e devnull1@socialtext.com
 
 echo "INSTALLING slapd"
-sudo apt-get install slapd
+sudo apt-get install --yes slapd
 
 echo "ENABLING Socialcalc for all workspaces"
 sudo $WIKITESTS/st-appliance-socialcalc enable
