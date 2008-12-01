@@ -88,8 +88,9 @@ Options:
   -v --ve-name    Name of the VE to operate on
   -r --repo       Name of the debian repo to install
   -u --upgrade-to Name of the repo to upgrade the VE to.
-  -p --plugins    Specifies that plugins should be installed
-
+  -p --plugins    plugins should be installed
+  -t --test-data  create devnull1 user
+  
 Passwordless SSH
   If you'd like an SSH key set up on the VE, commit a public 
   ssh key to svn:stconfig/trunk/personal/<your username>/pub.key
