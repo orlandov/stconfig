@@ -26,7 +26,7 @@ echo INSTALLING wikitest_files
 if [ ! -e /opt/wikitest_files ]; then
     sudo mkdir /opt/wikitest_files
 fi
-sudo unzip -f $WIKITESTS/wikitestfiles.zip  -d /opt/wikitest_files/
+sudo unzip -u $WIKITESTS/wikitestfiles.zip  -d /opt/wikitest_files/
 
 if [ -e /var/www/socialtext/data/test-data ]; then
     echo "DELETING old test-data workspace"
