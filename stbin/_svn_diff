@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 use warnings;
 use strict;
+use Time::HiRes qw/gettimeofday tv_interval/;
 
 $ENV{_SVN_DIFF_ARGS} = quotemeta "@ARGV";
 
@@ -11,5 +12,13 @@ if (@ARGV == 1 and $ARGV[0] =~ /^r?(\d+)$/) {
 }
 
 my @command = ('scm', 'diff', @ARGV);
-exec @command;
-die "exec @command: $!";
+my $t0 = [gettimeofday];
+my $rc = system @command;
+my $elapsed = tv_interval($t0);
+
+my $logfile = '/var/log/wasted-time.log';
+if (-w $logfile) {
+    open(my $fh, ">>$logfile") or die "Can't open $logfile - $!";
+    print $fh "$ENV{USER} - $elapsed\n";
+    close $fh or die "Can't write to $logfile: $!";
+}
