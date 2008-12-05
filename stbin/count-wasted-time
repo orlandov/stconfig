@@ -5,8 +5,10 @@ use Getopt::Long;
 use Socialtext::BuildUtils qw/notify_via_irc/;
 
 my $reset = 0;
+my $bob   = 0;
 GetOptions(
     'r|reset' => \$reset,
+    'bob'     => \$bob,
 );
 
 my $log = '/var/log/wasted-time.log';
@@ -22,7 +24,14 @@ close $fh;
 
 if ($total) {
     my $individuals = join ', ', map { "$_=$totals{$_}s" } keys %totals;
-    notify_via_irc(sprintf 'log: Time wasted waiting for SVK recently: %s seconds (%s)', $total, $individuals);
+    my $msg = sprintf 'Time wasted waiting for SVK recently: %s seconds (%s)',
+        $total, $individuals;
+    if ($bob) {
+        notify_via_irc("log: $msg");
+    }
+    else {
+        print "$msg\n";
+    }
 }
 
 if ($reset) {
