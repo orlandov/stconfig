@@ -16,7 +16,7 @@ open(my $fh, $log) or die "Can't open $log: $!";
 my %totals;
 my $total = 0;
 while (<$fh>) {
-    my ($user, $time) = m/^(\w+) - (\d+)/;
+    my ($user, $time, $reason) = m/^(\w+) - (\d+)(?: - (.+))?/;
     $totals{$user} += $time;
     $total += $time;
 }
