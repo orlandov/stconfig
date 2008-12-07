@@ -35,13 +35,14 @@ sync=true
     "/data/workspaces/#{@workspace}/pages/miscellaneous_testcases/frontlinks",
     "/data/workspaces/#{@workspace}/pages/widgets_testcases"]
 
-#@page_loc = "/data/workspaces/wikitests/pages/osr_testcases/frontlinks"
-#@page_loc = "/data/workspaces/feb22-test/pages/chris_small_set/frontlinks"
-
 @status_loc = "/data/workspaces/qat/pages/continuous_integration_status"
 
-@outfile = File.new("citestcases.out","w+")
+@outfile = File.new("ci.log","w+")
 @outfile.sync = true
+
+# run-wiki-tests command appends to testcases.out, so create it here
+@testout = File.new("testcases.out","w+")
+@testout.close()
 
 while 1 do #INFINITE LOOP
    @number_passed = 0
@@ -116,19 +117,13 @@ while 1 do #INFINITE LOOP
 
                 rmplugins = `rm -rf ~/src/st/socialtext-plugins/#{@branch}`
                 puts rmplugins
-                getplugins = getreports = `scm checkout https://repo.socialtext.net:8999/svn/plugins/#{@branch} ~/src/st/plugins/#{@branch}`
+                getplugins = `scm checkout https://repo.socialtext.net:8999/svn/plugins/#{@branch} ~/src/st/plugins/#{@branch}`
                 puts getplugins
 
                rmreports = `rm -rf ~/src/st/socialtext-reports/#{@branch}`
                puts rmreports
                getreports = `scm checkout https://repo.socialtext.net:8999/svn/socialtext-reports/#{@branch} ~/src/st/socialtext-reports/#{@branch}`
-               #getreports = `scm checkout https://repo.socialtext.net:8999/svn/socialtext-reports/branches/#{@branch} ~/src/st/socialtext-report/branches/#{@branch}`
                puts getreports
-
-               rmsocialcalc = `rm -rf ~/src/st/socialcalc`
-               puts rmsocialcalc
-               getsocialcalc = `scm checkout https://repo.socialtext.net:8999/svn/plugins/#{@branch}/socialcalc ~/src/st/socialcalc`
-               puts getsocialcalc
 
                rmcontrol = `rm -rf ~/src/st/control#{@branch}/`
                puts rmcontrol
@@ -143,8 +138,8 @@ while 1 do #INFINITE LOOP
                remove = `rm -rf ~/src/st/#{@branch}`
                puts remove
                checkout = `scm checkout https://repo.socialtext.net:8999/svn/socialtext/#{@branch} ~/src/st/#{@branch}`
-              # checkout = `scm checkout https://repo.socialtext.net:8999/svn/socialtext/branches/#{@branch} ~/src/st/branches/#{@branch}`
                puts checkout
+               
                puts "CHECKING OUT #{@dev_user}"
                setbranch = `~/stbin/set-branch #{@branch}\n`
                puts setbranch
@@ -161,11 +156,12 @@ while 1 do #INFINITE LOOP
                puts set_benchmark
 
                puts "DOING ST-MAKE-JS"
-               makejs = `~/stbin/st-make-js`
+               makejs = `~/src/st/current/nlw/dev-bin/st-make-js`
                puts makejs
                
                clearceq = system("~/src/st/current/nlw/bin/ceq-rm /.+/")
                puts clearceq
+               
                import_wikitests = `~/src/st/current/nlw/dev-bin/wikitests-to-wiki`
                puts import_wikitests
                              
@@ -174,14 +170,6 @@ while 1 do #INFINITE LOOP
                
                import_reports_data2 = `~/src/st/current/nlw/dev-bin/st-populate-reports-db`
                puts import_reports_data2
-
-               mk_1 = `mkdir ~/.nlw/etc/socialtext/workspace_options`
-               puts mk_1
-               mk_2 = `mkdir ~/.nlw/etc/socialtext/workspace_options/test-data`
-               puts mk_2
-               mk_3 = `mkdir ~/.nlw/etc/socialtext/workspace_options/wikitests`
-               touch = `touch ~/.nlw/etc/socialtext/workspace_options/test-data/enable_spreadsheet`
-               touch_2 = `touch ~/.nlw/etc/socialtext/workspace_options/wikitests/enable_spreadsheet`
 
                set_s3 = `~/src/st/current/nlw/bin/st-admin set-workspace-config --workspace test-data skin_name s3`
                puts set_s3
@@ -204,10 +192,7 @@ while 1 do #INFINITE LOOP
                   print  "running #{@testcase} at "
                   puts Time.now.to_s
 
-                  @content = `export ST_SKIN_NAME=s3; ~/stbin/run-wiki-tests --no-maximize --timeout 60000 --test-username "#{@wikitest_user}" --test-email #{@wikitest_user}""  --plan-page "#{@testcase}" 2>&1`
-                 # @content = `~/stbin/run-wiki-tests --no-maximize --test-username "#{@wikitest_user}" --test-email #{@wikitest_user}""  --timeout 60000 --plan-server "http://www2.socialtext.net"  --plan-workspace "s3wt" --plan-page "#{@testcase}" 2>&1`
-
-                  #puts @content
+                  @content = `export ST_SKIN_NAME=s3; ~/stbin/run-wiki-tests --no-maximize --timeout 60000 --test-username "#{@wikitest_user}" --test-email #{@wikitest_user}""  --plan-page "#{@testcase}" 1>>testcases.out 2>>testcases.out`
 
                   step_count = @content.scan(/1\.\.\d+/)
                   puts step_count
