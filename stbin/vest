@@ -108,8 +108,6 @@ sub install_plugins {
         'st-appliance-install-plugin people dashboard socialcalc agile',
         'st-admin enable-plugin --all-accounts --plugin people',
         'st-admin enable-plugin --all-accounts --plugin dashboard',
-        'st-admin enable-plugin --all-accounts --plugin socialcalc',
-        'st-admin enable-plugin --all-accounts --plugin agile',
     );
 }
 
