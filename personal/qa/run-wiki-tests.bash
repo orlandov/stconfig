@@ -30,16 +30,8 @@ PLAN_WORKSPACE="wikitests"
 [ "$SELENIUM_PLAN_SERVER" ] && PLAN_SERVER="$SELENIUM_PLAN_SERVER"
 
 if [ "$BRANCH" ]; then
-    echo "set-branch $BRANCH"
     ~/stbin/set-branch $BRANCH
-    REPOS=`/usr/bin/st-repo-list | sed 's/socialtext //'` # all repos except socialtext
-
-    for REPO in $REPOS; do
-        echo Checking out $REPO/$BRANCH ;
-        mkdir -p  $ST_SRC_BASE/$REPO ;
-        cd $ST_SRC_BASE/$REPO ;
-        svn co https://repo.socialtext.net:8999/svn/$REPO/$BRANCH_PATH $BRANCH_PATH ;
-    done;
+    ~/stbin/refresh-branch $BRANCH
 fi
 
 USERNAME="wikitester@ken.socialtext.net"
@@ -85,5 +77,6 @@ echo plan-server is $PLAN_SERVER
 
 $NLW_DEVBIN/st-socialcalc enable
 
+export ST_SKIN_NAME=s3;
 ~/stbin/run-wiki-tests --no-maximize --test-username "$USERNAME" --test-email "$USERNAME" --plan-server "$PLAN_SERVER" --plan-workspace "$PLAN_WORKSPACE" --timeout 60000 --plan-page "$1" >& testcases.out&
 echo RUNNING ... tail -f $ST_CURRENT/testcases.out to monitor progress
