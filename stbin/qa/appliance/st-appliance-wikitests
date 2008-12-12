@@ -34,14 +34,16 @@ if [ -e /var/www/socialtext/data/test-data ]; then
 fi
 echo "IMPORTING  test-data  WORKSPACE"
 sudo st-admin import-workspace --tarball $WIKITESTS/test-data.tar.gz
+sudo st-admin set-workspace-config --w test-data account_name $HOSTNAME || true
 
 if [ -e /var/www/socialtext/data/wikitests ]; then
-    echo DELETING old wikitests workspace
+    echo "DELETING old wikitests workspace"
     sudo st-admin delete-workspace --w wikitests --no-export
 fi
 echo "IMPORTING wikitests WORKSPACE"
 sudo apt-get install --yes st-static-files-wikitests
 sudo st-admin import-workspace --tarball $WIKITAR
+sudo st-admin set-workspace-config --w wikitests account_name $HOSTNAME || true
 
 echo "SETTING user accounts to $HOSTNAME, which is supposed to be the default account"
 sudo st-admin set-user-account --e wikitester@ken.socialtext.net --account $HOSTNAME
