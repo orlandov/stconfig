@@ -1,4 +1,5 @@
 ################
+require 'fileutils.rb'
 require 'net/http'
 sync=true
 
@@ -25,7 +26,8 @@ sync=true
 #stop_ldap = `~/src/st/current/nlw/dev-bin/st-ldap disable`
 #puts stop_ldap
 
-@page_locs = ["/data/workspaces/#{@workspace}/pages/calc_testcases/frontlinks",
+@page_locs = [
+    "/data/workspaces/#{@workspace}/pages/calc_testcases/frontlinks",
     "/data/workspaces/#{@workspace}/pages/default_user_testcases/frontlinks",
     "/data/workspaces/#{@workspace}/pages/ldap_testcases/frontlinks",
     "/data/workspaces/#{@workspace}/pages/core_testcases/frontlinks",
@@ -33,16 +35,15 @@ sync=true
     "/data/workspaces/#{@workspace}/pages/localization_testcases/frontlinks",
     "/data/workspaces/#{@workspace}/pages/report_testcases/frontlinks",
     "/data/workspaces/#{@workspace}/pages/miscellaneous_testcases/frontlinks",
-    "/data/workspaces/#{@workspace}/pages/widgets_testcases"]
+    "/data/workspaces/#{@workspace}/pages/widgets_testcases/frontlinks",
+    "/data/workspaces/#{@workspace}/pages/profile_testcases/frontlinks",
+    ]
 
 @status_loc = "/data/workspaces/qat/pages/continuous_integration_status"
 
 @outfile = File.new("ci.log","w+")
 @outfile.sync = true
 
-# run-wiki-tests command appends to testcases.out, so create it here
-@testout = File.new("testcases.out","w+")
-@testout.close()
 
 while 1 do #INFINITE LOOP
    @number_passed = 0
@@ -111,7 +112,6 @@ while 1 do #INFINITE LOOP
             puts
             puts "Starting  at #{start_time} on #{@env_port}"
             puts
-
 
             def deploy_branch
 
@@ -183,6 +183,11 @@ while 1 do #INFINITE LOOP
             puts "GETTING TESTCASES"
             get_testcases
             puts @testcases
+            
+            iTime = Time.now().to_i
+            @testout = "#{iTime}.testcases.out"
+            FileUtils.ln_s(@testout,'testcases.out', :force => true)
+            puts @testout 
 
             @testcases.each do |@testcase|
 
@@ -192,7 +197,7 @@ while 1 do #INFINITE LOOP
                   print  "running #{@testcase} at "
                   puts Time.now.to_s
 
-                  @content = `export ST_SKIN_NAME=s3; ~/stbin/run-wiki-tests --no-maximize --timeout 60000 --test-username "#{@wikitest_user}" --test-email #{@wikitest_user}""  --plan-page "#{@testcase}" 1>>testcases.out 2>>testcases.out`
+                  @content = `export ST_SKIN_NAME=s3; ~/stbin/run-wiki-tests --no-maximize --timeout 60000 --test-username "#{@wikitest_user}" --test-email #{@wikitest_user}""  --plan-page "#{@testcase}" 2>>#{@testout} | tee -a #{@testout}`
 
                   step_count = @content.scan(/1\.\.\d+/)
                   puts step_count
@@ -253,7 +258,7 @@ while 1 do #INFINITE LOOP
 
                   req = Net::HTTP::Put.new(@status_loc, initheader = {'Content-Type' =>'text/x.socialtext-wiki'})
                   req.basic_auth @test_user, @test_pass
-                  req.body = "Tests passed: #{passed} \nTests_failed: #{failed}\nTotal number of test steps: #{count}\nTest run finished at #{time}\nBranch is #{@branch}\nDevenv port is #{devenv_port}\nHost is #{hostname}"
+                  req.body = "Tests passed: #{passed} \nTests_failed: #{failed}\nTotal number of test steps: #{count}\nTest run finished at #{time}\nBranch is #{@branch}\nDevenv port is #{devenv_port}\nHost is #{hostname}\nOutput in #{@testout}"
                   response =
                   Net::HTTP.new(@test_host, @test_port).start {|http|
                   http.request(req) }
@@ -261,6 +266,11 @@ while 1 do #INFINITE LOOP
                end
 
                put_count_to_wiki
+
+               if (! File.exists?('old-testcases'))
+                    FileUtils.mkdir 'old-testcases' 
+               end
+               FileUtils.move(@testout,'old-testcases')
 
             end #run_tests
 
