@@ -28,11 +28,11 @@ my $test_title      = 'Canonical Test Data Set';
 my $test_username   = 'devnull1@socialtext.com';
 my $test_email      = $test_username;
 my $test_password   = 'd3vnu11l';
-my $maximize        = 1;
+my $maximize        = 0;
 
 my $version;
 my $verbose;
-my $time_out        = '10000';
+my $time_out        = '30000';
 my $fake_content_file;
 my $perf_summary;
 GetOptions(
