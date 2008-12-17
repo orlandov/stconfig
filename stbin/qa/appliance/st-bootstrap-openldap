@@ -11,7 +11,7 @@ use Pod::Usage;
 use File::Slurp qw(slurp write_file);
 use File::Temp qw(tempfile);
 use Fcntl qw(SEEK_SET);
-use Socialtext::AppConfig;
+use Socialtext::LDAP;
 use Socialtext::Bootstrap::OpenLDAP;
 
 ###############################################################################
@@ -32,6 +32,7 @@ my %actions = (
     'start'     => \&start,
     'stop'      => \&stop,
     'status'    => \&status,
+    'delete'    => \&delete_dn,
 );
 my $action = shift @ARGV;
 pod2usage(1) unless ($action && exists $actions{$action});
@@ -86,24 +87,11 @@ sub start {
         root_dn     => 'cn=Manager,dc=socialtext,dc=com',
         );
 
-
     my $ldif_fh = tempfile();
     $ldif_fh->print($ldif_data);
     seek $ldif_fh, 0, SEEK_SET;
-    $openldap->add($ldif_fh) || die "can't add data to LDAP server\n";
+    $openldap->add_ldif($ldif_fh) || die "can't add data to LDAP server\n";
     $ldif_fh->close();
-
-    # configure ldap.yaml based on this bootstrapped OpenLDAP instance
-    my $ldapcfg   = $openldap->ldap_config();
-    my $ldap_id   = $ldapcfg->id();
-    my $factories = "LDAP:$ldap_id;Default";
-
-    Socialtext::LDAP::Config->save($ldapcfg);
-
-    # configure user_factories so OpenLDAP can be used as a user source
-    my $appconfig = Socialtext::AppConfig->new();
-    $appconfig->set( 'user_factories', $factories );
-    $appconfig->write();
 
     # update PID file to show that *we* are running.
     #
@@ -148,6 +136,29 @@ sub status {
         }
     }
     print "$0 not running\n";
+}
+
+###############################################################################
+# Delete.  Deletes an entry from the LDAP directory, by its DN.
+sub delete_dn {
+    # get the DN to delete
+    my $dn = shift @ARGV;
+    unless ($dn) {
+        die "no DN given to delete from LDAP directory.\n";
+    }
+
+    # connect to LDAP
+    my $st_ldap = Socialtext::LDAP->new();
+    unless ($st_ldap) {
+        die "unable to connect to LDAP.\n";
+    }
+
+    # delete the DN from LDAP, using direct Net::LDAP methods
+    my $mesg = $st_ldap->{ldap}->delete($dn);
+    if ($mesg->code()) {
+        die "unable to remove DN from LDAP; " . $mesg->error() . "\n";
+    }
+    print "entry removed\n";
 }
 
 ###############################################################################
@@ -234,16 +245,18 @@ st-bootstrap-openldap - Bootstrap OpenLDAP instance for testing
 
   Actions:
     start           Start an OpenLDAP instance for testing
+        --daemonize     Daemonize, running OpenLDAP in the background
     stop            Stop any running OpenLDAP instance
     status          See if an OpenLDAP instance is running
+    delete <dn>     Delete the given DN from running OpenLDAP instance
 
   Options:
-    --daemonize     Daemonize, running OpenLDAP in the background
     --help/-?       Brief help message
     --man           Full documentation
 
   Example:
-    st-bootstrap-openldap --daemonize start
+    st-bootstrap-openldap start --daemonize
+    st-bootstrap-openldap delete "cn=devnull3,dc=socialtext,dc=com"
 
 =head1 DESCRIPTION
 
@@ -254,7 +267,7 @@ When bootstrapped, the OpenLDAP instance is populated with some test data and
 Socialtext is then configured to use this instance as a user factory.
 
 This script automatically kills any running copy of itself on subsequent
-starts.  Its safe to just do C<st-bootstrap-openldap --daemonize start>
+starts.  Its safe to just do C<st-bootstrap-openldap start --daemonize>
 repeatedly; each time you'll get a brand new OpenLDAP instance.
 
 =head1 OPTIONS
@@ -265,6 +278,16 @@ repeatedly; each time you'll get a brand new OpenLDAP instance.
 
 Kills off any running OpenLDAP instance and starts a new one.
 
+=over
+
+=item --daemonize
+
+When starting an OpenLDAP instance, daemonize it and fire it off into the
+background.  Without this option, C<st-bootstrap-openldap> will pause on the
+console waiting for you to hit ^C to stop the instance.
+
+=back
+
 =item B<stop>
 
 Stops any running OpenLDAP instance.
@@ -273,11 +296,9 @@ Stops any running OpenLDAP instance.
 
 Checks to see if an OpenLDAP instance is running.
 
-=item B<--daemonize>
+=item B<delete> E<lt>dnE<gt>
 
-When starting an OpenLDAP instance, daemonize it and fire it off into the
-background.  Without this option, C<st-bootstrap-openldap> will pause on the
-console waiting for you to hit ^C to stop the instance.
+Deletes the given DN from the running OpenLDAP instance.
 
 =item B<--help/-?>
 
@@ -324,3 +345,20 @@ gn: Dev Null
 sn: Three
 mail: devnull3@socialtext.com
 userPassword: ldapd3v
+
+# Taro Yamada (Note how gn and sn are reversed in the cn)
+dn: cn=山田太郎,dc=socialtext,dc=com
+objectClass: inetOrgPerson
+cn: 山田太郎
+gn: 太郎
+sn: 山田
+mail: taro.yamada@ken.socialtext.net
+userPassword: ld@pu53r
+
+dn: cn=Bjørn Sjörœnsén,dc=socialtext,dc=com
+objectClass: inetOrgPerson
+cn: Bjørn Sjörœnsén
+gn: Bjørn
+sn: Sjörœnsén
+mail: bjorn@ken.socialtext.net
+userPassword: ld@pu53r
