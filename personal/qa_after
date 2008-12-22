@@ -109,4 +109,9 @@ else
     alias fsel='ps auxww | grep selenium'
 
     export SVN_COMMAND='svn'
+
+    if [ -e /etc/bash_completion.d/socialtext ]; then
+        source /etc/bash_completion.d/socialtext 
+    fi
+
 fi
