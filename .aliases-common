@@ -50,6 +50,7 @@ f() {
     awk $@ "{print \$${N:-1}}";
 }
 
+sx()        { screen -x "$1/"; }
 abs_path()  { perl -MCwd -le "print Cwd::abs_path(shift)" $1; }
 scmcd()     { cd $1; scm up; scm status; }
 kiss()      { command kiss "$@";      rehash; }
