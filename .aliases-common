@@ -50,7 +50,17 @@ f() {
     awk $@ "{print \$${N:-1}}";
 }
 
-sx()        { screen -x "$1/"; }
+sx() { screen -x "$1/"; }
+# username completion for screen
+_sx_comp() {
+    SCREEN_DIR=/var/run/screen
+    local cur prev opts
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    COMPREPLY=( $(/bin/ls -d /var/run/screen/S-${cur}* 2>/dev/null | perl -ne 'm|/var/run/screen/S-([^/]*)|; print $1' ) )
+    return 0;
+}
+complete -F _sx_comp sx
+
 abs_path()  { perl -MCwd -le "print Cwd::abs_path(shift)" $1; }
 scmcd()     { cd $1; scm up; scm status; }
 kiss()      { command kiss "$@";      rehash; }
