@@ -13,16 +13,12 @@ my $current = readlink("$src_base/current");
 die "No current branch set!" unless $current;
 (my $branch_name = $current) =~ s#.+/##;
 
-my $SCM = $ENV{SVN_COMMAND};
-
 my @repos = split m/\s+/, qx(st-repo-list);
 my @paths;
 for my $r (@repos) {
     my $path = $r eq 'socialtext' ?
         "$src_base/$branch_name" :
-            $branch_name eq 'trunk'
-                ? "$src_base/$r/trunk"
-                : "$src_base/$r/branches/$branch_name";
+        "$src_base/$branch_name/$r";
     if (-d $path) {
         push @paths, $path;
     }
@@ -34,7 +30,7 @@ for my $r (@repos) {
 my @files;
 for my $path (@paths) {
     color_print('yellow', "Finding files in $path\n");
-    push @files, grep { /^[AMD]/ } qx($SCM st $path);
+    push @files, map { "$path/$_" } qx(cd $path; git-ls-files -m);
 }
 
 my $files = join('', @files);
@@ -67,12 +63,15 @@ my ($msg, $submit_files) = $content =~
 
 $msg =~ s/'//g;
 
-my @submit_files = grep { s/^[AMD]\s*// } split("\n", $submit_files);
+my @submit_files = split("\n", $submit_files);
 
 for my $path (@paths) {
     color_print('yellow', "Submiting files in $path");
-    my $cmd = join " ", "$SCM ci -m '$msg'", grep { /^$path/ } @submit_files;
-    system $cmd;
+    my @to_submit = grep { m/^$path/ } @submit_files;
+    next unless @to_submit;
+    system "git add @to_submit";
+    system "git commit -m '$msg'";
+    system "git push";
 }
 
 color_print('green', "All repositories of $branch_name updated!\n");
