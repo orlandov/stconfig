@@ -6,11 +6,12 @@ use File::Path qw/mkpath/;
 use Fatal qw/:void mkpath chdir unlink symlink/;
 use English;
 
-my @repos = split /\s+/, qx(st-repo-list);
+my @repos = grep { !m/^socialpoint/ } split /\s+/, qx(st-repo-list);
 my $branch = shift || '';
 my $private = shift;
 
-my $src_base   = $ENV{ST_SRC_BASE};
+my $git_base = $ENV{ST_GIT};
+my $src_base = $ENV{ST_SRC_BASE};
 unless (-d $src_base) {
     mkpath $src_base;
 }
@@ -18,80 +19,72 @@ unless (-d $src_base) {
 $branch = num_to_name($branch) if $branch =~ m/^\d+$/;
 usage() unless $branch;
 
-my $branch_dir = "$src_base/$branch";
-if ( $branch eq 'trunk' ) {
-    checkout($branch);
-}
-elsif ($branch =~ m#^tags/#) {
-    checkout($branch);
-}
-elsif ($private) {
-    checkout("private-branches/$branch");
+if ($branch =~ s#^tags/##) {
+    checkout($branch, 1);
 }
 else {
-    checkout("branches/$branch");
+    checkout($branch);
 }
 
+my $branch_dir = "$src_base/$branch";
 if (-d $branch_dir) {
     my $curlink = "$src_base/current";
     unlink $curlink if -l $curlink;
     symlink $branch_dir, $curlink;
 }
 
-create_repo_symlinks();
 exit;
 
 sub checkout {
-    my $path = shift;
-    update_or_checkout($_, $path) for @repos;    
+    my $branch = shift;
+    my $tag    = shift;
+    chdir $src_base;
+
+    if (-d $branch) {
+        shell_run("refresh-branch $branch");
+        exit;
+    };
+    
+    checkout_repo($_, $branch, $tag) for @repos;    
 }
 
-sub update_or_checkout {
-    my ($repo, $path) = @_;
-    chdir $src_base;
-    my $dir = $repo eq 'socialtext' ? $branch : "$repo/$path";
-    return if -d $dir;
-    if ($ENV{SVN_COMMAND} eq 'svk') {
-        color_print('green', "syncing $repo\n");
-        shell_run("-scm sync //mirror/$repo") || return;
-    }
-    
-    if (!-d $repo or !shell_run("-scm info $repo 2>/dev/null")) {
-        color_print('green', "checking out $repo/$path\n");
-        shell_run("scm checkout $ENV{ST_SVN}/$repo/$path $dir >/dev/null");
+sub checkout_repo {
+    my ($repo, $branch, $tag) = @_;
+    my $repo_dir = $repo eq 'socialtext' ? $branch : "$branch/$repo";
+    my $dir      = "$src_base/$repo_dir";
+    my $from     = $tag ? $branch : "origin/$branch";
+    $from =~ s/trunk$/master/;
+
+    (my $trunk_repo = $dir) =~ s/$branch/trunk/;
+    if (-d $trunk_repo) {
+        (my $to_clone = $repo_dir) =~ s/$branch/trunk/;
+        shell_run("git clone --local $src_base/$to_clone $dir");
+        chdir $dir;
+        shell_run("git remote rm origin"); # dis-associate from local trunk
+        shell_run("git remote add origin $git_base/$repo.git"); #associate with remote
+        shell_run("git fetch 2>&1 | grep -v 'new branch'");# | grep -v '^From'");
+        chdir '..';
     }
     else {
-        color_print('green', "updating $dir");
-        shell_run("scm up $dir >/dev/null");
+        shell_run("git clone $git_base/$repo.git $dir\n");
+    }
+
+    if ($branch ne 'master') {
+        my $track_opt = $tag ? ''      : '--track';
+        shell_run("cd $dir; git checkout $track_opt -b $branch $from\n");
     }
 }
 
 sub shell_run {
     my $cmd = shift;
     my $nodie = $cmd =~ s/^-//;
+    warn "+ $cmd\n";
     my $rc = system $cmd;
     unless ($nodie or $rc == 0) {
         color_print('red', "Error running $cmd\n");
         exit $rc;
     }
     return $rc == 0;
-}
-
-sub create_repo_symlinks {
-    for my $r (@repos) {
-        next if $r eq 'socialtext';
-        my $repo_branch = $branch eq 'trunk' 
-            ? "$src_base/$r/trunk"
-            : $branch =~ m#^tags/# ? "$src_base/$r/$branch"
-                                   : "$src_base/$r/branches/$branch";
-        (my $just_branch = $branch) =~ s#^tags/##;
-        my $st_path = "$src_base/$just_branch/$r";
-
-        unlink $st_path if -l $st_path;
-        symlink $repo_branch => $st_path
-            or warn "Can't create repo symlink for $r - is it checked out?\n"
-                    . "Trying to symlink $repo_branch to $st_path: $!\n";
-    }
 }
 
 sub num_to_name {
