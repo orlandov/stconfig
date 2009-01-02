@@ -42,10 +42,10 @@ sub checkout {
 
     if (-d "$branch/.git") {
         shell_run("refresh-branch $branch");
-        exit;
-    };
-    
-    checkout_repo($_, $branch, $tag) for @repos;    
+    }
+    else {
+        checkout_repo($_, $branch, $tag) for @repos;
+    }
 }
 
 sub checkout_repo {
