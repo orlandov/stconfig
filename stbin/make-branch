@@ -6,10 +6,19 @@ use Term::ANSIColor;
 use lib "$ENV{ST_SRC_BASE}/current/nlw/lib";
 use Socialtext::System qw/shell_run/;
 use Getopt::Long;
+use File::Temp qw(tempdir);
+use Cwd;
+use File::chdir;
 
 my $source_base = $ENV{ST_SRC_BASE} || "$ENV{HOME}/src/st";
 my $svk_mirror_base = '//mirror';
 my %repo_names = map { $_ => 1 } split /\s+/, qx(st-repo-list);
+
+# Check that we have a git trunk checkout, so we can archive files from it
+unless (-e "$ENV{ST_SRC_BASE}/trunk/.git") {
+    die "Can't find a git trunk checkout!";
+}
+my $TRUNK_BASE = "$ENV{ST_SRC_BASE}/trunk";
 
 my $r = get_rester();
 
@@ -28,96 +37,37 @@ for my $r (@repos) {
     usage("$r is not a valid repository") unless $repo_names{$r};
 }
 
-my $from = 'trunk';
-if ($opts{from}) {
-    if ($opts{from} =~ m/^tags\/.+/) {
-        $from = $opts{from};
-    }
-    else {
-        $from = "branches/$opts{from}";
-    }
-}
-
+my $git_from = $opts{from} || 'master';
 my $new_branch = shift;
 usage() unless $new_branch;
 
-my $svn_prefix = 'branches/';
-$svn_prefix = 'tags/' if $new_branch =~ s#^tags/##;
-
 for my $repo (@repos) {
+    next if $repo eq 'socialpoint';
     color_print('magenta', "Creating $new_branch in $repo repository.\n");
-    sync_mirror($repo);
 
-    # Check that the branch doesn't exist already
-    my $branch_path = "${svk_mirror_base}/$repo/$svn_prefix$new_branch";
-    unless (qx(svk ls $branch_path 2>&1) =~ m/is not versioned/) {
-        color_print('red bold', "It appears $branch_path already exists...\n");
-        next if $opts{force};
-        exit -1;
+    # Clone the repo to a temp dir
+    # We clone from a local trunk so it's fast, instead of cloning github
+    my $git_temp = tempdir( CLEANUP => 1 );
+    my $from_git_dir = $TRUNK_BASE;
+    $from_git_dir .= "/$repo" unless $repo eq 'socialtext';
+
+    {
+        local $CWD = $git_temp;
+        shell_run("git clone --shared $from_git_dir $repo");
+        $CWD .= "/$repo";
+        shell_run("git remote rm origin");
+        shell_run("git remote add origin $ENV{ST_GIT}/$repo.git");
+        shell_run("git fetch");
+        shell_run("git checkout -b $new_branch origin/$git_from");
+        shell_run("git push origin $new_branch");
     }
-
-    # use svn to actually make branch because some of our partners have
-    # to maintain separate mirrors, one for branches, one for tags
-    my $svn_repo = "$ENV{ST_SVN}/$repo";
-    my $msg = "make-branch $new_branch in $repo";
-    my $make_branch_command =
-      "svn cp -m '$msg' ${svn_repo}/$from ${svn_repo}/$svn_prefix$new_branch";
-    shell_run($make_branch_command);
-
-    # sync again
-    sync_mirror($repo);
 }
 
 shell_run("set-branch $new_branch");
 
-# then adding it to testrunner (maybe not required),
-# -- not supported yet --
-
-# writing a release contract,
-if (!$opts{'no-rc'} and create_rc_prompt()) {
-    print "Creating a new release contract.\n";
-    $r->server('https://www2.socialtext.net');
-    $r->workspace('dev-tasks');
-    my $rc_template_page = 'Release Contract Template';
-    my $rc_template = $r->get_page($rc_template_page);
-    my @rc_tags = $r->get_pagetags($rc_template_page);
-    my $new_rc_page = "$new_branch Release Contract";
-    $r->put_page($new_rc_page, $rc_template);
-    $r->put_pagetag($new_rc_page, $_) for @rc_tags;
-
-    shell_run("wikedit -s '" . $r->server
-            . "' -w '" . $r->workspace
-            . "' '$new_rc_page'" );
-}
-
-shell_run("set-branch $new_branch");
-
-color_print('magenta', "Symlinking repos into $source_base/current ...\n");
-for my $repo (@repos) {
-    # make symlink to this branch from inside the current symlink
-    (my $repo_local = $repo) =~ s/^socialtext-//;
-    my $checkout_dir = "$source_base/$repo_local/$svn_prefix$new_branch";
-    if ($repo ne 'socialtext' and -d "$source_base/current") {
-        shell_run("ln -sf $checkout_dir $source_base/current/$repo");
-    }
-}
 
 color_print('bold green', "\nAll done creating branch $new_branch!\n");
 exit;
-
-sub create_rc_prompt {
-    local $| = 1;
-    color_print('green',
-        'Would you like to create a Release Contract page right now? ');
-    color_print('yellow', 'Y/n: ');
-    my $ans = <STDIN>;
-    return $ans =~ m/^y/i;
-}
-
-sub sync_mirror {
-    my $repo = shift;
-    shell_run("svk sync $svk_mirror_base/$repo");
-}
 
 sub usage {
     my $msg = shift || '';
