@@ -78,7 +78,7 @@ sub checkout_repo {
 sub shell_run {
     my $cmd = shift;
     my $nodie = $cmd =~ s/^-//;
-    warn "+ $cmd\n";
+    warn "+ $cmd\n" if $cmd =~ m/git/;
     my $rc = system $cmd;
     unless ($nodie or $rc == 0) {
         color_print('red', "Error running $cmd\n");
