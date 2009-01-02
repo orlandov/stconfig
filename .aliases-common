@@ -81,8 +81,8 @@ cdwikiwyg() { cd `abs_path $ST_CURRENT/nlw/share/skin/wikiwyg/javascript`; }
 CDwikiwyg() { scmcd `abs_path $ST_CURRENT/nlw/share/skin/wikiwyg/javascript`; }
 cdcur()   { cd `abs_path $ST_CURRENT`; }
 CDcur()   { scmcd `abs_path $ST_CURRENT`; }
-cdcfg()   { cd `abs_path $ST_CURRENT/../stconfig/trunk`; }
-CDcfg()   { scmcd `abs_path $ST_CURRENT/../stconfig/trunk` && ./stconfig-setup; }
+cdcfg()   { cd `abs_path $ST_CURRENT/../stconfig`; }
+CDcfg()   { scmcd `abs_path $ST_CURRENT/../stconfig` && ./stconfig-setup; }
 cdcrp()   { cd `abs_path $ST_CURRENT/../clients/rest/perl`; }
 cdrpt()   { cd `abs_path $ST_CURRENT/socialtext-reports`; }
 cdapp()   { cd `abs_path $ST_CURRENT/appliance`; }
@@ -121,6 +121,7 @@ alias iterad='dtrad -l "current iteration"'
 alias convrad='w2rad -w conversation'
 alias stprad='w2rad -w socialpedia'
 alias ves='dtrad "Zircon VE Assignment"'
+alias toprad="wikrad -s http://$(hostname):$((20000+$UID)) -w admin -u devnull1@socialtext.com -p d3vnu11l"
 
 ##############
 # GIT Section
