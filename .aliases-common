@@ -148,6 +148,7 @@ alias gci='git commit'
 alias gcia='git commit -a'
 alias gciam='git commit -a -m'
 alias gun='git reset HEAD'
+alias gpu='git push'
 
 provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
