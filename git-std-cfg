@@ -1,0 +1,9 @@
+#!/bin/sh
+gcfg='git config --global'
+$gcfg core.excludesfile ~/src/st/stconfig/.gitignore
+$gcfg color.ui auto
+
+# alias "co" to mean "checkout"
+$gcfg alias.co checkout
+$gcfg alias.ci commit
+$gcfg alias.st status
