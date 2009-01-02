@@ -12,7 +12,11 @@ if [ -z "$BRANCH" ]; then
 fi
 
 if [ "$BRANCH" = "-c" ]; then
-    BRANCH=`perl -le '$b = readlink("$ENV{HOME}/src/st/current"); $b =~ s(.+/)(); print $b'`
+    BRANCH=`perl -le '$b = readlink("$ENV{ST_SRC_BASE}/current"); $b =~ s(.+/)(); print $b'`
+fi
+if [ ! -d "$ST_SRC_BASE/$BRANCH" ]; then
+    echo "The branch you specified ($BRANCH) must be checked out!";
+    exit 1;
 fi
 
 VERSION=${4:-$(st-version $BRANCH)}
@@ -37,7 +41,6 @@ fi
 
 for REPO in `st-repo-list` ; 
 do
-    
     MESSAGE="Copying /$REPO/branches/$BRANCH to /$REPO/tags/$TAG $MSG"
     BRANCH_URL="$ST_SVN/$REPO/branches/$BRANCH"
     TAG_URL="$ST_SVN/$REPO/tags/$TAG"
@@ -48,9 +51,19 @@ do
         echo To: $TAG_URL
     fi
 
-    if svn -q copy -m "$MESSAGE" $BRANCH_URL $TAG_URL >/dev/null; then
-        echo "Created $REPO tag $TAG from branch $BRANCH"
+    if [ "$REPO" = "socialpoint" ]; then
+        echo "Using svn to create $TAG";
+        if svn -q copy -m "$MESSAGE" $BRANCH_URL $TAG_URL >/dev/null; then
+            echo "Created $REPO tag $TAG from branch $BRANCH"
+        fi
+    else
+        REPO_DIR=$ST_SRC_BASE/$BRANCH
+        if [ "$REPO" != "socialtext" ]; then
+            REPO_DIR="$ST_SRC_BASE/$BRANCH/$REPO"
+        fi
+        cd $REPO_DIR
+        git tag -a $TAG -m "$MESSAGE"
+        git push --tags
     fi
-
 done
 
