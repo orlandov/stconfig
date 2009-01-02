@@ -42,28 +42,19 @@ fi
 for REPO in `st-repo-list` ; 
 do
     MESSAGE="Copying /$REPO/branches/$BRANCH to /$REPO/tags/$TAG $MSG"
-    BRANCH_URL="$ST_SVN/$REPO/branches/$BRANCH"
-    TAG_URL="$ST_SVN/$REPO/tags/$TAG"
    
     if [ $VERBOSE ]; then
         echo Message: $MESSAGE
-        echo From: $BRANCH_URL
-        echo To: $TAG_URL
+        echo From: $BRANCH
+        echo To: $TAG
     fi
 
-    if [ "$REPO" = "socialpoint" ]; then
-        echo "Using svn to create $TAG";
-        if svn -q copy -m "$MESSAGE" $BRANCH_URL $TAG_URL >/dev/null; then
-            echo "Created $REPO tag $TAG from branch $BRANCH"
-        fi
-    else
-        REPO_DIR=$ST_SRC_BASE/$BRANCH
-        if [ "$REPO" != "socialtext" ]; then
-            REPO_DIR="$ST_SRC_BASE/$BRANCH/$REPO"
-        fi
-        cd $REPO_DIR
-        git tag -a $TAG -m "$MESSAGE"
-        git push --tags
+    REPO_DIR=$ST_SRC_BASE/$BRANCH
+    if [ "$REPO" != "socialtext" ]; then
+        REPO_DIR="$ST_SRC_BASE/$BRANCH/$REPO"
     fi
+    cd $REPO_DIR
+    git tag -a $TAG -m "$MESSAGE"
+    git push --tags
 done
 
