@@ -138,9 +138,14 @@ alias ves='dtrad "Zircon VE Assignment"'
 ##############
 alias gst='git status'
 alias gd='git diff'
+alias gdp='gd | vim-pager'
 alias gdc='git diff --cached'
+alias gdcp='gdc | vim-pager'
 alias ga='git add'
+alias gau='git add -u'
+alias gco='git checkout'
 alias gci='git commit'
+alias gun='git reset HEAD'
 
 provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
