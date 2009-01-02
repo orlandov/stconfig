@@ -40,7 +40,7 @@ sub checkout {
     my $tag    = shift;
     chdir $src_base;
 
-    if (-d $branch) {
+    if (-d "$branch/.git") {
         shell_run("refresh-branch $branch");
         exit;
     };
@@ -56,7 +56,7 @@ sub checkout_repo {
     $from =~ s/trunk$/master/;
 
     (my $trunk_repo = $dir) =~ s/$branch/trunk/;
-    if (-d $trunk_repo) {
+    if (-d "$trunk_repo/.git") {
         (my $to_clone = $repo_dir) =~ s/$branch/trunk/;
         shell_run("git clone --local $src_base/$to_clone $dir");
         chdir $dir;
