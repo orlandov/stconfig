@@ -2,6 +2,7 @@
 gcfg='git config --global'
 $gcfg core.excludesfile ~/src/st/stconfig/.gitignore
 $gcfg color.ui auto
+$gcfg core.pager 'less -FXRS' # -R allows colors
 
 # alias "co" to mean "checkout"
 $gcfg alias.co checkout
