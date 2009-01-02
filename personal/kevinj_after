@@ -21,12 +21,11 @@
 ################################################################
 #
 
-alias dtrad='wikrad --server https://www2.socialtext.net --workspace dev-tasks'
-
 # ZSH specific stuff from here on
 ls =ls >/dev/null 2>&1 || return
 
-alias find='noglob find'
+keychain $HOME/.ssh/id_dsa
+source $HOME/.keychain/topaz.socialtext.net-sh
 
 RPS1=''
 eval $(dircolors | perl -pe 's/di=01;34/di=01;36/')
