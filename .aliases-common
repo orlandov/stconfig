@@ -141,7 +141,7 @@ alias gciam='git commit -a -m'
 alias gun='git reset HEAD'
 alias gpu='git push'
 alias gl='git log .'
-alias guppy='gup; gpu'
+alias guppy='gup && gpu'
 
 provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
