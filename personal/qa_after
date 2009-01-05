@@ -38,11 +38,9 @@ else
     alias stopme='$ST_CURRENT/nlw/dev-bin/nlwctl stop'
     alias startme='$ST_CURRENT/nlw/dev-bin/nlwctl start'
     alias restartme='$ST_CURRENT/nlw/dev-bin/nlwctl restart'
-    alias svnstatus='svn status --show-updates'
     alias ceqread='$ST_CURRENT/nlw/bin/ceq-read'
     alias ceqstat='$ST_CURRENT/nlw/bin/ceq-stat'
     alias ceqrm='$ST_CURRENT/nlw/bin/ceq-rm'
-    alias svnall='cdcur; stopme; rb; freshdev; cdcur'
     alias findceq='ps x  | grep ceqlotron | grep -v grep'
     alias findwikis='ls ~/.nlw/root/data/'
 
@@ -102,7 +100,6 @@ else
     # functions
     branches() {  /bin/ls /home/$1/src/st ; }
     sb()        { set-branch $1; cdnlw; cd ..; }
-    trunkdiff () { svn diff https://repo.socialtext.net:8999/svn/socialtext/trunk https://repo.socialtext.net:8999/svn/socialtext/branches/$1 ; }
 
     alias brqa='branches qa*'
     alias ffx='ps auxww | grep firefox'
