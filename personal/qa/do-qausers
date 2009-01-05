@@ -1,2 +1,5 @@
-for i in `cat qausers` ; do sudo -u $i  svn update /home/$i/src/st/stconfig ; done ;
+echo ################
+echo qa users need their ssh keys set up for this script to work
+echo ###############
+for i in `cat qausers` ; do cd /home/$i/src/st/stconfig ; sudo -u $i  /home/$i/stbin/gup ; done ;
 
