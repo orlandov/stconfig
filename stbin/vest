@@ -93,7 +93,7 @@ Options:
   
 Passwordless SSH
   If you'd like an SSH key set up on the VE, commit a public 
-  ssh key to svn:stconfig/trunk/personal/<your username>/pub.key
+  ssh key to stconfig/personal/<your username>/pub.key
 EOT
 }
 

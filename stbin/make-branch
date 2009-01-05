@@ -10,15 +10,17 @@ use File::Temp qw(tempdir);
 use Cwd;
 use File::chdir;
 
+
+
 my $source_base = $ENV{ST_SRC_BASE} || "$ENV{HOME}/src/st";
 my $svk_mirror_base = '//mirror';
 my %repo_names = map { $_ => 1 } split /\s+/, qx(st-repo-list);
 
-# Check that we have a git trunk checkout, so we can archive files from it
-unless (-e "$ENV{ST_SRC_BASE}/trunk/.git") {
-    die "Can't find a git trunk checkout!";
+# Check that we have a git master checkout, so we can archive files from it
+my $MASTER_BASE = "$ENV{ST_SRC_BASE}/master";
+unless (-d "$MASTER_BASE/.git") {
+    die "Can't find a git master checkout!";
 }
-my $TRUNK_BASE = "$ENV{ST_SRC_BASE}/trunk";
 
 my $r = get_rester();
 
@@ -46,12 +48,13 @@ for my $repo (@repos) {
     color_print('magenta', "Creating $new_branch in $repo repository.\n");
 
     # Clone the repo to a temp dir
-    # We clone from a local trunk so it's fast, instead of cloning github
+    # We clone from a local master so it's fast, instead of cloning github
     my $git_temp = tempdir( CLEANUP => 1 );
-    my $from_git_dir = $TRUNK_BASE;
+    my $from_git_dir = $MASTER_BASE;
     $from_git_dir .= "/$repo" unless $repo eq 'socialtext';
 
     {
+        # TODO: this is shared code with set-branch, Refactor it
         local $CWD = $git_temp;
         shell_run("git clone --shared $from_git_dir $repo");
         $CWD .= "/$repo";
@@ -79,7 +82,7 @@ $0 [rester options] [options] new-branch-name
 
 options:
   --no-rc   Don't create a release contract
-  --from    Branch to copy from (Default: trunk)
+  --from    Branch to copy from (Default: master)
   --force   Continue even if branches already exist
   --repo    The repositories to create the branch in:
             $valid_repos OR all

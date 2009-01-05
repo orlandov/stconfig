@@ -1,17 +1,10 @@
 #!/bin/bash
 set -x
 
-ST_SVN=https://repo.socialtext.net:8999/svn
-
 cd ~
 mkdir -p src/st
 cd src/st
 
-svk depotmap --init
-
-svk mirror $ST_SVN/stconfig //mirror/stconfig
-svk sync //mirror/stconfig
-svk co //mirror/stconfig/trunk stconfig
 rm ~/.bashrc
 rm ~/.bash_profile
 rm ~/.zshrc
@@ -22,23 +15,4 @@ sudo apt-get install st-perl-deps
 
 sudo -u postgres createuser lukec
 
-svk mirror $ST_SVN/socialtext-clients //mirror/clients
-svk mirror $ST_SVN/appliance //mirror/appliance
-svk mirror $ST_SVN/customer-code //mirror/customer-code
-svk mirror $ST_SVN/debian-packages //mirror/debian-packages
-svk mirror $ST_SVN/brett //mirror/brett
-svk mirror $ST_SVN/control //mirror/control
-svk mirror $ST_SVN/customer-skins //mirror/customer-skins
-svk mirror $ST_SVN/debian //mirror/debian
-svk mirror $ST_SVN/st-repo-tools //mirror/repo-tools
-
-svk sync -a
-
-svk mirror $ST_SVN/socialtext //mirror/socialtext 
-
-svk sync -a
-
-echo "SVK probably just died around 1064.  You'll need to switch over to svn+ssh for a few..."
-echo "Run this: svk mirror svn+ssh://repo.socialtext.net/var/lib/svn/socialtext //mirror/socialtext"
-echo "Then: svk mirror --relocate //mirror/socialtext $ST_SVN/socialtext"
-
+set-branch master
