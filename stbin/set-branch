@@ -7,7 +7,7 @@ use Fatal qw/:void mkpath chdir unlink symlink/;
 use English;
 use List::Util qw(first);
 
-my @repos = grep { !m/^socialpoint/ } split /\s+/, qx(st-repo-list);
+my @repos = split /\s+/, qx(st-repo-list);
 my $branch = shift || '';
 
 if ($branch eq 'trunk') {
