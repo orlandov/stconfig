@@ -1,15 +1,85 @@
-#!/bin/bash
-curdir=`pwd`
-echo -n "+ git $* : "
-for r in `st-repo-list`; do 
-    echo -n "$r "
+#!/usr/bin/perl
 
-    if [ $r = 'socialtext' ]; then 
-        r=''
-    fi
+use strict;
+use warnings;
+use IPC::Run qw(run);
+use Pod::Usage;
+use Term::ANSIColor 'color';
 
-    cd $ST_SRC_BASE/current/$r
-    git $*
-done
-cd $curdir
-echo "."
+pod2usage() unless (@ARGV);
+
+# See if we're supposed to be running quietly.
+my $quiet = $ARGV[0] =~ s/^@//;
+my $nodie = $ARGV[0] =~ s/^-//;
+
+# Its a "git" command we're running.
+unshift @ARGV, 'git';
+$| = 1;
+print "++";
+
+# Run the command against all repos.
+my $st_current = "$ENV{ST_SRC_BASE}/current";
+foreach my $repo (repo_list()) {
+    my $out = '';
+    color_print('green'," $repo");
+
+    # make sure we're in the right repo dir.
+    $repo = '' if ($repo eq 'socialtext');
+    unless (-e "$st_current/$repo") {
+        color_print('red','?');
+        next;
+    }
+    chdir "$st_current/$repo";
+
+    # run the command against this repo.
+    my $rc = run [@ARGV], \*STDIN, \$out, \$out;
+    color_print('red','!') unless $rc;
+
+    chomp $out;
+    unless ($quiet || $out eq '') {
+        print "\n[$out]\n";
+    }
+    exit $rc unless ($nodie || $rc);
+}
+print "\n";
+exit;
+
+
+
+sub repo_list {
+    my @repos = split /\s+/, `st-repo-list`;
+    chomp @repos;
+    return @repos;
+}
+
+sub color_print {
+    my $color = shift;
+    my $msg = shift;
+    print color($color), $msg, color('reset');
+}
+
+=head1 NAME
+
+st-git-all - Runs a Git command against all ST repos
+
+=head1 SYNOPSIS
+
+  st-git-all [@][-][command] <options>
+
+  Example:
+    st-git-all pull
+    st-git-all @fetch
+    st-git-all -status
+
+=head1 DESCRIPTION
+
+C<st-git-all> runs a Git command against all of the ST repos (as returned by
+F<st-repo-list>).
+
+Optionally prefixing your Git command with "@" will cause the output to be
+silently ignored (except in the event of an error).  This includes STDERR.
+
+Optionally prefixing your Git command with "-" will cause errors to be
+ignored.  Otherwise, we halt on the first occurring error.
+
+=cut
