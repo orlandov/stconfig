@@ -7,7 +7,6 @@ use Fatal qw/:void mkpath chdir unlink symlink/;
 use English;
 use List::Util qw(first);
 
-my @repos = split /\s+/, qx(st-repo-list);
 my $branch = shift || '';
 
 if ($branch eq 'trunk') {
@@ -24,84 +23,72 @@ my $src_base = $ENV{ST_SRC_BASE};
 unless (-d $src_base) {
     mkpath $src_base;
 }
+my @repos = (split /\s+/,`st-repo-list`);
+chomp @repos;
 
 $branch = num_to_name($branch) if $branch =~ m/^\d+$/;
 usage() unless $branch;
+$branch =~ s#^tags/##;
 
-if ($branch =~ s#^tags/##) {
-    checkout($branch, 1);
-}
-else {
-    checkout($branch);
+chdir $src_base;
+my $current = readlink "$src_base/current";
+
+# TODO: if current/$repo doesn't exist, clone it?
+
+git_all('fetch');
+
+assert_branch_exists($branch);
+
+git_all(qq{\@stash save 'auto-stash for set-branch'});
+git_all(qq{\@checkout --track -q -b $branch origin/$branch});
+
+# move the working directory to its new name
+shell_run(qq{mv $current $branch}) if $current;
+shell_run(qq{ln -sf $branch current});
+
+$current = "$src_base/$branch";
+
+foreach my $repo (@repos) {
+    $repo = '' if $repo eq 'socialtext';
+    next unless -d "$src_base/current/$repo";
+
+    chdir "$src_base/current/$repo";
+
+    my $latest = first { /On \Q$branch\E: auto-stash/ } `git stash list`;
+    next unless $latest;
+    $latest =~ s/:.+//;
+
+    shell_run(qq{git stash apply --index $latest >/dev/null});
+    shell_run(qq{git stash drop $latest >/dev/null});
 }
 
-my $branch_dir = "$src_base/$branch";
-if (-d $branch_dir) {
-    my $curlink = "$src_base/current";
-    unlink $curlink if -l $curlink;
-    symlink $branch_dir, $curlink;
-}
+chdir $current;
 
 exit;
 
-sub checkout {
-    my $branch = shift;
-    my $tag    = shift;
-    chdir $src_base;
-
-    if (-d "$branch/.git") {
-        shell_run("refresh-branch $branch");
-    }
-    else {
-        assert_branch_exists("$src_base/master", $branch)
-            unless ($branch eq 'master');
-        checkout_repo($_, $branch, $tag) for @repos;
-    }
-}
-
-sub checkout_repo {
-    my ($repo, $branch, $tag) = @_;
-    my $repo_dir = $repo eq 'socialtext' ? $branch : "$branch/$repo";
-    my $dir      = "$src_base/$repo_dir";
-    my $from     = $tag ? $branch : "origin/$branch";
-
-    (my $master_repo = $dir) =~ s/$branch/master/;
-    if (-d "$master_repo/.git") {
-        (my $to_clone = $repo_dir) =~ s/$branch/master/;
-        shell_run("git clone --local $src_base/$to_clone $dir");
-        chdir $dir;
-        shell_run("git remote rm origin"); # dis-associate from local master
-        shell_run("git remote add origin $git_base/$repo.git"); #associate with remote
-        shell_run("git fetch 2>&1 | grep -v 'new branch'");# | grep -v '^From'");
-        chdir '..';
-    }
-    else {
-        shell_run("git clone $git_base/$repo.git $dir\n");
-    }
-
-    if ($branch ne 'master') {
-        my $track_opt = $tag ? ''      : '--track';
-        shell_run("cd $dir; git checkout $track_opt -b $branch $from");
-    }
-}
-
 sub assert_branch_exists {
-    my ($repo_dir, $branch) = @_;
     # check if the branch exists, exit if not
-    my @branches = map { s/^[* ]*//g; $_ } split "\n", `cd $repo_dir; git branch -r`;
+    my @branches = map { s/^[* ]*//g; $_ } 
+                   split "\n", `cd $src_base/current; git branch -r`;
     if (!first { m|^(?:origin/)?$branch$| } @branches) {
         warn color("red") . "Couldn't find a local or upstream branch, '$branch'" . color("reset") . "\n";
         exit 1;
     }
 }
+
+sub git_all {
+    my $cmd = shift;
+    shell_run("st-git-all $cmd");
+}
+
 sub shell_run {
     my $cmd = shift;
     my $nodie = $cmd =~ s/^-//;
     warn "+ $cmd\n" if $cmd =~ m/git/;
     my $rc = system $cmd;
-    unless ($nodie or $rc == 0) {
+    unless ($rc == 0) {
         color_print('red', "Error running $cmd\n");
-        exit $rc;
+        exit $rc unless $nodie;
     }
     return $rc == 0;
 }
@@ -117,9 +104,6 @@ sub usage {
     my $i = 1;
     my @branches = map { sprintf('  %2d - %s', $i++, $_) } branch_list();
     
-    (my $current = readlink("$src_base/current")) =~ s#.+/##;
-    @branches = map { s/^\s(\s+\d+\s\-\s\Q$current\E)$/*$1/; $_ } @branches;
-
     local $LIST_SEPARATOR = "\n";
     die <<EOT;
 USAGE: set-branch <branch>
@@ -136,7 +120,9 @@ sub color_print {
 }
 
 sub branch_list {
-    my @branches = sort glob("$src_base/*/nlw");
-    return grep { $_ ne 'current' }
-        map { s#.+/(.+)/nlw#$1#; $_ } @branches;
+    # cd current; git branch | sort
+    # or
+    # cd current; git branch -r | sort
+    my @branches = `cd $src_base/current; git branch | sort`;
+    return @branches;
 }
