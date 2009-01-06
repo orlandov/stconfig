@@ -5,6 +5,7 @@ use Term::ANSIColor 'color';
 use File::Path qw/mkpath/;
 use Fatal qw/:void mkpath chdir unlink symlink/;
 use English;
+use List::Util qw(first);
 
 my @repos = grep { !m/^socialpoint/ } split /\s+/, qx(st-repo-list);
 my $branch = shift || '';
@@ -52,6 +53,8 @@ sub checkout {
         shell_run("refresh-branch $branch");
     }
     else {
+        assert_branch_exists("$src_base/master", $branch)
+            unless ($branch eq 'master');
         checkout_repo($_, $branch, $tag) for @repos;
     }
 }
@@ -82,6 +85,15 @@ sub checkout_repo {
     }
 }
 
+sub assert_branch_exists {
+    my ($repo_dir, $branch) = @_;
+    # check if the branch exists, exit if not
+    my @branches = map { s/^[* ]*//g; $_ } split "\n", `cd $repo_dir; git branch -r`;
+    if (!first { m|^[* ]*(?:origin/)?$branch$| } @branches) {
+        warn color("red") . "Couldn't find a local or upstream branch, '$branch'" . color("reset") . "\n";
+        exit 1;
+    }
+}
 sub shell_run {
     my $cmd = shift;
     my $nodie = $cmd =~ s/^-//;
