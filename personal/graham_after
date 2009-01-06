@@ -10,5 +10,5 @@ export PAGER=less
 export PERLLIB=/home/graham/perl/lib/perl5/`perl -MConfig -e 'print $Config{archname}'`:/home/graham/perl/share/perl/`perl -MConfig -e 'print $Config{version}'`
 export PATH=/home/graham/perl/bin:$PATH
 
-# I use SVN, not SVK
-export SVN_COMMAND='svn'
+# password-less SSH key for Github
+export GIT_SSH=/home/graham/bin/ssh-github
