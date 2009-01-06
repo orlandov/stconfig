@@ -89,7 +89,7 @@ sub assert_branch_exists {
     my ($repo_dir, $branch) = @_;
     # check if the branch exists, exit if not
     my @branches = map { s/^[* ]*//g; $_ } split "\n", `cd $repo_dir; git branch -r`;
-    if (!first { m|^[* ]*(?:origin/)?$branch$| } @branches) {
+    if (!first { m|^(?:origin/)?$branch$| } @branches) {
         warn color("red") . "Couldn't find a local or upstream branch, '$branch'" . color("reset") . "\n";
         exit 1;
     }
