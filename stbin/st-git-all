@@ -1,0 +1,12 @@
+#!/bin/bash
+curdir=`cwd`
+for r in `st-repo-list`; do 
+    if [ $r = 'socialtext' ]; then 
+        r=''
+    fi
+
+    echo "in $ST_SRC_BASE/current/$r: git $*"
+    cd $ST_SRC_BASE/current/$r
+    git $*
+done
+cd $curdir
