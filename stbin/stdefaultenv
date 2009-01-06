@@ -16,7 +16,7 @@ else {
 my %default_env = (
     ST_SRC_BASE       => $src_base,
     ST_CURRENT        => "$src_base/current",
-    ST_TRUNK          => "$src_base/trunk",
+    ST_MASTER         => "$src_base/master",
     SVN_COMMAND       => $scm,
     NLW_TEST_FASTER   => '1',
     ST_HAXORS         => get_haxors(),
@@ -44,7 +44,7 @@ for my $name (keys %default_env) {
       unless $ENV{$name} and $name ne 'PATH';
 }
 
-# path is special because it depends on $ST_TRUNK, and is an array, so it fits
+# path is special because it depends on $ST_MASTER, and is an array, so it fits
 # better outside the above loop.
 if ($ENV{PATH} !~ /stdefaultenv-done/) {
     printf "export PATH=%s; ", join ':', qw(
@@ -54,8 +54,8 @@ if ($ENV{PATH} !~ /stdefaultenv-done/) {
       /usr/local/bin
       $ST_CURRENT/nlw/bin
       $ST_CURRENT/nlw/dev-bin
-      $ST_TRUNK/nlw/bin
-      $ST_TRUNK/nlw/dev-bin
+      $ST_MASTER/nlw/bin
+      $ST_MASTER/nlw/dev-bin
       $PATH
       /.stdefaultenv-done
     );
@@ -90,14 +90,14 @@ sub make_current_link {
         if ( @dirs == 1 ) {
             $source = $dirs[0];
         }
-        elsif ( grep m{/trunk$}, @dirs ) {
-            $source = "$src_base/trunk";
+        elsif ( grep m{/master$}, @dirs ) {
+            $source = "$src_base/master";
         }
         elsif (@dirs) {
             $source = ( sort @dirs )[0];
         }
         else {
-            $source = "$src_base/trunk";
+            $source = "$src_base/master";
         }
         symlink($source, $current)
             or warn "Could not make symlink $current to $source\n";

@@ -8,6 +8,14 @@ use English;
 
 my @repos = grep { !m/^socialpoint/ } split /\s+/, qx(st-repo-list);
 my $branch = shift || '';
+
+if ($branch eq 'trunk') {
+    warn color('red') . "Warning:". color('reset')
+        . " you are attempting to use the deprecated 'trunk' branch.\n";
+    warn "In the future use 'master'. Substituting 'master' for 'trunk'.\n\n";
+    $branch = 'master';
+}
+
 my $private = shift;
 
 my $git_base = $ENV{ST_GIT};
@@ -53,14 +61,13 @@ sub checkout_repo {
     my $repo_dir = $repo eq 'socialtext' ? $branch : "$branch/$repo";
     my $dir      = "$src_base/$repo_dir";
     my $from     = $tag ? $branch : "origin/$branch";
-    $from =~ s/trunk$/master/;
 
-    (my $trunk_repo = $dir) =~ s/$branch/trunk/;
-    if (-d "$trunk_repo/.git") {
-        (my $to_clone = $repo_dir) =~ s/$branch/trunk/;
+    (my $master_repo = $dir) =~ s/$branch/master/;
+    if (-d "$master_repo/.git") {
+        (my $to_clone = $repo_dir) =~ s/$branch/master/;
         shell_run("git clone --local $src_base/$to_clone $dir");
         chdir $dir;
-        shell_run("git remote rm origin"); # dis-associate from local trunk
+        shell_run("git remote rm origin"); # dis-associate from local master
         shell_run("git remote add origin $git_base/$repo.git"); #associate with remote
         shell_run("git fetch 2>&1 | grep -v 'new branch'");# | grep -v '^From'");
         chdir '..';
@@ -71,7 +78,7 @@ sub checkout_repo {
 
     if ($branch ne 'master') {
         my $track_opt = $tag ? ''      : '--track';
-        shell_run("cd $dir; git checkout $track_opt -b $branch $from\n");
+        shell_run("cd $dir; git checkout $track_opt -b $branch $from");
     }
 }
 

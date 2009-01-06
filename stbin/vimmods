@@ -1,8 +1,8 @@
 #!/usr/bin/perl -w
 use strict;
 my @mods = map {
-    s/^.\s*//; chomp; $_
-} grep /^[MA?]/, slurp('scm st|');
+    s/^.*:\s*//; chomp; $_
+} grep /modified:|new file:/, slurp('git status |');
 die "(No modified files.)\n" unless @mods;
 system 'vim', '-o', @mods;
 

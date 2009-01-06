@@ -1,6 +1,0 @@
-#!/bin/sh
-
-checkout_path=$1
-shift
-
-exec scm co "$ST_CODE_REPO/$checkout_path" $@

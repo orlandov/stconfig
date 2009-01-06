@@ -6,6 +6,8 @@ use lib "$ENV{ST_SRC_BASE}/current/nlw/lib";
 use Socialtext::System qw/shell_run/;
 use Getopt::Long;
 
+die "this tool is broken until someone ports it to git\n";
+# NOTE: s/trunk/master/
 
 my %opts;
 GetOptions( \%opts,

@@ -18,10 +18,7 @@ if [ ! -e ~/.nlw ] || [ "$3" ] ; then
     FRESHDEV="yes"
 fi
 
-BRANCH=""
-BRANCH_PATH=""
-[ $2 ] && [ "$2" == "trunk" ] && BRANCH="trunk" && BRANCH_PATH="trunk"
-[ $2 ] && [ "$2" != "trunk" ] && BRANCH="$2" && BRANCH_PATH="branches/$2"
+BRANCH="$2"
 
 PORT=`perl -e 'print $> + 20000'`
 PLAN_SERVER=http://`hostname`:$PORT

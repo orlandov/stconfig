@@ -17,10 +17,10 @@ echo SETTING TIME
 source $WIKITESTS/set-time
 
 echo INSTALLING and ENABLING all plugins for all accounts
-sudo st-appliance-install-plugin dashboard people socialcalc
+sudo st-appliance-install-plugin dashboard people socialcalc signals
 sudo st-admin enable-plugin --all-accounts --plugin dashboard
 sudo st-admin enable-plugin --all-accounts --plugin people
-sudo st-admin enable-plugin --all-accounts --plugin socialcalc
+sudo st-admin enable-plugin --all-accounts --plugin signals
 
 echo INSTALLING wikitest_files
 if [ ! -e /opt/wikitest_files ]; then

@@ -7,6 +7,9 @@ use Socialtext::System qw/shell_run/;
 use Getopt::Long;
 use Socialtext::BuildUtils qw/display/;
 
+die "this tool is broken until someone ports it to git\n";
+# NOTE: s/trunk/master/
+
 my %opts;
 GetOptions( \%opts,
     'pretend',
