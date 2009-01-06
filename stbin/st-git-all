@@ -1,12 +1,15 @@
 #!/bin/bash
 curdir=`pwd`
+echo -n "+ git $* : "
 for r in `st-repo-list`; do 
+    echo -n "$r "
+
     if [ $r = 'socialtext' ]; then 
         r=''
     fi
 
-    echo "in $ST_SRC_BASE/current/$r: git $*"
     cd $ST_SRC_BASE/current/$r
     git $*
 done
 cd $curdir
+echo "."
