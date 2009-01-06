@@ -1,5 +1,5 @@
 #!/bin/bash
-curdir=`cwd`
+curdir=`pwd`
 for r in `st-repo-list`; do 
     if [ $r = 'socialtext' ]; then 
         r=''
