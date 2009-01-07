@@ -71,8 +71,8 @@ if ($current_branch ne $branch) {
     git_all(qq{\@stash save 'auto-stash for set-branch'});
 }
 
-color_print('blue', "Setting working copy to $branch\n");
 foreach my $repo (@repos) {
+    color_print('blue', "Setting working copy of $repo to $branch\n");
     checkout_branch($repo, $branch);
 }
 
