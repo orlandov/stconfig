@@ -8,8 +8,11 @@ use English;
 use List::Util qw(first);
 use Getopt::Long;
 
+my $offline = 0;
 my $overwrite = 0;
+
 GetOptions(
+    'offline!' => \$offline,
     'overwrite!' => \$overwrite,
 );
 
@@ -52,8 +55,13 @@ foreach my $repo (@repos) {
 (my $current_branch = $current) =~ s#^.+/##;
 #exit if $current_branch eq $branch;
 
-color_print('yellow', "Fetching changes from GitHub\n");
-git_all('fetch');
+if ($offline) {
+    color_print('yellow', "Offline mode: Not fetching changes from GitHub\n");
+}
+else {
+    color_print('yellow', "Fetching changes from GitHub\n");
+    git_all('fetch');
+}
 
 assert_branch_exists($branch);
 
