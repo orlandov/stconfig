@@ -191,7 +191,7 @@ sub clone_repo {
     }
 
     color_print('blue', "Cloning $repo from GitHub to $dir");
-    shell_run(qq{git clone git\@github.com:socialtext/$repo.git $dir});
+    shell_run(qq{git clone $git_base/$repo.git $dir});
 }
 
 sub repo_dir {
