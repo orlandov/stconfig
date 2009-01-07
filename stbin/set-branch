@@ -6,6 +6,12 @@ use File::Path qw/mkpath/;
 use Fatal qw/:void mkpath chdir unlink symlink/;
 use English;
 use List::Util qw(first);
+use Getopt::Long;
+
+my $overwrite = 0;
+GetOptions(
+    'overwrite!' => \$overwrite,
+);
 
 my $branch = shift || '';
 
@@ -44,43 +50,61 @@ foreach my $repo (@repos) {
 }
 
 (my $current_branch = $current) =~ s#^.+/##;
-exit if $current_branch eq $branch;
+#exit if $current_branch eq $branch;
 
+color_print('yellow', "Fetching changes from GitHub\n");
 git_all('fetch');
 
 assert_branch_exists($branch);
 
-git_all(qq{\@stash save 'auto-stash for set-branch'});
+if ($current_branch ne $branch) {
+    color_print('yellow', "Stashing local modifications\n");
+    git_all(qq{\@stash save 'auto-stash for set-branch'});
+}
 
-# ensure that the remote mappings exist
-git_all(qq{\@-checkout -q --track -b $branch origin/$branch});
-# check out the desired branch for reals
-git_all(qq{\@checkout -q $branch});
+color_print('yellow', "Ensuring remote-branch mappings exist\n");
+foreach my $repo (@repos) {
+    next if (-f repo_git_dir($repo) . "/refs/heads/$branch");
+    my $repo_dir = repo_dir($repo);
+    shell_run(qq{cd $repo_dir; git checkout -q --track -b $branch origin/$branch});
+}
+
+color_print('yellow', "Setting working copy to $branch\n");
+my $force_checkout = ($overwrite) ? '-f' : '';
+git_all(qq{-checkout $force_checkout -q $branch}) or
+    color_print('blue', "Conflicting files? try --overwrite or fix it yourself");
 
 # move the working directory to its new name
-shell_run(qq{mv $current $branch}) if $current;
-shell_run(qq{ln -sf $branch current});
+if ($current_branch ne $branch) {
+    shell_run(qq{mv $current $branch}) if $current;
+    shell_run(qq{ln -sf $branch current});
+    $current = "$src_base/$branch";
+}
 
-$current = "$src_base/$branch";
+if ($current_branch ne $branch) {
+    color_print('yellow', 
+                "Re-applying previously stashed modifications for $branch\n");
+    foreach my $repo (@repos) {
+        my $repo_dir = repo_dir($repo);
+        chdir $repo_dir;
 
-foreach my $repo (@repos) {
-    my $repo_dir = repo_dir($repo);
-    chdir $repo_dir;
+        my $latest = first { /On \Q$branch\E: auto-stash/ } `git stash list`;
+        next unless $latest;
+        $latest =~ s/:.+//s;
 
-    my $latest = first { /On \Q$branch\E: auto-stash/ } `git stash list`;
-    next unless $latest;
-    $latest =~ s/:.+//s;
-
-    my $rc = shell_run(qq{-git stash apply --index $latest >/dev/null});
-    if ($rc) {
-        color_print('red', "Failed to apply stash $latest; inspect manually");
-    }
-    else {
-        shell_run(qq{git stash drop $latest >/dev/null});
+        my $rc = shell_run(qq{-git stash apply --index $latest >/dev/null});
+        if ($rc) {
+            color_print('red', "Failed to apply auto-stash $latest in $repo;".
+                               "inspect manually\n");
+        }
+        else {
+            shell_run(qq{git stash drop $latest >/dev/null});
+        }
     }
 }
 
 chdir $current;
+color_print('green', "Done!\n");
 
 exit;
 
@@ -106,7 +130,8 @@ sub branch_exists {
 
 sub git_all {
     my $cmd = shift;
-    shell_run("st-git-all $cmd");
+    my $gitall = ($cmd =~ /^-/) ? '-st-git-all' : 'st-git-all';
+    shell_run("$gitall $cmd");
 }
 
 sub shell_run {
@@ -144,7 +169,8 @@ EOT
 sub color_print {
     my $color = shift;
     my $msg = shift;
-    print color($color), $msg, color('reset');
+    chomp $msg;
+    print color($color), $msg, color('reset'), "\n";
 }
 
 sub branch_list {
