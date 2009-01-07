@@ -52,14 +52,10 @@ assert_branch_exists($branch);
 
 git_all(qq{\@stash save 'auto-stash for set-branch'});
 
-if (branch_exists($branch)) {
-    # assume we already have a local branch with this name; switch to it
-    git_all(qq{\@checkout -q $branch});
-}
-else {
-    # no local branch with this name; create a new one, tracking the remote
-    git_all(qq{\@checkout -q --track -b $branch origin/$branch});
-}
+# ensure that the remote mappings exist
+git_all(qq{\@-checkout -q --track -b $branch origin/$branch});
+# check out the desired branch for reals
+git_all(qq{\@checkout -q $branch});
 
 # move the working directory to its new name
 shell_run(qq{mv $current $branch}) if $current;
