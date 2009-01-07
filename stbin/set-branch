@@ -44,8 +44,7 @@ chdir $src_base;
 refresh_current();
 
 # no current directory or a bad symlink
-if (!-e "$src_base/current" || !-l _ || 
-    !-d $current || !-d "$current/.git") 
+unless (-l 'current' && -d $current && -d "$current/.git") 
 {
     color_print('red', "you don't seem to have a current git repo\n");
     clone_master();
