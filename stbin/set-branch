@@ -16,8 +16,6 @@ if ($branch eq 'trunk') {
     $branch = 'master';
 }
 
-my $private = shift;
-
 my $git_base = $ENV{ST_GIT};
 my $src_base = $ENV{ST_SRC_BASE};
 unless (-d $src_base) {
@@ -33,14 +31,35 @@ $branch =~ s#^tags/##;
 chdir $src_base;
 my $current = readlink "$src_base/current";
 
-# TODO: if current/$repo doesn't exist, clone it?
+# create 'current' symlink if it doesn't exist yet
+unless ($current) {
+    mkdir 'master' unless (-d 'master');
+    unlink 'current';
+    symlink 'master', 'current';
+    $current = readlink "$src_base/current";
+}
+
+foreach my $repo (@repos) {
+    clone_repo($repo) unless (-d repo_git_dir($repo));
+}
+
+(my $current_branch = $current) =~ s#^.+/##;
+exit if $current_branch eq $branch;
 
 git_all('fetch');
 
 assert_branch_exists($branch);
 
 git_all(qq{\@stash save 'auto-stash for set-branch'});
-git_all(qq{\@checkout --track -q -b $branch origin/$branch});
+
+if (branch_exists($branch)) {
+    # assume we already have a local branch with this name; switch to it
+    git_all(qq{\@checkout -q $branch});
+}
+else {
+    # no local branch with this name; create a new one, tracking the remote
+    git_all(qq{\@checkout -q --track -b $branch origin/$branch});
+}
 
 # move the working directory to its new name
 shell_run(qq{mv $current $branch}) if $current;
@@ -49,17 +68,20 @@ shell_run(qq{ln -sf $branch current});
 $current = "$src_base/$branch";
 
 foreach my $repo (@repos) {
-    $repo = '' if $repo eq 'socialtext';
-    next unless -d "$src_base/current/$repo";
-
-    chdir "$src_base/current/$repo";
+    my $repo_dir = repo_dir($repo);
+    chdir $repo_dir;
 
     my $latest = first { /On \Q$branch\E: auto-stash/ } `git stash list`;
     next unless $latest;
-    $latest =~ s/:.+//;
+    $latest =~ s/:.+//s;
 
-    shell_run(qq{git stash apply --index $latest >/dev/null});
-    shell_run(qq{git stash drop $latest >/dev/null});
+    my $rc = shell_run(qq{-git stash apply --index $latest >/dev/null});
+    if ($rc) {
+        color_print('red', "Failed to apply stash $latest; inspect manually");
+    }
+    else {
+        shell_run(qq{git stash drop $latest >/dev/null});
+    }
 }
 
 chdir $current;
@@ -68,12 +90,22 @@ exit;
 
 sub assert_branch_exists {
     # check if the branch exists, exit if not
-    my @branches = map { s/^[* ]*//g; $_ } 
-                   split "\n", `cd $src_base/current; git branch -r`;
-    if (!first { m|^(?:origin/)?$branch$| } @branches) {
-        warn color("red") . "Couldn't find a local or upstream branch, '$branch'" . color("reset") . "\n";
-        exit 1;
+    unless (branch_exists($branch) || remote_branch_exists($branch)) {
+        die color("red")
+            . "Couldn't find a local or upstream branch, '$branch'"
+            . color("reset") . "\n";
     }
+}
+
+sub remote_branch_exists {
+    my $branch = shift;
+    return branch_exists("origin/$branch");
+}
+
+sub branch_exists {
+    my $branch = shift;
+    my $exists = grep { $_ =~ /\s\Q$branch\E\s*/ } `cd $src_base/current ; git branch -a`;
+    return $exists ? 1 : 0;
 }
 
 sub git_all {
@@ -125,4 +157,25 @@ sub branch_list {
     # cd current; git branch -r | sort
     my @branches = `cd $src_base/current; git branch | sort`;
     return @branches;
+}
+
+sub clone_repo {
+    my $repo = shift;
+
+    my $dir = 'current';
+    if ($repo ne 'socialtext') {
+        $dir .= "/$repo";
+    }
+
+    shell_run(qq{git clone git\@github.com:socialtext/$repo.git $src_base/$dir});
+}
+
+sub repo_dir {
+    my $repo = shift;
+    $repo = '.' if ($repo eq 'socialtext');
+    return "$current/$repo";
+}
+
+sub repo_git_dir {
+    return repo_dir(shift) . '/.git';
 }
