@@ -19,12 +19,13 @@ print "++";
 
 # Run the command against all repos.
 my $st_current = "$ENV{ST_SRC_BASE}/current";
-foreach my $repo (repo_list()) {
+my $overall_err = 0;
+foreach my $repo_name (repo_list()) {
     my $out = '';
-    color_print('green'," $repo");
-
-    # make sure we're in the right repo dir.
+    my $repo = $repo_name;
     $repo = '' if ($repo eq 'socialtext');
+    color_print('green'," $repo_name");
+
     unless (-e "$st_current/$repo") {
         color_print('red','?');
         next;
@@ -32,17 +33,20 @@ foreach my $repo (repo_list()) {
     chdir "$st_current/$repo";
 
     # run the command against this repo.
-    my $rc = run [@ARGV], \*STDIN, \$out, \$out;
-    color_print('red','!') unless $rc;
+    my $success = run \@ARGV, \*STDIN, \$out, \$out;
+    my $err = $?>>8;
+    color_print('red',"!(exit:$err)") unless $success;
 
     chomp $out;
     unless ($quiet || $out eq '') {
-        print "\n[$out]\n";
+        $out =~ s/^/$repo_name: /mg;
+        print "\n$out\n";
     }
-    exit $rc unless ($nodie || $rc);
+    $overall_err |= $err; # yes, bitwise
+    exit $err unless ($nodie || $success);
 }
 print "\n";
-exit;
+exit $overall_err;
 
 
 
