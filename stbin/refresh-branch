@@ -13,37 +13,7 @@ GetOptions( \%opts,
 
 git_all(($opts{quiet} ? '@' : '') . 'pull --rebase');
 
-<<<<<<< HEAD:stbin/refresh-branch
 exit;
-=======
-my $src_base = $ENV{ST_SRC_BASE} or die "\$ST_SRC_BASE is not defined!";
-my $current = readlink("$src_base/current");
-die "No current branch set!" unless $current;
-(my $branch_name = $current) =~ s#.+/##;
-$branch_name = $what_to_refresh if $what_to_refresh;
-
-if ($branch_name eq 'trunk') {
-    warn color('red') . "Warning:". color('reset')
-        . " you are attempting to use the deprecated 'trunk' branch.\n";
-    warn "In the future use 'master'. Substituting 'master' for 'trunk'.\n\n";
-    $branch_name = 'master';
-}
-
-unless (-d "$src_base/$branch_name") {
-    die << ".";
-$src_base/$branch_name does not exist.
-
-Please run this command instead:
-
-    set-branch $branch_name
-
-.
-}
-
-my @repos = split m/\s+/, qx(st-repo-list);
-for my $r (@repos) {
-    color_print('yellow', "Updating $branch_name - $r\n");
->>>>>>> * Update 'refresh-branch' so it can s/trunk/master/.:stbin/refresh-branch
 
 sub git_all {
     my $cmd = shift;
