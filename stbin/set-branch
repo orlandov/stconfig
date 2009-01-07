@@ -222,7 +222,7 @@ sub checkout_branch {
         shell_run(qq{git checkout $force -q --track -b $branch origin/$branch});
     }
     else {
-        shell_run(qq{git -checkout $force -q $branch}) or
+        shell_run(qq{-git checkout $force -q $branch}) or
             color_print('blue', 
                 "Conflicting files? try --overwrite or fix it yourself");
     }
