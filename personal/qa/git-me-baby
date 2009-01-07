@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "    User qa1 must be configured to use git user stqa"
+echo "    User qa1 must be configured to use git user stqa..."
 echo "    Borrowing the car keys from qa1..."
 sudo cp ~qa1/.ssh/id_rsa $HOME/.ssh
 sudo cp ~qa1/.ssh/id_rsa.pub $HOME/.ssh
