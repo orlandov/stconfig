@@ -37,50 +37,45 @@ $branch = num_to_name($branch) if $branch =~ m/^\d+$/;
 usage() unless $branch;
 $branch =~ s#^tags/##;
 
-chdir $src_base;
-my $current = readlink "$src_base/current";
+our $current;
+our $current_branch;
 
-# create 'current' symlink if it doesn't exist yet
-unless ($current) {
-    mkdir 'master' unless (-d 'master');
-    unlink 'current';
-    symlink 'master', 'current';
-    $current = readlink "$src_base/current";
+chdir $src_base;
+refresh_current();
+
+# no current directory or a bad symlink
+if (!-e "$src_base/current" || !-l _ || 
+    !-d $current || !-d "$current/.git") 
+{
+    color_print('red', "you don't seem to have a current git repo\n");
+    clone_master();
 }
 
+# make sure that we've got the sub repos set up
 foreach my $repo (@repos) {
+    next if $repo eq 'socialtext';
     clone_repo($repo) unless (-d repo_git_dir($repo));
 }
-
-(my $current_branch = $current) =~ s#^.+/##;
-#exit if $current_branch eq $branch;
 
 if ($offline) {
     color_print('yellow', "Offline mode: Not fetching changes from GitHub\n");
 }
 else {
-    color_print('yellow', "Fetching changes from GitHub\n");
-    git_all('fetch');
+    color_print('blue', "Fetching changes from GitHub\n");
+    git_all('-fetch');
 }
 
 assert_branch_exists($branch);
 
 if ($current_branch ne $branch) {
-    color_print('yellow', "Stashing local modifications\n");
+    color_print('blue', "Stashing local modifications on $current_branch\n");
     git_all(qq{\@stash save 'auto-stash for set-branch'});
 }
 
-color_print('yellow', "Ensuring remote-branch mappings exist\n");
+color_print('blue', "Setting working copy to $branch\n");
 foreach my $repo (@repos) {
-    next if (-f repo_git_dir($repo) . "/refs/heads/$branch");
-    my $repo_dir = repo_dir($repo);
-    shell_run(qq{cd $repo_dir; git checkout -q --track -b $branch origin/$branch});
+    checkout_branch($repo, $branch);
 }
-
-color_print('yellow', "Setting working copy to $branch\n");
-my $force_checkout = ($overwrite) ? '-f' : '';
-git_all(qq{-checkout $force_checkout -q $branch}) or
-    color_print('blue', "Conflicting files? try --overwrite or fix it yourself");
 
 # move the working directory to its new name
 if ($current_branch ne $branch) {
@@ -90,7 +85,7 @@ if ($current_branch ne $branch) {
 }
 
 if ($current_branch ne $branch) {
-    color_print('yellow', 
+    color_print('blue', 
                 "Re-applying previously stashed modifications for $branch\n");
     foreach my $repo (@repos) {
         my $repo_dir = repo_dir($repo);
@@ -119,9 +114,9 @@ exit;
 sub assert_branch_exists {
     # check if the branch exists, exit if not
     unless (branch_exists($branch) || remote_branch_exists($branch)) {
-        die color("red")
-            . "Couldn't find a local or upstream branch, '$branch'"
-            . color("reset") . "\n";
+        color_print('red',
+            "Couldn't find a local or upstream branch, '$branch'");
+        exit 1;
     }
 }
 
@@ -132,14 +127,14 @@ sub remote_branch_exists {
 
 sub branch_exists {
     my $branch = shift;
-    my $exists = grep { $_ =~ /\s\Q$branch\E\s*/ } `cd $src_base/current ; git branch -a`;
+    my $dir = shift || "$src_base/current";
+    my $exists = grep { $_ =~ /\s\Q$branch\E\s*/ } `cd $dir ; git branch -a`;
     return $exists ? 1 : 0;
 }
 
 sub git_all {
     my $cmd = shift;
-    my $gitall = ($cmd =~ /^-/) ? '-st-git-all' : 'st-git-all';
-    shell_run("$gitall $cmd");
+    shell_run("st-git-all $cmd");
 }
 
 sub shell_run {
@@ -182,30 +177,75 @@ sub color_print {
 }
 
 sub branch_list {
-    # cd current; git branch | sort
-    # or
-    # cd current; git branch -r | sort
     my @branches = `cd $src_base/current; git branch | sort`;
     return @branches;
 }
 
 sub clone_repo {
     my $repo = shift;
+    my $dir = repo_dir($repo);
 
-    my $dir = 'current';
-    if ($repo ne 'socialtext') {
-        $dir .= "/$repo";
+    if ($offline) {
+        color_print('red', "can't clone from GitHub under --offline mode");
+        exit 1;
     }
 
-    shell_run(qq{git clone git\@github.com:socialtext/$repo.git $src_base/$dir});
+    color_print('blue', "Cloning $repo from GitHub to $dir");
+    shell_run(qq{git clone git\@github.com:socialtext/$repo.git $dir});
 }
 
 sub repo_dir {
     my $repo = shift;
-    $repo = '.' if ($repo eq 'socialtext');
+    return $current if ($repo eq 'socialtext');
     return "$current/$repo";
 }
 
 sub repo_git_dir {
     return repo_dir(shift) . '/.git';
+}
+
+sub refresh_current {
+    $current = readlink "$src_base/current";
+    ($current_branch = $current) =~ s#^.*/##;
+    $current = "$src_base/$current";
+}
+
+sub checkout_branch {
+    my $repo = shift;
+    my $branch = shift;
+
+    my $force = ($overwrite) ? '-f' : '';
+
+    my $repo_dir = repo_dir($repo);
+    chdir $repo_dir;
+    if (!-f repo_git_dir($repo)."/refs/heads/$branch") {
+        color_print('yellow', "... Mapping $branch to origin/$branch\n");
+        shell_run(qq{git checkout $force -q --track -b $branch origin/$branch});
+    }
+    else {
+        shell_run(qq{git -checkout $force -q $branch}) or
+            color_print('blue', 
+                "Conflicting files? try --overwrite or fix it yourself");
+    }
+    chdir $src_base;
+}
+
+sub clone_master {
+    color_print('blue', "Setting up master repo from GitHub...");
+    shell_run("-mv $current $current.old") if (-d $current);
+
+    $current = "$src_base/master";
+    $current_branch = 'master';
+    shell_run(qq{ln -sf master current});
+
+    clone_repo('socialtext');
+
+    if ($branch ne 'master') {
+        assert_branch_exists($branch);
+        checkout_branch('socialtext',$branch);
+        $current_branch = $branch;
+        $current = "$src_base/$branch";
+        shell_run(qq{mv master $branch});
+    }
+    shell_run(qq{ln -sf $branch current});
 }
