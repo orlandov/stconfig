@@ -2,7 +2,6 @@
 use strict;
 use warnings;
 use lib "$ENV{ST_SRC_BASE}/current/nlw/lib";
-use Socialtext::System qw/shell_run/;
 use Term::ANSIColor;
 use Getopt::Long;
 
@@ -12,42 +11,32 @@ GetOptions( \%opts,
     'no-restart'
 ) or usage();
 
-my $what_to_refresh = shift;
+git_all(($opts{quiet} ? '@' : '') . 'pull --rebase');
 
-my $src_base = $ENV{ST_SRC_BASE} or die "\$ST_SRC_BASE is not defined!";
-my $current = readlink("$src_base/current");
-die "No current branch set!" unless $current;
-(my $branch_name = $current) =~ s#.+/##;
-$branch_name = $what_to_refresh if $what_to_refresh;
-
-my @repos = split m/\s+/, qx(st-repo-list);
-for my $r (@repos) {
-    color_print('yellow', "Updating $branch_name - $r\n");
-
-    if ($r eq 'socialtext') {
-        run("cd $src_base/$branch_name; git-pull --rebase");
-    }
-    else {
-        my $dir = "$src_base/$branch_name/$r";
-        next unless -d $dir;
-        run("cd $dir; git-pull --rebase");
-    }
-}
-
-color_print('green', "All repositories of $branch_name updated!\n");
-
-run("nlwctl restart")
-    unless $opts{'no-restart'};
 exit;
 
-sub run {
+sub git_all {
     my $cmd = shift;
-    local $Socialtext::System::SILENT_RUN = 0;
-    if ($opts{quiet}) {
-        $cmd = "$cmd > /dev/null";
-        $Socialtext::System::SILENT_RUN = 1;
+    shell_run("st-git-all $cmd");
+}
+
+sub color_print {
+    my $color = shift;
+    my $msg = shift;
+    print color($color), $msg, color('reset');
+}
+
+
+sub shell_run {
+    my $cmd = shift;
+    my $nodie = $cmd =~ s/^-//;
+    warn "+ $cmd\n" if $cmd =~ m/git/;
+    my $rc = system $cmd;
+    unless ($rc == 0) {
+        color_print('red', "Error running $cmd\n");
+        exit $rc unless $nodie;
     }
-    shell_run($cmd);
+    return $rc == 0;
 }
 
 sub usage {
@@ -56,11 +45,4 @@ USAGE: $0 [--quiet] [branch]
 
 Update the current (or specified branch) across all repositories.
 EOT
-}
-
-
-sub color_print {
-    my $color = shift;
-    my $msg = shift;
-    print color($color), $msg, color('reset');
 }
