@@ -138,10 +138,12 @@ alias gci='git commit'
 alias gcim='git commit -m'
 alias gcia='git commit -a'
 alias gciam='git commit -a -m'
+alias gre='git reset'
 alias gun='git reset HEAD'
 alias gpu='git push'
 alias gl='git log .'
 alias guppy='gup && gpu'
+alias gunpushed='git log origin.. --pretty=oneline'
 
 provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 

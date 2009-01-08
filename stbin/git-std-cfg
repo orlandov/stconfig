@@ -8,3 +8,4 @@ $gcfg core.pager 'less -FXRS' # -R allows colors
 $gcfg alias.co checkout
 $gcfg alias.ci commit
 $gcfg alias.st status
+$gcfg alias.re reset
