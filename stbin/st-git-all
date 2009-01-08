@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IPC::Run qw(run);
+use IPC::Run qw(start finish);
 use Pod::Usage;
 use Term::ANSIColor 'color';
 
@@ -20,32 +20,50 @@ print "++";
 # Run the command against all repos.
 my $st_current = "$ENV{ST_SRC_BASE}/current";
 my $overall_err = 0;
-foreach my $repo_name (repo_list()) {
+my @repo_list = repo_list();
+my %proc;
+foreach my $repo_name (@repo_list) {
     my $out = '';
     my $repo = $repo_name;
     $repo = '' if ($repo eq 'socialtext');
-    color_print('green'," $repo_name");
 
     unless (-e "$st_current/$repo") {
+        color_print('green'," $repo_name");
         color_print('red','?');
         next;
     }
     chdir "$st_current/$repo";
 
     # run the command against this repo.
-    my $success = run \@ARGV, \*STDIN, \$out, \$out;
+    $proc{$repo_name} = {
+        handle => start(\@ARGV, \*STDIN, \$out, \$out),
+        output => \$out,
+    };
+}
+
+while (my $repo_name = shift @repo_list) {
+    color_print('green'," $repo_name");
+    my $success = $proc{$repo_name}{handle}->finish;
     my $err = $?>>8;
     color_print('red',"!(exit:$err)") unless $success;
 
+    my $out = ${$proc{$repo_name}{output}};
     chomp $out;
     unless ($quiet || $out eq '') {
         $out =~ s/^/$repo_name: /mg;
         print "\n$out\n";
     }
     $overall_err |= $err; # yes, bitwise
-    exit $err unless ($nodie || $success);
+    unless ($nodie || $success) {
+        foreach my $remaining (@repo_list) {
+            $proc{$remaining}{handle}->kill_kill();
+        }
+        exit $err;
+    }
 }
+
 print "\n";
+
 exit $overall_err;
 
 
