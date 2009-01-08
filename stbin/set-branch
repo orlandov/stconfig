@@ -158,7 +158,6 @@ sub num_to_name {
 sub usage {
     my $i = 1;
     my @branches = map { sprintf('  %2d - %s', $i++, $_) } branch_list();
-    chomp @branches;
     
     local $LIST_SEPARATOR = "\n";
     die <<EOT;
@@ -178,6 +177,8 @@ sub color_print {
 
 sub branch_list {
     my @branches = `cd $src_base/current; git branch | sort`;
+    chomp @branches;
+    s/^\s+// for @branches;
     return @branches;
 }
 
