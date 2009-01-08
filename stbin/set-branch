@@ -158,6 +158,7 @@ sub num_to_name {
 sub usage {
     my $i = 1;
     my @branches = map { sprintf('  %2d - %s', $i++, $_) } branch_list();
+    chomp @branches;
     
     local $LIST_SEPARATOR = "\n";
     die <<EOT;
