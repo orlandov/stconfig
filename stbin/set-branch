@@ -218,6 +218,7 @@ sub repo_git_dir {
 }
 
 sub refresh_current {
+    return unless -e "$src_base/current";
     $current = readlink "$src_base/current";
     ($current_branch = $current) =~ s#^.*/##;
     $current = "$src_base/$current";
