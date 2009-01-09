@@ -1,14 +1,10 @@
 #!/bin/sh
 BRANCH=$1
 
-echo "This tool is broken until it's ported to git"
-exit 1
-
 if [ -z "$BRANCH" ]; then
     echo "Usage: $0 branch-name (or 'master')"
     exit 1
 fi
 
-svn cat $(st-branch-url $BRANCH)/nlw/lib/Socialtext.pm |
-grep 'our.*$VERSION' |
-sed -e 's/[^\.0-9]//g'
+git co $BRANCH;
+cat lib/Socialtext.pm | grep 'our.*$VERSION' | sed -e 's/[^\.0-9]//g'
