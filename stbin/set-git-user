@@ -2,7 +2,7 @@
 
 echo -n "git username: " 
 read GUSER
-echo -n "git password: "
+echo -n "git email: "
 stty -echo
 read GPWD
 stty echo
