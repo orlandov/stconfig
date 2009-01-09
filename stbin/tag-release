@@ -39,22 +39,6 @@ if [ "$answer" != "y" ]; then
     exit
 fi
 
-for REPO in `st-repo-list` ; 
-do
-    MESSAGE="Copying /$REPO/branches/$BRANCH to /$REPO/tags/$TAG $MSG"
-   
-    if [ $VERBOSE ]; then
-        echo Message: $MESSAGE
-        echo From: $BRANCH
-        echo To: $TAG
-    fi
-
-    REPO_DIR=$ST_SRC_BASE/$BRANCH
-    if [ "$REPO" != "socialtext" ]; then
-        REPO_DIR="$ST_SRC_BASE/$BRANCH/$REPO"
-    fi
-    cd $REPO_DIR
-    git tag -a $TAG -m "$MESSAGE"
-    git push --tags
-done
-
+MESSAGE="Creating tag $TAG from $BRANCH $MSG"
+st-git-all tag -a $TAG -m "$MESSAGE"
+st-git-all push --tags
