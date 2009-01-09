@@ -19,7 +19,6 @@ _sb_comp() {
     local cur
     cur="${COMP_WORDS[COMP_CWORD]}"
     COMPREPLY=( $(git --git-dir $current branch -a | perl -e 'while (<STDIN>){ s{^..(?:[^/]+/)?}{}g; print if (/^$ARGV[0]/); }' $cur) )
-    echo "$cur" >> /tmp/testing-124
     return 0
 }
 complete -F _sb_comp sb
