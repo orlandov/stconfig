@@ -3,12 +3,12 @@
 echo -n "git username: " 
 read GUSER
 echo -n "git email: "
-stty -echo
-read GPWD
-stty echo
+read GEM
 #echo $GUSER $GPWD
 
-git config --global user.name "$GUSER"
-git config --global user.email "$GPWD2"
+echo git config --global user.name \""$GUSER"\"
+echo git config --global user.email "$GEM"
 
+git config --global user.name \""$GUSER"\"
+git config --global user.email "$GEM"
 echo ""
