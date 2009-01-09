@@ -10,6 +10,7 @@ use Getopt::Long;
 
 my $offline = 0;
 my $overwrite = 0;
+my $Is_tag = 0;
 
 GetOptions(
     'offline!' => \$offline,
@@ -88,6 +89,9 @@ if ($current_branch ne $branch) {
                 "Re-applying previously stashed modifications for $branch\n");
     foreach my $repo (@repos) {
         my $repo_dir = repo_dir($repo);
+        unless (-d $repo_dir) {
+
+        }
         chdir $repo_dir;
 
         my $latest = first { /On \Q$branch\E: auto-stash/ } `git stash list`;
@@ -112,7 +116,7 @@ exit;
 
 sub assert_branch_exists {
     # check if the branch exists, exit if not
-    unless (branch_exists($branch) || remote_branch_exists($branch)) {
+    unless (branch_exists($branch) || remote_branch_exists($branch) || tag_exists($branch)) {
         color_print('red',
             "Couldn't find a local or upstream branch, '$branch'");
         exit 1;
@@ -128,6 +132,14 @@ sub branch_exists {
     my $branch = shift;
     my $dir = shift || "$src_base/current";
     my $exists = grep { $_ =~ /\s\Q$branch\E\s*/ } `cd $dir ; git branch -a`;
+    return $exists ? 1 : 0;
+}
+
+sub tag_exists {
+    my $branch = shift;
+    my $dir = shift || "$src_base/current";
+    my $exists = grep { $_ =~ /\Q$branch\E\s*/ } `cd $dir ; git tag`;
+    $Is_tag = $exists;
     return $exists ? 1 : 0;
 }
 
@@ -219,9 +231,10 @@ sub checkout_branch {
 
     my $repo_dir = repo_dir($repo);
     chdir $repo_dir;
+    my $origin_branch = $Is_tag ? $branch : "origin/$branch";
     if (!-f repo_git_dir($repo)."/refs/heads/$branch") {
-        color_print('yellow', "... Mapping $branch to origin/$branch\n");
-        shell_run(qq{git checkout $force -q --track -b $branch origin/$branch});
+        color_print('yellow', "... Mapping $branch to $origin_branch\n");
+        shell_run(qq{git checkout $force -q --track -b $branch $origin_branch});
     }
     else {
         shell_run(qq{-git checkout $force -q $branch}) or
