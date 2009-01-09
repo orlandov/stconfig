@@ -1,0 +1,14 @@
+#!/bin/sh
+
+echo -n "git username: " 
+read GUSER
+echo -n "git password: "
+stty -echo
+read GPWD
+stty echo
+#echo $GUSER $GPWD
+
+git config --global user.name "$GUSER"
+git config --global user.email "$GPWD2"
+
+echo ""
