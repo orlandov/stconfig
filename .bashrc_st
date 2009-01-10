@@ -26,20 +26,28 @@ complete -F _sb_comp sb
 # see http://pueblo.sourceforge.net/doc/manual/ansi_color_codes.html
 COLOR_RESET="\[\033[0;39;49m\]"
 COLOR_BRANCH="\[\033[0;1;32;44m\]"
+COLOR_REPO="\[\033[0;1;33;44m\]"
 COLOR_WORKDIR="\[\033[0;1;33;42m\]"
 
 # shamelessly ripped off from http://github.com/rtomayko/git-sh/tree/master
 _git_prompt_color() {
-        br=$(git symbolic-ref -q HEAD 2>/dev/null)
-        if [ -n "$br" ] ; then
-                br=${br#refs/heads/}
-        else
-                br=$(git rev-parse --short HEAD 2>/dev/null)
-        fi
+    br=$(git symbolic-ref -q HEAD 2>/dev/null)
+    if [ -n "$br" ] ; then
+        # there's a nice ref, use it
+        br=${br#refs/heads/}
+    else
+        # no nice ref; use a SHA prefix (empty if not a git dir)
+        br=$(git rev-parse --short HEAD 2>/dev/null)
+    fi
+
+    if [ -n "$br" ]; then
         rel=$(git rev-parse --show-prefix 2>/dev/null)
         rel="${rel%/}"
         loc="${PWD%/$rel}"
-        PS1="\u@\h:${COLOR_BRANCH}${br}${COLOR_RESET}!${COLOR_WORKDIR}${loc/*\/}${rel:+/$rel}${COLOR_RESET}$ "
+        PS1="\u@\h:${COLOR_BRANCH}${br}${COLOR_RESET}!${COLOR_REPO}${loc/*\/}${COLOR_RESET}${COLOR_WORKDIR}${rel:+/$rel}${COLOR_RESET}\$ "
+    else
+        PS1="\u@\h:\w\$ "
+    fi
 }
 
 # Set this in your ${USER}_after file to use the git prompt:
