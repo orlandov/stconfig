@@ -12,6 +12,9 @@ bindkey "^[[3~" delete-char            # Del
 bindkey "^[[A" up-line-or-history      # Up
 bindkey "^[[B" down-line-or-history    # Down
 
+# Add the local compfuncs directory for other completion libraries like _git
+fpath=( $HOME/.zsh/compfuncs $fpath )
+
 # Semi-voodoo, but enables <Esc>v to use vim to edit a command:
 autoload edit-command-line; zle -N edit-command-line
 autoload -U compinit; compinit
