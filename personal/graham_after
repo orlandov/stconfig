@@ -12,3 +12,9 @@ export PATH=/home/graham/perl/bin:$PATH
 
 # password-less SSH key for Github
 export GIT_SSH=/home/graham/bin/ssh-github
+
+# colourized prompt
+COLOR_BRANCH='\[\033[1;32m\]'
+COLOR_WORKDIR='\[\033[1;32m\]'
+COLOR_REPO='\[\033[1;31m\]'
+PROMPT_COMMAND=_git_prompt_color
