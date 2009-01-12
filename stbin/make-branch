@@ -16,10 +16,10 @@ my $source_base = $ENV{ST_SRC_BASE} || "$ENV{HOME}/src/st";
 my $svk_mirror_base = '//mirror';
 my %repo_names = map { $_ => 1 } split /\s+/, qx(st-repo-list);
 
-# Check that we have a git master checkout, so we can archive files from it
-my $MASTER_BASE = "$ENV{ST_SRC_BASE}/master";
+# Check that we have a git socialtext checkout, so we can archive files from it
+my $MASTER_BASE = "$ENV{ST_SRC_BASE}/socialtext";
 unless (-d "$MASTER_BASE/.git") {
-    die "Can't find a git master checkout!";
+    die "Can't find a git socialtext checkout!";
 }
 
 my $r = get_rester();
