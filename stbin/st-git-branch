@@ -1,0 +1,53 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Term::ANSIColor 'color';
+
+my @all_repos = split /\s+/, `st-repo-list`;
+chomp @all_repos;
+my %all_repos = map { $_ => 1 } @all_repos;
+
+my @branches = `st-git-all branch | grep '*' | sed 's,* ,,'`;
+
+my %branch_repo;
+foreach (@branches) {
+    chomp;
+    my ($repo,$branch) = split /\s*:\s+/,$_;
+    $branch_repo{$branch} ||= [];
+    push @{$branch_repo{$branch}}, $repo;
+    delete $all_repos{$repo};
+}
+
+if (%all_repos) {
+    $branch_repo{''} ||= [];
+    push @{$branch_repo{''}}, keys %all_repos;
+}
+
+if (keys %branch_repo == 1) {
+    color_print('blue',keys %branch_repo);
+    print ': ';
+    color_print('green','all');
+    print "\n";
+}
+else {
+    foreach my $branch (sort keys %branch_repo) {
+        if (!$branch) {
+            color_print('red','no-branch');
+        }
+        else {
+            color_print('blue',$branch);
+        }
+
+        print ': ';
+        color_print('red', join ' ',@{$branch_repo{$branch}});
+        print "\n";
+    }
+}
+
+exit;
+
+sub color_print {
+    my $color = shift;
+    my $msg = shift;
+    print color($color), $msg, color('reset');
+}
