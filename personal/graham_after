@@ -2,16 +2,16 @@
 alias dir='ls -l'
 alias cls='clear'
 
-# exports
-export EDITOR=vim
-export PAGER=less
+# editor/pager
+EDITOR=vim
+PAGER=less
 
 # add personal Perl stuff to @INC and $PATH
-export PERLLIB=/home/graham/perl/lib/perl5/`perl -MConfig -e 'print $Config{archname}'`:/home/graham/perl/share/perl/`perl -MConfig -e 'print $Config{version}'`
-export PATH=/home/graham/perl/bin:$PATH
+PERLLIB=/home/graham/perl/lib/perl5/`perl -MConfig -e 'print $Config{archname}'`:/home/graham/perl/share/perl/`perl -MConfig -e 'print $Config{version}'`
+PATH=/home/graham/perl/bin:$PATH
 
 # password-less SSH key for Github
-export GIT_SSH=/home/graham/bin/ssh-github
+GIT_SSH=/home/graham/bin/ssh-github
 
 # colourized prompt
 COLOR_BRANCH='\[\033[1;32m\]'
