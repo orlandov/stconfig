@@ -12,11 +12,7 @@ if [ -z "$BRANCH" ]; then
 fi
 
 if [ "$BRANCH" = "-c" ]; then
-    BRANCH=`perl -le '$b = readlink("$ENV{ST_SRC_BASE}/current"); $b =~ s(.+/)(); print $b'`
-fi
-if [ ! -d "$ST_SRC_BASE/$BRANCH" ]; then
-    echo "The branch you specified ($BRANCH) must be checked out!";
-    exit 1;
+    BRANCH=`git branch | grep '*' | awk '{print $2}'`
 fi
 
 VERSION=${4:-$(st-version $BRANCH)}
