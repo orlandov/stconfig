@@ -34,3 +34,4 @@ if [ -e $KEYCHAIN ]; then
     source $KEYCHAIN
 fi
 
+export PROMPT_COMMAND=_git_prompt_color
