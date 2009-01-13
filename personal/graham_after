@@ -3,12 +3,12 @@ alias dir='ls -l'
 alias cls='clear'
 
 # editor/pager
-EDITOR=vim
-PAGER=less
+export EDITOR=vim
+export PAGER=less
 
 # add personal Perl stuff to @INC and $PATH
-PERL5LIB=/home/graham/perl/lib/perl5/`perl -MConfig -e 'print $Config{archname}'`:/home/graham/perl/share/perl/`perl -MConfig -e 'print $Config{version}'`
-PATH=/home/graham/perl/bin:$PATH
+export PERLLIB=/home/graham/perl/lib/perl5/`perl -MConfig -e 'print $Config{archname}'`:/home/graham/perl/share/perl/`perl -MConfig -e 'print $Config{version}'`
+export PATH=/home/graham/perl/bin:$PATH
 
 # colourized prompt
 COLOR_BRANCH='\[\033[1;32m\]'
