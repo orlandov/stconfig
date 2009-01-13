@@ -144,6 +144,7 @@ alias gpu='git push'
 alias gl='git log .'
 alias guppy='gup && gpu'
 alias gunpushed='git log origin.. --pretty=oneline'
+alias gunpushed-all="st-git-all log --pretty=oneline origin/`git branch | grep '^*' | awk '{print $2}'`.."
 
 provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
