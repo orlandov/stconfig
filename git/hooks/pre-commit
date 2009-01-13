@@ -80,7 +80,10 @@ perl -e '
             }
 
             if (/console.log\(.*\)/) {
-                bad_line(qq{"console.log"-style warning is suspicious}, $_);
+                bad_line(qq{"console.log()"-style warning is suspicious}, $_);
+            }
+            if (/alert\(.*\)/) {
+                bad_line(qq{"alert()"-style warning is suspicious}, $_);
             }
         }
     }
