@@ -7,7 +7,7 @@ EDITOR=vim
 PAGER=less
 
 # add personal Perl stuff to @INC and $PATH
-PERLLIB=/home/graham/perl/lib/perl5/`perl -MConfig -e 'print $Config{archname}'`:/home/graham/perl/share/perl/`perl -MConfig -e 'print $Config{version}'`
+PERL5LIB=/home/graham/perl/lib/perl5/`perl -MConfig -e 'print $Config{archname}'`:/home/graham/perl/share/perl/`perl -MConfig -e 'print $Config{version}'`
 PATH=/home/graham/perl/bin:$PATH
 
 # colourized prompt
