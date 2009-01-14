@@ -13,20 +13,25 @@ my $basedir = $ENV{ST_SRC_BASE};
 my $bump;
 my $check = 0;
 my $current;
+my $commit;
 GetOptions(
     "c|current" => \$current,
     "major" => sub { $bump = 'major' },
     "minor" => sub { $bump = 'minor' },
     "point" => sub { $bump = 'point' },
     "bugfix" => sub { $bump = 'bugfix' },
+    'commit' => \$commit,
     "help" => \&usage,
     "check!" => \$check,
 ) or usage();
 
-my $branch = shift || 'current';
-my $VERSION_FILE = "$basedir/$branch/nlw/lib/Socialtext.pm";
+my $branch       = shift || 'current';
+my $VERSION_FILE = "lib/Socialtext.pm";
 
 usage() unless $bump;
+
+chdir "$basedir/socialtext/nlw" 
+    or die "Can't chdir into $basedir/socialtext/nlw: $!";
 
 display('green', "Bumping '$bump' in '$branch'");
 
@@ -38,6 +43,12 @@ display('yellow', "Bumped Version: ", $bumped_ver);
 exit 0 if $check;
 
 replace_version($cur_ver => $bumped_ver, $VERSION_FILE);
+
+if ($commit) {
+    display('green', "Committing new $VERSION_FILE");
+    shell_run("git add $VERSION_FILE");
+    shell_run("git commit -m '$bump version bump' $VERSION_FILE");
+}
 
 display('bold green', "Done!");
 
