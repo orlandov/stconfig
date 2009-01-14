@@ -30,7 +30,7 @@ my $VERSION_FILE = "lib/Socialtext.pm";
 
 usage() unless $bump;
 
-chdir "$basedir/socialtext/nlw" 
+chdir "$basedir/socialtext/nlw"
     or die "Can't chdir into $basedir/socialtext/nlw: $!";
 
 display('green', "Bumping '$bump' in '$branch'");
