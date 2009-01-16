@@ -44,7 +44,6 @@ my $new_branch = shift;
 usage() unless $new_branch;
 
 for my $repo (@repos) {
-    next if $repo eq 'socialpoint';
     color_print('magenta', "Creating $new_branch in $repo repository.\n");
 
     # Clone the repo to a temp dir
