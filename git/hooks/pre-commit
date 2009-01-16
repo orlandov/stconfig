@@ -72,8 +72,8 @@ perl -e '
                 bad_line(qq{"use XXX"-style warning is suspicious}, $_);
             }
 
-            if (/^\s+use Data::Dumper/) {
-                bad_line(qq{Indented "use Data::Dumper" is suspicious}, $_);
+            if (/^\s+use Data::Dump(er)?/) {
+                bad_line(qq{Indented "use Data::Dump$1" is suspicious}, $_);
             }
             if (/(?:print|warn).* Dumper/) {
                 bad_line(qq{"use Data::Dumper"-style warning is suspicious}, $_);
