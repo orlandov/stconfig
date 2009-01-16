@@ -3,20 +3,25 @@ use strict;
 use warnings;
 use Term::ANSIColor 'color';
 
+my $base = $ENV{ST_SRC_BASE} . '/socialtext';
+
 my @all_repos = split /\s+/, `st-repo-list`;
 chomp @all_repos;
 my %all_repos = map { $_ => 1 } @all_repos;
-
-my @branches = `st-git-all branch | grep '*' | sed 's,* ,,'`;
+my %repos = map { $_ => (($_ eq 'socialtext') ? "$base" : "$base/$_") } @all_repos;
 
 my %branch_repo;
-foreach (@branches) {
-    chomp;
-    my ($repo,$branch) = split /\s*:\s+/,$_;
-    $branch_repo{$branch} ||= [];
+
+while (my ($repo, $path) = each %repos) {
+    local $ENV{GIT_DIR} = "$path/.git";
+    my $ref = `git symbolic-ref -q HEAD 2>/dev/null`;
+    chomp $ref;
+    next unless $ref;
+    (my $branch = $ref) =~ s#refs/heads/##;
     push @{$branch_repo{$branch}}, $repo;
     delete $all_repos{$repo};
 }
+
 
 if (%all_repos) {
     $branch_repo{''} ||= [];
