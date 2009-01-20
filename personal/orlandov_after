@@ -1,1 +1,9 @@
 . ~/.keychain/topaz*-sh
+# this first one says: reset (0), bold (1), foreground: yellow (32),  
+# background: blue (44)
+# see http://pueblo.sourceforge.net/doc/manual/ansi_color_codes.html
+# COLOR_BRANCH="\[\033[0;1;32;44m\]"
+# COLOR_REPO="\[\033[0;1;33;44m\]"
+# COLOR_WORKDIR="\[\033[0;1;33;42m\]"
+
+PROMPT_COMMAND=_git_prompt_color
