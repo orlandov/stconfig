@@ -111,11 +111,10 @@ else
         source /etc/bash_completion.d/socialtext 
     fi
 
-# git prompt
-COLOR_BRANCH=""
-COLOR_REPO=""
-COLOR_WORKDIR=""
-export PROMPT_COMMAND=_git_prompt_color
-
+    # git prompt
+    COLOR_BRANCH=""
+    COLOR_REPO=""
+    COLOR_WORKDIR=""
+    export PROMPT_COMMAND=_git_prompt_color
 
 fi
