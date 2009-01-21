@@ -142,6 +142,8 @@ alias gl='git log'
 alias glol='git log --pretty=oneline'
 alias guppy='gup && gpu'
 alias gls='git ls-files --exclude-standard'
+alias gunpushed='git log origin.. --pretty=oneline'
+alias gcp='git cherry-pick -x'
 
 provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
