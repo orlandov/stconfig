@@ -21,6 +21,7 @@ my %default_env = (
     NLW_TEST_FASTER   => '1',
     ST_HAXORS         => get_haxors(),
     LANG              => 'en_US.utf-8',
+    LESSCHARSET       => 'utf-8',
     REMOTE_USER       => 'devnull1@socialtext.com',
     EDITOR            => 'vim',
     VISUAL            => 'vim',
