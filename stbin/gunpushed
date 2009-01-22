@@ -2,6 +2,11 @@
 use strict;
 use warnings;
 
+use List::MoreUtils qw(part);
+
+my ($st_args, $git_args) = part { (/^--st-/) ? 0 : 1 } @ARGV;
+$st_args ||= []; $git_args ||= [];
+
 my $local_ref = `git symbolic-ref -q HEAD 2>/dev/null`;
 chomp $local_ref;
 die "no current branch?!\n" unless $local_ref;
@@ -22,13 +27,15 @@ $remote_ref =~ s#/heads/#/remotes/$config{remote}/#;
 #warn "# local branch: $local_branch ($local_ref)\n";
 #warn "# remote branch: $remote_branch ($remote_ref)\n";
 
-my $spec = "$remote_branch..$local_branch";
+my $spec = (grep {$_ eq '--st-reverse'} @$st_args) ?
+    "$local_branch..$remote_branch" :
+    "$remote_branch..$local_branch";
 
 # could instead use the longer spec, but the above is nicer and *usually* does
 # the trick (the only case where it doesn't, apparently, is when there's a tag
 # and a branch named the same thing.
 #my $spec = "$remote_ref..$local_ref";
 
-my @cmd = ($spec, @ARGV);
+my @cmd = ($spec, @$git_args);
 warn "+ git log ".join(' ', map { "'$_'" } @cmd) . "\n";
 exec qw(git log), @cmd;
