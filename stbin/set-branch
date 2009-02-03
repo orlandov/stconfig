@@ -177,8 +177,13 @@ sub color_print {
 }
 
 sub branch_list {
-    my @branches = `cd $src_base/socialtext; git branch | sort`;
+    my @branches = `cd $src_base/socialtext; git branch`;
     chomp @branches;
+    @branches = sort { 
+        (my $aname = $a) =~ s/^..//;
+        (my $bname = $b) =~ s/^..//;
+        return $aname cmp $bname;
+    } @branches;
     s/^\s+// for @branches;
     return @branches;
 }
