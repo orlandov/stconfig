@@ -1,2 +1,6 @@
+# env variables
+EMAIL='Brandon Noard <brandon.noard@socialtext.com>'
+
+# aliases
 alias s3cfg='st-admin set-workspace-config -w admin skin_name s3'
 alias s2cfg='st-admin set-workspace-config -w admin skin_name s2'
