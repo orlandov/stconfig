@@ -127,7 +127,9 @@ alias toprad="wikrad -s http://$(hostname):$((20000+$UID)) -w admin -u devnull1@
 # GIT Section
 ##############
 alias gst='git status'
+alias gstall='st-git-all -status'
 alias gd='git diff'
+alias gdall='st-git-all diff'
 alias gdp='gd | vim-pager'
 alias gdc='git diff --cached'
 alias gdcp='gdc | vim-pager'
@@ -145,6 +147,10 @@ alias gls='git ls-files --exclude-standard'
 alias gcp='git cherry-pick -x'
 alias gunpulled='gunpushed --st-reverse'
 alias gunpulled-all='gunpushed-all --st-reverse'
+alias gunpulledall='gunpushed-all --st-reverse'
+alias grh='git reset --hard HEAD'
+alias grh-all='st-git-all reset --hard HEAD'
+alias grhall='st-git-all reset --hard HEAD'
 
 provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
 
