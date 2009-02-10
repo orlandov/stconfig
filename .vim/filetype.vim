@@ -41,5 +41,7 @@ augroup filetypedetect
           \   setf git | 
           \ endif
 
+    au BufNewFile,BufRead *.mxml set filetype=mxml
+    au BufNewFile,BufRead *.as set filetype=actionscript
 augroup END
 
