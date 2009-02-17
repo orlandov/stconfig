@@ -24,11 +24,18 @@
 # ZSH specific stuff from here on
 ls =ls >/dev/null 2>&1 || return
 
-keychain $HOME/.ssh/id_dsa
-source $HOME/.keychain/topaz.socialtext.net-sh
+HOSTNAME=`hostname`
+if [ "$HOSTNAME" = "topaz.socialtext.net" ]; then
+    keychain $HOME/.ssh/id_dsa
+    source $HOME/.keychain/topaz.socialtext.net-sh
+fi
+
+export PATH=/usr/local/git/bin:/sw/bin:/sw/sbin:$PATH
 
 RPS1=''
-eval $(dircolors | perl -pe 's/di=01;34/di=01;36/')
+if [ -x dircolors ]; then
+    eval $(dircolors | perl -pe 's/di=01;34/di=01;36/')
+fi
 bindkey "^R" history-incremental-search-backward
 
 unsetopt print_exit_value
