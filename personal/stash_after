@@ -3,6 +3,8 @@
 alias fdefs='fresh-dev-env-from-scratch'
 alias run-all-wikitests='for t in `find -L t/wikitests/ -name "*.wiki"`; do echo $t; run-wiki-tests -f $t 2>&1 | grep "not ok"; done'
 
+MOD_GLYPH="⚡"
+STATE_GLYPH="⚠ "
 PROMPT_COMMAND=_git_prompt_color
 
 # enable local perl5 dir. Thanks, http://search.cpan.org/~apeiron/local-lib/
@@ -15,3 +17,4 @@ alias gun='git reset HEAD'
 
 # for deb-helper tools
 EMAIL="Jeremy Stashewsky <jeremy.stashewsky@socialtext.com>"
+
