@@ -7,10 +7,10 @@ use Socialtext::System qw/shell_run/;
 
 my $ve_host = $ENV{ST_VE_HOST} || 'zircon.socialtext.net';
 my $ve_name = $ENV{ST_VE_NAME};
-my $ve_name;
 my $repo;
 my $upgrade_to;
 my $plugins;
+my $apt_server = $ENV{ST_APT} || 'https://apt.socialtext.net';
 my ($test_data, $test_data_only);
 GetOptions(
     'v|ve-name=s' => \$ve_name,
@@ -35,7 +35,7 @@ if ($ve_name =~ m/^qa\d$/) {
 
 if ($upgrade_to) {
     exec_on_ve( 
-        qq{echo "deb https://apt.socialtext.net/socialtext $upgrade_to }
+        qq{echo "deb $apt_server/socialtext $upgrade_to }
           . 'main alien" >> /etc/apt/sources.list',
         'st-appliance-update',
     );
