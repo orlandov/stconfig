@@ -6,6 +6,7 @@ use lib "$ENV{ST_CURRENT}/nlw/lib";
 use Socialtext::System qw/shell_run/;
 
 my $ve_host = $ENV{ST_VE_HOST} || 'zircon.socialtext.net';
+my $ve_name = $ENV{ST_VE_NAME};
 my $ve_name;
 my $repo;
 my $upgrade_to;
