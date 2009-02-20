@@ -30,6 +30,7 @@ COLOR_REPO="\[\033[0;1;33;44m\]"
 COLOR_WORKDIR="\[\033[0;1;33;42m\]"
 MOD_GLYPH="*"
 STATE_GLYPH="|"
+PS1_GLYPH="\$"
 
 # shamelessly ripped off from http://github.com/rtomayko/git-sh/tree/master
 # ... and Ubuntu's __git_ps1() in /etc/bash_completion.d/git
@@ -39,7 +40,7 @@ _git_prompt_color() {
     g="$(git rev-parse --git-dir 2>/dev/null)"
     if [ -z $g ]; then
         export BASH_GIT_BRANCH=""
-        PS1="\u@\h:\w\$ "
+        PS1="\u@\h:\w$PS1_GLYPH "
         return
     fi
 
@@ -93,7 +94,7 @@ _git_prompt_color() {
     rel="${rel%/}"
     loc="${PWD%/$rel}"
 
-    PS1="\u@\h:${COLOR_BRANCH}${b}${r}${COLOR_RESET}!${COLOR_REPO}${loc/*\/}${COLOR_RESET}${COLOR_WORKDIR}${rel:+/$rel}${COLOR_RESET}\$ "
+    PS1="\u@\h:${COLOR_BRANCH}${b}${r}${COLOR_RESET}!${COLOR_REPO}${loc/*\/}${COLOR_RESET}${COLOR_WORKDIR}${rel:+/$rel}${COLOR_RESET}${PS1_GLYPH} "
 }
 
 # Set this in your ${USER}_after file to use the git prompt:
