@@ -63,9 +63,9 @@ else {
     );
 }
 
-install_plugins() if $plugins;
 install_test_data() if $test_data;
-run_tests();
+eval { run_tests() }; warn $@ if $@;
+install_plugins() if $plugins;
 
 exit;
 
