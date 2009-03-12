@@ -19,5 +19,3 @@ alias gun='git reset HEAD'
 EMAIL="Jeremy Stashewsky <jeremy.stashewsky@socialtext.com>"
 
 export NYTPROF="file=/home/stash/nytprof/nytp.out"
-
-export FUCK_YOU_DIAGNOSTICS_GO_TO_HELL=1

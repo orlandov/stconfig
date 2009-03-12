@@ -41,7 +41,7 @@ if [[ -z "$*" ]] {
 
 # Do it.
 OPTIONS=""
-if [ -z "$FUCK_YOU_DIAGNOSTICS_GO_TO_HELL" ]; then
+if [ "$DIAGNOSTICS" != "" ]; then
     OPTIONS="$OPTIONS -Mdiagnostics"
 fi
 PERL5OPT=$OPTIONS exec prove -l $switches $tests
