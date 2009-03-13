@@ -94,6 +94,7 @@ cdsc() { cd `abs_path $ST_CURRENT/plugins/socialcalc`; }
 cdppl() { cd `abs_path $ST_CURRENT/plugins/people`; }
 cdsig() { cd `abs_path $ST_CURRENT/plugins/signals`; }
 cdwid() { cd `abs_path $ST_CURRENT/plugins/widgets`; }
+cdsub() { cd `abs_path $ST_CURRENT/submodules`; }
 
 MAC_FILE="~/.nlw/etc/Socialtext/MAC.secret"
 alias muckmac="rm $MAC_FILE; echo bemucked > $MAC_FILE"
@@ -136,10 +137,10 @@ alias gdcp='gdc | vim-pager'
 alias ga='git add'
 alias gau='git add -u'
 alias gco='git checkout'
-alias gci='git commit'
-alias gcim='git commit -m'
-alias gcia='git commit -a'
-alias gciam='git commit -a -m'
+alias gci='git commit -v'
+alias gcim='git commit -m -v'
+alias gcia='git commit -a -v'
+alias gciam='git commit -a -m -v'
 alias gl='git log'
 alias glol='git log --pretty=oneline'
 alias glop='git log -p -1'
