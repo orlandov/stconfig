@@ -70,14 +70,19 @@ else {
 
 assert_branch_exists($branch);
 
-color_print('blue', "Stashing local modifications on your current branch\n");
-git_all(qq{\@stash save 'auto-stash for set-branch'});
+# color_print('blue', "Stashing local modifications on your current branch\n");
+# git_all(qq{\@stash save 'auto-stash for set-branch'});
 
 foreach my $repo (@repos) {
     color_print('blue', "Setting working copy of $repo to $branch\n");
     checkout_branch($repo, $branch);
 }
 
+chdir "$ENV{ST_SRC_BASE}/current";
+shell_run("git submodule init");
+shell_run("git submodule update");
+
+exit;
 color_print('blue', 
             "Re-applying previously stashed modifications for $branch\n");
 foreach my $repo (@repos) {
