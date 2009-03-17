@@ -60,14 +60,6 @@ foreach my $repo (@repos) {
     clone_repo($repo) unless -d repo_git_dir($repo);
 }
 
-if ($offline) {
-    color_print('yellow', "Offline mode: Not fetching changes from GitHub\n");
-}
-else {
-    color_print('blue', "Fetching changes from GitHub\n");
-    git_all('-fetch');
-}
-
 assert_branch_exists($branch);
 
 # color_print('blue', "Stashing local modifications on your current branch\n");
