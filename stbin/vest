@@ -11,6 +11,8 @@ my $repo;
 my $upgrade_to;
 my $plugins;
 my $apt_server = $ENV{ST_APT} || 'https://apt.socialtext.net';
+my $arch = 'amd64';
+my $wipe_it = 0;
 my ($test_data, $test_data_only);
 GetOptions(
     'v|ve-name=s' => \$ve_name,
@@ -18,6 +20,8 @@ GetOptions(
     'u|upgrade-to=s' => \$upgrade_to,
     'p|plugins'   => \$plugins,
     't|test-data' => \$test_data,
+    'a|arch=s' => \$arch,
+    'w|wipe' => \$wipe_it,
     'test-data-only' => \$test_data_only,
 ) or usage ();
 
@@ -42,11 +46,18 @@ if ($upgrade_to) {
 }
 else {
     my $ssh = "ssh $ve_host";
+    if ($wipe_it) {
+        eval {
+            shell_run(qq{$ssh "sudo setup-qa-ve wipe --ve $ve_name"});
+        };
+        warn $@ if $@;
+    }
     eval {
-        shell_run(qq{$ssh "sudo setup-qa-ve rebuild --ve $ve_name --repo $repo"});
+        die "cannot rebuild when wiping\n" if $wipe_it;
+        shell_run(qq{$ssh "sudo setup-qa-ve rebuild --arch $arch --ve $ve_name --repo $repo"});
     };
     if ($@) {
-        shell_run(qq{$ssh "sudo setup-qa-ve create --ve $ve_name --repo $repo"});
+        shell_run(qq{$ssh "sudo setup-qa-ve create --arch $arch --ve $ve_name --repo $repo"});
     }
 
     # Runs as root on the VE
@@ -91,6 +102,8 @@ Options:
   -u --upgrade-to Name of the repo to upgrade the VE to.
   -p --plugins    plugins should be installed
   -t --test-data  create devnull1 user
+  -a --arch       CPU architecture (amd64 (default) or i386)
+  -w --wipe       Wipe the VE clean first.
   
 Passwordless SSH
   If you'd like an SSH key set up on the VE, commit a public 
