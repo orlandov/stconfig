@@ -33,7 +33,6 @@ fi
 
 USERNAME="wikitester@ken.socialtext.net"
 if [ $FRESHDEV ]; then
-    ~/personal/qa/tests-to-tarballs.bash
     $NLW_DEVBIN/fresh-dev-env-from-scratch
     echo Removing all ceqlotron tasks to stop unnecessary indexing
     $NLW_BIN/ceq-rm /.+/
