@@ -1,1 +1,8 @@
 alias smi='sudo make install'
+
+COLOR_RESET="\[\033[0;39;49m\]"
+COLOR_BRANCH="\[\033[0;1;32m\]"
+COLOR_REPO="\[\033[0;1;33m\]"
+COLOR_WORKDIR="\[\033[0;1;32m\]"
+
+PROMPT_COMMAND=_git_prompt_color

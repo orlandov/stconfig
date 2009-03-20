@@ -38,6 +38,24 @@ foreach my $path (@paths) {
 sub check {
     my ( $path, @switches ) = @_;
 
+    if ($path =~ /\.pmc?$/) {
+        open my $mf, '<', $path or die "can't open $path: $!";
+        my $mod;
+        while (<$mf>) {
+            next unless /^\s*package (.+?);/;
+            $mod = $1;
+            last;
+        }
+        close $mf;
+        if ($mod) {
+            warn "checking perl module";
+            if (-1 == system "$^X -Ilib -M$mod -wce1" ) {
+                throw Error::Simple("$^X: $!");
+            }
+            return;
+        }
+    }
+
     my $options = get_options($path);
 
     if (-1 == system "$^X -c $options @switches $path") {

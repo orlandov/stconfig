@@ -1,6 +1,5 @@
 #!/bin/bash
 if [ -e /etc/socialtext/socialtext.conf ]; then
-    # aliases for an appliance
 
    # aliases for an appliance
     alias sww='sudo -u www-data '
@@ -8,6 +7,7 @@ if [ -e /etc/socialtext/socialtext.conf ]; then
     alias cdwt='cd /usr/share/nlw/workspaces/wikitests'
     alias cdappwt='cd /usr/share/stconfig/stbin/qa/appliance'
     alias grnok="grep  -C 6 'not ok' testcases.out"
+    alias grnokk="grep 'not ok' testcases.out"
     alias grtc="grep 'Loading test plan\|COMPLETED' testcases.out"
     alias ttc='tail -f testcases.out'
     alias findwikis='ls /var/www/socialtext/data/'
@@ -15,14 +15,13 @@ if [ -e /etc/socialtext/socialtext.conf ]; then
     alias ceqread='/usr/bin/ceq-read'
     alias ceqstat='/usr/bin/ceq-stat'
     alias ceqrm='/usr/bin/ceq-rm'
-    alias cdwt='cd /usr/share/nlw/wikitests'
     alias cdskin='cd /usr/share/nlw/skin'
     alias cdplugins='cd /usr/share/nlw/plugins'
     alias noplugins='sudo /etc/init.d/apache-perl stop; sudo apt-get remove --purge  socialtext-plugin-people socialtext-plugin-gadgets; sudo /etc/init.d/apache-perl start'
 
-	RWT='/usr/share/stconfig/stbin/run-wiki-tests'
+    RWT='/usr/share/stconfig/stbin/run-wiki-tests'
 
-	alias xwt='export ST_SKIN_NAME='\''s3'\''; export WIKIEMAIL=$HOSTNAME; sudo -u www-data $RWT --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-server http://$HOSTNAME --test-server http://$HOSTNAME --plan-page  '
+    alias xwt='export ST_SKIN_NAME='\''s3'\''; export WIKIEMAIL=$HOSTNAME; sudo -u www-data $RWT --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-server http://$HOSTNAME --test-server http://$HOSTNAME --plan-page  '
 
     alias xlwt='export ST_SKIN_NAME='\''s3'\''; export WIKIEMAIL=$HOSTNAME; sudo -u www-data $RWT  --no-maximize --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-server http://$HOSTNAME --test-server http://$HOSTNAME  0 --plan-page  '
  
@@ -31,8 +30,6 @@ else
     # aliases for a dev env
     alias sta='$ST_CURRENT/nlw/bin/st-admin '
     alias freshdev='~/personal/qa/tests-to-tarballs.bash; $ST_CURRENT/nlw/dev-bin/fresh-dev-env-from-scratch; $ST_CURRENT/nlw/bin/ceq-rm /.+/; $ST_CURRENT/nlw/bin/st-config set benchmark_mode 1'
-    alias noplugins='rm -f $ST_CURRENT/nlw/share/plugin; ln -s $ST_CURRENT/nlw/share/../../plugins/socialcalc $ST_CURRENT/nlw/share/plugin; restartme'
-    alias yesplugins='rm -f $ST_CURRENT/nlw/share/plugin; ln -s $ST_CURRENT/nlw/share/../../plugins $ST_CURRENT/nlw/share/plugin; restartme'
     alias tests-from-tarballs='~/personal/qa/tests-from-tarballs.bash'
     alias tests-to-tarballs='~/personal/qa/tests-to-tarballs.bash'
     alias stopme='$ST_CURRENT/nlw/dev-bin/nlwctl stop'
@@ -57,7 +54,6 @@ else
     alias cdwt='cd $ST_CURRENT/nlw/share/workspaces/wikitests'
     alias cdst='cd $ST_SRC_BASE'
     alias cdshare='cd $ST_CURRENT/nlw/share'
-    alias cdcalc='cd $ST_CURRENT/nlw/../plugins/socialcalc'
     alias cdndb='cd $ST_CURRENT/nlw/dev-bin'
     alias cdnb='cd $ST_CURRENT/nlw/bin'
     
@@ -73,6 +69,7 @@ else
 
     # aliases to evaluate wikitests
     alias grnok="grep  -C 6 'not ok' testcases.out"
+    alias grnokk="grep 'not ok' testcases.out"
     alias grtc="grep 'Loading test plan\|COMPLETED' testcases.out"
     alias ttc='tail -f testcases.out'
 
@@ -90,7 +87,6 @@ else
     alias psqa10='pstree -aAhlnp qa10'
     alias psqa11='pstree -aAhlnp qa11'
     alias psqa12='pstree -aAhlnp qa12'
-    alias pslyssa='pstree -aAhlnp lyssa'
     alias pssel='pstree -aAhlnp selenium'
     alias pschris='pstree -aAhlnp cmcmahon'
     alias psrick='pstree -aAhlnp rick'
@@ -98,10 +94,19 @@ else
     alias psmatt='pstree -aAhlnp mheusser'
 
     # functions
-    branches() {  /bin/ls /home/$1/src/st ; }
+    branches() { 
+        WDD=$PWD
+        for i in `cat $ST_SRC_BASE/stconfig/personal/qa/qausers` ; do
+            echo $i;
+            cd /home/$i/src/st/current;
+            git branch | grep "*";
+        done;
+        cd $WDD
+    }
+    
     sb()        { set-branch $1; cdnlw; cd ..; }
 
-    alias brqa='branches qa*'
+    alias brqa='branches'
     alias ffx='ps auxww | grep firefox'
     alias fsel='ps auxww | grep selenium'
 

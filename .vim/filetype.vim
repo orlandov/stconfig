@@ -27,5 +27,19 @@ augroup filetypedetect
         \ endif
     "TT2 and HTML"
     :let b:tt2_syn_tags = '\[% %] <!-- -->'
+
+    " Git, taken from vim 7.2's filetype.vim
+    autocmd BufNewFile,BufRead *.git/COMMIT_EDITMSG    setf gitcommit 
+    autocmd BufNewFile,BufRead *.git/config,.gitconfig setf gitconfig 
+    autocmd BufNewFile,BufRead git-rebase-todo         setf gitrebase 
+    autocmd BufNewFile,BufRead .msg.[0-9]* 
+          \ if getline(1) =~ '^From.*# This line is ignored.$' | 
+          \   setf gitsendemail | 
+          \ endif 
+    autocmd BufNewFile,BufRead *.git/** 
+          \ if getline(1) =~ '^\x\{40\}\>\|^ref: ' | 
+          \   setf git | 
+          \ endif
+
 augroup END
 

@@ -12,7 +12,7 @@
 
 autocmd BufRead *.wiki set ft=wiki tw=0
 au FileType vim set iskeyword+=. iskeyword+=/ iskeyword+=~
-au BufNewFile,BufRead COMMIT_EDITMSG :1
+au BufNewFile,BufRead COMMIT_EDITMSG goto 1
 set splitright
 
 set termencoding=utf-8

@@ -1,15 +1,11 @@
 if [ -e $ST_SRC_BASE/stconfig/personal/qa_after ]; then
     source $ST_SRC_BASE/stconfig/personal/qa_after
-    # git prompt
-    COLOR_BRANCH=""
-    COLOR_REPO=""
-    COLOR_WORKDIR=""
-    export PROMPT_COMMAND=_git_prompt_color
+    alias selme='setsel 5435 firefox osx'
 elif [ -e /usr/share/stconfig/personal/qa_after ]; then
     source /usr/share/stconfig/personal/qa_after
+    alias selme='source /usr/share/stconfig/stbin/qa/appliance/setup-selenium  5435 firefox osx'
 else
     echo COULD NOT FIND file qa_after
 fi
-alias selme='setsel 5435 firefox osx'
 
 

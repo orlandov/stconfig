@@ -60,24 +60,25 @@ foreach my $repo (@repos) {
     clone_repo($repo) unless -d repo_git_dir($repo);
 }
 
-if ($offline) {
-    color_print('yellow', "Offline mode: Not fetching changes from GitHub\n");
-}
-else {
-    color_print('blue', "Fetching changes from GitHub\n");
-    git_all('-fetch');
-}
-
 assert_branch_exists($branch);
 
-color_print('blue', "Stashing local modifications on your current branch\n");
-git_all(qq{\@stash save 'auto-stash for set-branch'});
+# color_print('blue', "Stashing local modifications on your current branch\n");
+# git_all(qq{\@stash save 'auto-stash for set-branch'});
 
 foreach my $repo (@repos) {
     color_print('blue', "Setting working copy of $repo to $branch\n");
     checkout_branch($repo, $branch);
 }
 
+chdir "$ENV{ST_SRC_BASE}/current";
+shell_run("git submodule init");
+shell_run("git submodule update");
+
+chdir "$ENV{ST_SRC_BASE}/current/plugins";
+shell_run("git submodule init");
+shell_run("git submodule update");
+
+exit;
 color_print('blue', 
             "Re-applying previously stashed modifications for $branch\n");
 foreach my $repo (@repos) {
@@ -177,8 +178,13 @@ sub color_print {
 }
 
 sub branch_list {
-    my @branches = `cd $src_base/socialtext; git branch | sort`;
+    my @branches = `cd $src_base/socialtext; git branch`;
     chomp @branches;
+    @branches = sort { 
+        (my $aname = $a) =~ s/^..//;
+        (my $bname = $b) =~ s/^..//;
+        return $aname cmp $bname;
+    } @branches;
     s/^\s+// for @branches;
     return @branches;
 }

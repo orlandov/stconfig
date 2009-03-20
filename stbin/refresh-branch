@@ -18,6 +18,14 @@ exit;
 sub git_all {
     my $cmd = shift;
     shell_run("st-git-all $cmd");
+
+    chdir "$ENV{ST_SRC_BASE}/current";
+    shell_run("git submodule init");
+    shell_run("git submodule update");
+
+    chdir "$ENV{ST_SRC_BASE}/current/plugins";
+    shell_run("git submodule init");
+    shell_run("git submodule update");
 }
 
 sub color_print {

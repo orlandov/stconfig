@@ -36,5 +36,5 @@ if [ "$answer" != "y" ]; then
 fi
 
 MESSAGE="Creating tag $TAG from $BRANCH $MSG"
-st-git-all tag -a $TAG -m "$MESSAGE"
+st-git-all -tag -a $TAG -m "$MESSAGE"
 st-git-all push --tags

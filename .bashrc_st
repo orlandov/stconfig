@@ -28,16 +28,19 @@ COLOR_RESET="\[\033[0;39;49m\]"
 COLOR_BRANCH="\[\033[0;1;32;44m\]"
 COLOR_REPO="\[\033[0;1;33;44m\]"
 COLOR_WORKDIR="\[\033[0;1;33;42m\]"
+MOD_GLYPH="*"
+STATE_GLYPH="|"
+PS1_GLYPH="\$"
 
 # shamelessly ripped off from http://github.com/rtomayko/git-sh/tree/master
 # ... and Ubuntu's __git_ps1() in /etc/bash_completion.d/git
 _git_prompt_color() {
-    local g r b rel loc
+    local g r b rel loc mod
 
     g="$(git rev-parse --git-dir 2>/dev/null)"
     if [ -z $g ]; then
         export BASH_GIT_BRANCH=""
-        PS1="\u@\h:\w\$ "
+        PS1="\u@\h:\w$PS1_GLYPH "
         return
     fi
 
@@ -45,30 +48,30 @@ _git_prompt_color() {
     then
         if test -f "$g/../.dotest/rebasing"
         then
-            r="|REBASE"
+            r="${STATE_GLYPH}REBASE"
         elif test -f "$g/../.dotest/applying"
         then
-            r="|AM"
+            r="${STATE_GLYPH}AM"
         else
-            r="|AM/REBASE"
+            r="${STATE_GLYPH}AM/REBASE"
         fi
         b="$(git symbolic-ref HEAD 2>/dev/null)"
     elif [ -f "$g/.dotest-merge/interactive" ]
     then
-        r="|REBASE-i"
+        r="${STATE_GLYPH}REBASE-i"
         b="$(cat "$g/.dotest-merge/head-name")"
     elif [ -d "$g/.dotest-merge" ]
     then
-        r="|REBASE-m"
+        r="${STATE_GLYPH}REBASE-m"
         b="$(cat "$g/.dotest-merge/head-name")"
     elif [ -f "$g/MERGE_HEAD" ]
     then
-        r="|MERGING"
+        r="${STATE_GLYPH}MERGING"
         b="$(git symbolic-ref HEAD 2>/dev/null)"
     else
         if [ -f "$g/BISECT_LOG" ]
         then
-            r="|BISECTING"
+            r="${STATE_GLYPH}BISECTING"
         fi
         if ! b="$(git symbolic-ref HEAD 2>/dev/null)"
         then
@@ -82,11 +85,16 @@ _git_prompt_color() {
     b="${b##refs/heads/}" # make it a pretty name
     export BASH_GIT_BRANCH="$b"
 
+    mod=`git ls-files --modified --deleted --others --exclude-standard 2>/dev/null | head -1`
+    if [ ! -z "$mod" ]; then
+        r="${MOD_GLYPH}$r"
+    fi
+
     rel=$(git rev-parse --show-prefix 2>/dev/null)
     rel="${rel%/}"
     loc="${PWD%/$rel}"
 
-    PS1="\u@\h:${COLOR_BRANCH}${b}${r}${COLOR_RESET}!${COLOR_REPO}${loc/*\/}${COLOR_RESET}${COLOR_WORKDIR}${rel:+/$rel}${COLOR_RESET}\$ "
+    PS1="\u@\h:${COLOR_BRANCH}${b}${r}${COLOR_RESET}!${COLOR_REPO}${loc/*\/}${COLOR_RESET}${COLOR_WORKDIR}${rel:+/$rel}${COLOR_RESET}${PS1_GLYPH} "
 }
 
 # Set this in your ${USER}_after file to use the git prompt:
