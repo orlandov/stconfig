@@ -15,3 +15,6 @@ COLOR_BRANCH='\[\033[1;32m\]'
 COLOR_WORKDIR='\[\033[1;32m\]'
 COLOR_REPO='\[\033[1;31m\]'
 PROMPT_COMMAND=_git_prompt_color
+
+# so dh_make_perl knows who I am
+EMAIL='Graham TerMarsch <graham.termarsch@socialtext.com>'
