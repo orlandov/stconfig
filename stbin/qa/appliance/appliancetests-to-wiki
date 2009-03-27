@@ -1,0 +1,20 @@
+#!/bin/bash
+
+BIN=/usr/bin
+DIR=/usr/share/nlw/workspaces/wikitests
+
+STBIN="sudo -u www-data $BIN"
+STADMIN="$STBIN/st-admin "
+
+$STADMIN delete-workspace --workspace wikitests --no-export
+$STADMIN create-workspace --title 'Wikitests' --name wikitests --empty
+$STADMIN add-workspace-admin  --email devnull1@socialtext.com --workspace wikitests
+$STADMIN create-user --e tester@ken.socialtext.net --p wikitest
+$STADMIN add-member  --e tester@ken.socialtext.net --w wikitests
+
+$STBIN/fast-import-pages --workspace wikitests --from $DIR
+
+# get rid of superfluous ceq indexing then index
+$STBIN/ceq-rm wikitests
+$STADMIN index-workspace --w wikitests --sync
+

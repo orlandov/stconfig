@@ -11,7 +11,6 @@ else
 fi
 
 WIKITESTS="/usr/share/stconfig/stbin/qa/appliance"
-WIKITAR='/usr/share/nlw/workspaces/wikitests/wikitests.1.tar.gz'
 
 echo SETTING TIME
 source $WIKITESTS/set-time
@@ -42,7 +41,9 @@ if [ -e /var/www/socialtext/data/wikitests ]; then
 fi
 echo "IMPORTING wikitests WORKSPACE"
 sudo apt-get install --yes st-static-files-wikitests
-sudo st-admin import-workspace --tarball $WIKITAR
+
+sudo ln -sf $WIKITESTS/fast-import-page  /usr/bin/
+sudo $WIKITESTS/appliancetests-to-wiki
 sudo st-admin set-workspace-config --w wikitests account_name $HOSTNAME || true
 
 echo "SETTING user accounts to $HOSTNAME, which is supposed to be the default account"
@@ -70,10 +71,9 @@ sudo st-admin reset-account-skin --account $HOSTNAME  --skin s3
 sudo chown -R www-data:www-data /etc/socialtext/
 
 # link appliance wikitest files into the path
-sudo rm -f /usr/bin/st-bootstrap-openldap /usr/bin/st-appliance-socialcalc /usr/bin/st-appliance-wikitests
-sudo ln -s $WIKITESTS/st-bootstrap-openldap /usr/bin/
-sudo ln -s $WIKITESTS/st-appliance-socialcalc /usr/bin/
-sudo ln -s $WIKITESTS/st-appliance-wikitests  /usr/bin/
+sudo ln -sf $WIKITESTS/st-bootstrap-openldap /usr/bin/
+sudo ln -sf $WIKITESTS/st-appliance-socialcalc /usr/bin/
+sudo ln -sf $WIKITESTS/st-appliance-wikitests  /usr/bin/
 
 echo "Setting up /tmp/backup for Console Backup and Restore testing"
 sudo mkdir -p /tmp/backup
