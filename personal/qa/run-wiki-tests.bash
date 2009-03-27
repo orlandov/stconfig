@@ -48,15 +48,8 @@ if [ $FRESHDEV ]; then
     # report tests to pass
     $NLW_DEVBIN/st-populate-reports-db
     
-    echo ""
-    read -p  "Build wikitests wiki from scratch? y/n " wikitest
-    if [ "$wikitest" == "y" ]; then
-        $NLW_DEVBIN/wikitests-to-wiki
-    else
-        echo ""
-        read -p  "Build wikitests wiki from tarball? y/n " wikitest
-        [ "$wikitest" == "y" ] && $NLW_BIN/st-admin import-workspace --tarball $ST_CURRENT/nlw/share/workspaces/wikitests/wikitests.1.tar.gz  
-    fi
+    echo "Building wikitests"
+    $NLW_DEVBIN/wikitests-to-wiki
     echo "Setting benchmark mode to prevent JS make on every page load"
     echo "Use st-make-js after every rb to make JS once"
     $NLW_BIN/st-config set benchmark_mode 1
