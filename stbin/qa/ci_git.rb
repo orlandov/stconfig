@@ -1,5 +1,5 @@
 ################
-require 'fileutils.rb'
+require 'fileutils'
 require 'net/http'
 require 'net/https'
 sync=true
@@ -97,9 +97,10 @@ while 1 do #INFINITE LOOP
             req.basic_auth @test_user, @test_pass
             response = http.request(req)
             page = response.body
-
-            if (page !~ /not found/)
-                 puts "DELETING" + @put_loc
+            
+            if  page.match('Looks like you failed')
+                 puts "FAILED TEST CASE NOW PASSING.  DELETING" + @put_loc
+                 http = Net::HTTP.new(@test_host,443)
                  @outfile.puts "DELETING" + @put_loc
                  req = Net::HTTP::Delete.new(@put_loc, initheader = {'Content-Type' =>'text/x.socialtext-wiki'})
                  http.use_ssl = true
@@ -120,10 +121,11 @@ while 1 do #INFINITE LOOP
 
             def deploy_branch
 
-               puts "DOING HARD RESET FROM WIKITESTS DIR" 
-               gzhack = `cd ~/src/st/socialtext/nlw/share/workspaces/wikitests; git reset --hard HEAD`
-               puts gzhack
-
+               puts "DOING SB"
+               @set="~/stbin/set-branch " + @branch
+               sb = system(@set)
+               puts sb
+               
                puts "DOING RB"
                rb = system("~/stbin/refresh-branch")
                
@@ -151,9 +153,9 @@ while 1 do #INFINITE LOOP
                clearceq = system("~/src/st/current/nlw/bin/ceq-rm /.+/")
                puts clearceq
                
-               puts "IMPORTING WIKITESTS"
-               import_wikitests = `~/src/st/current/nlw/bin/st-admin import-workspace --tarball ~/src/st/current/nlw/share/workspaces/wikitests/wikitests.1.tar.gz`
-               puts import_wikitests
+               puts "CREATING WIKITESTS"
+               create_wikitests = `~/src/st/current/nlw/dev-bin/wikitests-to-wiki`
+               puts create_wikitests
                              
                puts "SETTING UP REPORTS TEST DATA"
                import_reports_data = `~/src/st/current/nlw/dev-bin/st-populate-reports-db`
@@ -230,7 +232,7 @@ while 1 do #INFINITE LOOP
                end #def
 
                testcase_page = @testcase.gsub(/\s+/, "_")
-               @put_loc = "/data/workspaces/qat/pages/#{testcase_page} OUTPUT"
+               @put_loc = "/data/workspaces/qat/pages/#{testcase_page}"
 
                run_test
 
