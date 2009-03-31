@@ -23,6 +23,7 @@ map \p :set paste<CR>
 map \v :!vim .vimrc<CR>:so .vimrc<CR>
 map \V :!vim ~/.vimrc<CR>:so ~/.vimrc<CR>
 map \vf :!vim <cword><CR>:so <cword><CR>
+map \m ggouse Moose;<CR>use namespace::clean -except => 'meta';<CR><ESC>GO__PACKAGE__->meta->make_immutable;<ESC>
 
 map \# :s/^/# / <CR> :noh <CR>
 map \\# :s/^# // <CR> :noh <CR>
