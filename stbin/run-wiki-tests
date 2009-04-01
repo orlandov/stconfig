@@ -127,6 +127,7 @@ my $wikitest_files_dir = {
 my $test_start_time = _epoch_to_timpstamp(time);
 
 diag "Testing $test_server\n";
+(my $atmail = $test_email) =~ s#@#\\@#;
 my $test_plan = Socialtext::WikiObject::TestPlan->new(
     rester => $rester,
     page => $plan_page,
@@ -147,6 +148,7 @@ my $test_plan = Socialtext::WikiObject::TestPlan->new(
         wikitest_files => $wikitest_files_dir,
         wikitest_client_files => $wikitest_client_files_dir,
         hostname => $hostname,
+        atmail => $atmail,
     },
 );
 $test_plan->run_tests;
