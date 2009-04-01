@@ -1,0 +1,123 @@
+#!/usr/bin/perl
+use strict;
+use File::Temp;
+
+BEGIN { $SIG{__WARN__} = sub { 0 } };
+
+=head1 NAME
+
+st-tap2html - Convert Wikitest TAP output to HTML format
+
+=head1 SYNOPSIS
+
+Generate HTML output as part of run-wiki-tests:
+
+    run-wiki-tests ... | st-tap2html > output.html
+
+Or, as two steps, saving the intermediate output file:
+
+    run-wiki-tests ... >& testcases.out
+    # Make testcases.html from the output file
+    st-tap2html testcases.out
+
+=head1 DESCRIPTION
+
+Wikitests emit TAP output.  This utility converts these files into HTML
+viewable by the developer via URL in the browser.
+
+For each test plan (as denoted by "Loading test plan ..." in the output), we
+generate a separate test section.  Then we provide an master view that shows a
+summary view and links to those detailed test pages.
+
+=head2 Features
+
+=over 4
+
+=item * Red/green display (that's what the existing tap2html does, slightly ugly)
+=item * Cope with not only "not ok" but also "Failure during ...".
+=item * Click on display to open corresponding section of TAP output file.
+=item * Capture the STDERR output in individual section logs.
+
+=back
+
+=head1 AUTHORS
+
+Ken Pier, Audrey Tang
+
+=cut
+
+my $output_file;
+if (!@ARGV and -t STDIN) {
+    exec("perldoc" => $0);
+}
+
+if (@ARGV and -t STDOUT) {
+    $output_file = $ARGV[0];
+    $output_file =~ s/(.*)\..*/$1.html/;
+}
+
+my $dir = File::Temp::tempdir( CLEANUP => 1 );
+my @tests;
+my $c;
+while (<>) {
+    if (/Loading test plan Test Case: (.*)\.\.\./i) {
+        push @tests, $1;
+        print "1..$c\n" if defined $c;
+        close FH;
+        open FH, '>:utf8', "$dir/$1";
+        select FH;
+        print "use utf8; binmode STDOUT, ':utf8'; print <DATA>;\n__DATA__\n";
+        $c = 0;
+    }
+    else {
+        s/^((?:not )?ok )(\d+)/$1 . ++$c/e;
+        print FH $_;
+    }
+}
+print FH "1..$c\n";
+close FH;
+
+use Encode;
+use TAP::Formatter::HTML;
+use TAP::Harness;
+use Cwd;
+
+my $cwd = Cwd::getcwd();
+
+chdir $dir;
+my $out = '';
+open FH, '>', \$out;
+my $fmt = TAP::Formatter::HTML->new;
+$fmt->force_inline_css(1)->stdout(\*FH);
+my $harness = TAP::Harness->new({ formatter => $fmt, merge => 1 });
+$harness->runtests( @tests );
+
+$out =~ s/.*<html>\n<head>\n/<html><head><meta http-equiv="Content-Type" content="text\/html; charset=utf-8"/s;
+$out =~ s{<script type="text/javascript" src="file:([^"]+)"></script>}{
+    local $/;
+    open my $fh, '<:utf8', $1;
+    '<script type="text/javascript">' . scalar <$fh> . '</script>';
+}eg;
+
+chdir $cwd;
+Encode::_utf8_off($out);
+Encode::from_to($out, utf8 => 'latin1');
+Encode::_utf8_on($out);
+
+if ($output_file) {
+    open FH, '>:utf8', $output_file;
+    select FH;
+}
+else {
+    binmode STDOUT, ':utf8';
+}
+
+foreach my $orig (split(/\n/, $out)) {
+    my $line = $orig;
+    eval {
+        Encode::_utf8_off($line);
+        Encode::from_to($line, utf8 => 'latin1', Encode::FB_CROAK());
+        $line = Encode::decode_utf8($line, Encode::FB_CROAK());
+        print "$line\n";
+    } or print "$orig\n";
+}
