@@ -60,7 +60,10 @@ my $dir = File::Temp::tempdir( CLEANUP => 1 );
 my @tests;
 my $c;
 while (<>) {
-    if (/Loading test plan Test Case: (.*)\.\.\./i) {
+    if (/Loading test plan Test Case: (.*)\.\.\./i
+            or
+        /comment: STARTING: Test Case: (.*)/i
+    ) {
         push @tests, $1;
         print "1..$c\n" if defined $c;
         close FH;
@@ -70,6 +73,7 @@ while (<>) {
         $c = 0;
     }
     else {
+        s/^(1\.\.\d+)$/# $1/;
         s/^((?:not )?ok )(\d+)/$1 . ++$c/e;
         print FH $_;
     }
