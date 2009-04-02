@@ -1,0 +1,62 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Socialtext::Resting::Getopt qw/get_rester/;
+use Socialtext::WikiObject;
+
+my $r = get_rester( 
+    server => 'https://www2.socialtext.net',
+    workspace => 'dev-tasks',
+);
+
+$r->accept('text/plain');
+my @in_dev = $r->get_taggedpages('In Dev');
+
+my @stories_in_dev_by_me;
+my $user = $ENV{USER};
+$r->accept('text/x.socialtext-wiki');
+for my $story_name (@in_dev) {
+    my $wo = Socialtext::WikiObject->new(
+        rester => $r,
+        page => $story_name,
+    );
+    
+    my $details_table = [];
+    if (ref($wo->{details}) eq 'HASH') {
+        my $text = $wo->{details}{text};
+        if (ref($text) eq 'HASH') {
+            $details_table = $wo->{details}{text}{table};
+        }
+        else {
+            $details_table = $wo->{details}{items};
+        }
+        
+    }
+    elsif (ref($wo->{details}) eq 'ARRAY') {
+        $details_table = $wo->{details};
+    }
+
+    my $devs = 'UNKNOWN';
+    for my $row (@$details_table) {
+        next unless ref($row) eq 'ARRAY';
+        next unless $row->[0] =~ m/dev/i;
+        $devs = $row->[1];
+    }
+
+    if ($devs =~ m/\Q$user\E/) {
+        push @stories_in_dev_by_me, $story_name;
+    }
+}
+
+
+if (@stories_in_dev_by_me == 1) {
+    exec('w2rad', '-w', 'dev-tasks', $stories_in_dev_by_me[0]);
+}
+else {
+    print "Your stories:\n"
+        . join("\n", map { "  $_" } @stories_in_dev_by_me)
+        . "\n";
+}
+exit;
+
+
