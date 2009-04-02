@@ -66,11 +66,11 @@ while (<>) {
         /comment: STARTING: Test Case: (.*)/i
     ) {
         push @tests, $1.$suffix;
-        print "1..$c\n" if defined $c;
+        print FH "1..$c\n" if defined $c;
         close FH;
         open FH, '>:utf8', "$dir/$1$suffix";
         select FH;
-        print "use utf8; binmode STDOUT, ':utf8'; print <DATA>;\n__DATA__\n";
+        print FH "use utf8; binmode STDOUT, ':utf8'; print <DATA>;\n__DATA__\n";
         $c = 0;
     }
     elsif (/Loading test plan (.*)\.\.\./i) {
@@ -123,6 +123,7 @@ if ($output_file) {
 }
 else {
     binmode STDOUT, ':utf8';
+    select STDOUT;
 }
 
 foreach my $orig (split(/\n/, $out)) {
