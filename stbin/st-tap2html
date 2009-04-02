@@ -59,18 +59,22 @@ if (@ARGV and -t STDOUT) {
 my $dir = File::Temp::tempdir( CLEANUP => 1 );
 my @tests;
 my $c;
+my $suffix = '';
 while (<>) {
     if (/Loading test plan Test Case: (.*)\.\.\./i
             or
         /comment: STARTING: Test Case: (.*)/i
     ) {
-        push @tests, $1;
+        push @tests, $1.$suffix;
         print "1..$c\n" if defined $c;
         close FH;
-        open FH, '>:utf8', "$dir/$1";
+        open FH, '>:utf8', "$dir/$1$suffix";
         select FH;
         print "use utf8; binmode STDOUT, ':utf8'; print <DATA>;\n__DATA__\n";
         $c = 0;
+    }
+    elsif (/Loading test plan (.*)\.\.\./i) {
+        $suffix = " ($1)";
     }
     else {
         s/^(1\.\.\d+)$/# $1/;
