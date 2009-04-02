@@ -13,7 +13,7 @@ st-tutorbot - Tutor bot
 
 =head1 SYNOPSIS
 
-    st-tutorbot --user cpan@audreyt.org --password tutorbot
+    st-tutorbot --user cpan@audreyt.org --password PASSWORD
                 --server https://www2.socialtext.net \
                 --workspace tutorbot --page tutorbot \
                 --interval 3600
@@ -33,7 +33,7 @@ Adina Levin, Audrey Tang
 =cut
 
 my $user = 'cpan@audreyt.org';
-my $password = 'tutorbot';
+my $password;
 my $server = 'https://www2.socialtext.net/';
 my $interval = 3600;
 my $workspace = 'tutorbot';
@@ -47,6 +47,10 @@ GetOptions(
     "workspace=s" => \$workspace,
     "page=s"      => \$page,
 );
+
+if (!$password) {
+    exec(perldoc => $0);
+}
 
 my $ua = LWP::UserAgent->new(
     requests_redirectable => [ 'GET', 'POST' ],
