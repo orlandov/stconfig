@@ -13,6 +13,7 @@ $r->accept('text/plain');
 my @in_dev = $r->get_taggedpages('In Dev');
 
 my @stories_in_dev_by_me;
+my @stories_and_devs;
 my $user = $ENV{USER};
 $r->accept('text/x.socialtext-wiki');
 for my $story_name (@in_dev) {
@@ -46,11 +47,16 @@ for my $story_name (@in_dev) {
     if ($devs =~ m/\Q$user\E/) {
         push @stories_in_dev_by_me, $story_name;
     }
+    push @stories_and_devs, "$story_name: $devs";
 }
 
 
 if (@stories_in_dev_by_me == 1) {
     exec('w2rad', '-w', 'dev-tasks', $stories_in_dev_by_me[0]);
+}
+elsif (@stories_in_dev_by_me == 0) {
+    print "You don't have any stories in dev.\n\n"
+        . join("\n", @stories_and_devs) . "\n";
 }
 else {
     print "Your stories:\n"
