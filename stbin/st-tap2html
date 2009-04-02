@@ -82,7 +82,7 @@ print FH "1..$c\n";
 close FH;
 
 use Encode;
-use TAP::Formatter::HTML;
+use TAP::Formatter::HTML 0.07;
 use TAP::Harness;
 use Cwd;
 
@@ -92,11 +92,16 @@ chdir $dir;
 my $out = '';
 open FH, '>', \$out;
 my $fmt = TAP::Formatter::HTML->new;
-$fmt->force_inline_css(1)->stdout(\*FH);
+$fmt->output_fh(\*FH)->silent(1);
 my $harness = TAP::Harness->new({ formatter => $fmt, merge => 1 });
 $harness->runtests( @tests );
 
 $out =~ s/.*<html>\n<head>\n/<html><head><meta http-equiv="Content-Type" content="text\/html; charset=utf-8"/s;
+$out =~ s{<link rel="stylesheet" type="text/css" href="file:([^"]+)" />}{
+    local $/;
+    open my $fh, '<:utf8', $1;
+    '<style>' . scalar <$fh> . '</style>';
+}eg;
 $out =~ s{<script type="text/javascript" src="file:([^"]+)"></script>}{
     local $/;
     open my $fh, '<:utf8', $1;
