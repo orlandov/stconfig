@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use File::Temp;
+use File::Basename;
 
 BEGIN { $SIG{__WARN__} = sub { 0 } };
 
@@ -56,34 +57,45 @@ if (@ARGV and -t STDOUT) {
     $output_file =~ s/(.*)\..*/$1.html/;
 }
 
+my $input_file = (@ARGV ? $ARGV[0] : '-');
+
 my $dir = File::Temp::tempdir( CLEANUP => 1 );
 my @tests;
-my $c;
+my $c = 0;
 my $suffix = '';
 while (<>) {
     if (/Loading test plan Test Case: (.*)\.\.\./i
             or
         /comment: STARTING: Test Case: (.*)/i
     ) {
-        push @tests, $1.$suffix;
-        print FH "1..$c\n" if defined $c;
-        close FH;
-        open FH, '>:utf8', "$dir/$1$suffix";
-        select FH;
-        print FH "use utf8; binmode STDOUT, ':utf8'; print <DATA>;\n__DATA__\n";
+        start_test("$1$suffix");
         $c = 0;
     }
     elsif (/Loading test plan (.*)\.\.\./i) {
         $suffix = " ($1)";
     }
     else {
-        s/^(1\.\.\d+)$/# $1/;
-        s/^((?:not )?ok )(\d+)/$1 . ++$c/e;
+        my $changed;
+        $changed++ if s/^(1\.\.\d+)$/# $1/;
+        $changed++ if s/^((?:not )?ok )(\d+)/$1 . ++$c/e;
+        if ($changed and not @tests) {
+            start_test(basename($input_file));
+        }
         print FH $_;
     }
 }
 print FH "1..$c\n";
 close FH;
+
+sub start_test {
+    my $name = shift;
+    push @tests, $name;
+    print FH "1..$c\n" if defined $c;
+    close FH;
+    open FH, '>:utf8', "$dir/$name";
+    select FH;
+    print FH "use utf8; binmode STDOUT, ':utf8'; print <DATA>;\n__DATA__\n";
+}
 
 use Encode;
 use TAP::Formatter::HTML 0.07;
