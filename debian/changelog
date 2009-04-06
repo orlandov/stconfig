@@ -1,3 +1,9 @@
+stconfig (20090406-1239049121) socialtext; urgency=low
+
+  * new upstream version
+
+ -- Ken Pier <kenpier@topaz.socialtext.net>  Mon,  6 Apr 2009 13:18:41 -0700
+
 stconfig (20090403-1238810021) socialtext; urgency=low
 
   * new upstream version
