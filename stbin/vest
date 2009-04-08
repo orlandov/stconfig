@@ -39,8 +39,9 @@ if ($ve_name =~ m/^qa\d$/) {
 
 if ($upgrade_to) {
     exec_on_ve( 
-        qq{echo "deb $apt_server/socialtext $upgrade_to }
-          . 'main alien" >> /etc/apt/sources.list',
+        qq{echo "deb $apt_server/ubuntu dapper main universe" > /etc/apt/sources.list},
+        qq{echo "deb $apt_server/ubuntu dapper-security main universe" >> /etc/apt/sources.list},
+        qq{echo "deb $apt_server/socialtext $upgrade_to main alien" >> /etc/apt/sources.list},
         qq{perl -pi -e "s/upgrade_path: \\w+/upgrade_path: no-such-path/" }
           . '/etc/socialtext/appliance.conf',
         'st-appliance-update',
