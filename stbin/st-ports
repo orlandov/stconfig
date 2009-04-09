@@ -1,0 +1,11 @@
+#!/bin/bash
+START_PORT=20000
+(
+for U in `ls /home`; do
+    if [ -d /home/$U/src/st/socialtext/nlw ]; then
+        ID=`id -u $U` 
+        PORT=$(($START_PORT+$ID))
+        echo "$PORT    $U"
+    fi
+done
+) | sort
