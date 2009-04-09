@@ -73,6 +73,7 @@ else {
         'touch /etc/socialtext/reports-test',
         # Set up stconfig for the root user
         q{su - -c "cd /root; rm .bashrc; stconfig-setup"},
+        qq{su - $ENV{USER} -c "rm .bashrc; stconfig-setup"},
         # Set up local backups
         q{perl -pi -e "s#^local_archivedir: .+#local_archivedir: /tmp/backup#" /etc/socialtext/appliance.conf},
         'mkdir /tmp/backup',
