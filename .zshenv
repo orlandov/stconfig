@@ -20,7 +20,7 @@ setopt \
     auto_list \
     NO_auto_pushd \
     auto_resume \
-    cdable_vars \
+    NO_cdable_vars \
     NO_clobber \
     complete_in_word \
     correct \
