@@ -15,8 +15,7 @@ WIKITESTS="/usr/share/stconfig/stbin/qa/appliance"
 echo SETTING TIME
 source $WIKITESTS/set-time
 
-echo "Installing packages"
-sudo apt-get install --yes st-static-files-wikitests
+echo "Installing st-tap2html packages"
 sudo apt-get install --yes libtest-harness-perl
 sudo apt-get install --yes libaccessors-perl
 sudo apt-get install --yes libtap-formatter-html-perl
@@ -47,6 +46,7 @@ if [ -e /var/www/socialtext/data/wikitests ]; then
 fi
 
 echo "IMPORTING wikitests WORKSPACE"
+sudo apt-get install --yes st-static-files-wikitests
 sudo ln -sf $WIKITESTS/fast-import-pages  /usr/bin/
 sudo $WIKITESTS/appliancetests-to-wiki
 sudo st-admin set-workspace-config --w wikitests account_name $HOSTNAME || true
