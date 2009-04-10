@@ -39,7 +39,7 @@ if ($ve_name =~ m/^qa\d$/) {
 
 if ($upgrade_to) {
     exec_on_ve( 
-        qq{echo "deb $apt_server/ubuntu dapper main universe" > /etc/apt/sources.list},
+        qq{echo "# deb $apt_server/ubuntu dapper main universe" > /etc/apt/sources.list},
         qq{echo "deb $apt_server/ubuntu dapper-security main universe" >> /etc/apt/sources.list},
         qq{echo "deb $apt_server/socialtext stqa main alien" >> /etc/apt/sources.list},
         qq{echo "deb $apt_server/socialtext ops main alien" >> /etc/apt/sources.list},
