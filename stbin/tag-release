@@ -29,10 +29,12 @@ fi
 
 VERBOSE=${5:-""}
 
-echo -n "Tag branch $BRANCH as $TAG? [yN] "
-read answer
-if [ "$answer" != "y" ]; then
-    exit
+if [ "$FORCE_TAG_RELEASE" = "" ]; then
+    echo -n "Tag branch $BRANCH as $TAG? [yN] "
+    read answer
+    if [ "$answer" != "y" ]; then
+        exit
+    fi
 fi
 
 MESSAGE="Creating tag $TAG from $BRANCH $MSG"
