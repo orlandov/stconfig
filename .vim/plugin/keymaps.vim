@@ -35,7 +35,7 @@ map \1 :w<CR>
 map \2 :up<CR>:!perlcheck -Ilib %<CR>
 map \3 :up<CR>:call RunLastT()<CR>
 map \4 :up<CR>:!prove -ls t<CR>
-map \5 :up<CR>:!restart-apache-if-needed; run-wiki-tests --fake-content-file %<CR>
+map \5 :up<CR>:call RunLastWikitest()<CR>
 map \6 :up<CR>:!make all install<CR>
 
 map \d :.!echo -n 'date:    '; date<CR>

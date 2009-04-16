@@ -11,6 +11,17 @@ function! RunLastT()
     endif
 endf
 
+function! RunLastWikitest()
+    if (expand('%:e') == 'wiki')
+        let $lastwikitfile = expand('%')
+    endif
+    if (!strlen($lastwikitfile))
+       execute '!./' . expand('%')
+    else
+        !restart-apache-if-needed; run-wiki-tests --fake-content-file $lastwikitfile
+    endif
+endf
+
 " This lets you put a #: line at the top of some file you're working on with a
 " command you'd like executed (maybe a GET or something?) each time you say
 " \h.  It's a baby step before writing/running a test, and a little faster.
