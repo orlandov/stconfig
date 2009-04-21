@@ -14,7 +14,7 @@ restartit() {
         return
     fi
 
-    mods=`find ~/src/st/socialtext/nlw/lib -follow -newer $touchfile | head -1`
+    mods=`find ~/src/st/socialtext/nlw/lib -follow -newer $touchfile | egrep -v '\.*\.sw[ponm]$' | head -1`
     if [ ! -z $mods ]; then
         touch $touchfile
         nlwctl -1 restart
