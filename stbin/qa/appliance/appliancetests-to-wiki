@@ -14,7 +14,8 @@ $STADMIN add-member  --e tester@ken.socialtext.net --w wikitests
 
 $STBIN/fast-import-pages --workspace wikitests --from $DIR
 
-# get rid of superfluous ceq indexing then index
-$STBIN/ceq-rm wikitests
+# wait a bit, then index
+sleep 5
+echo "Indexing wikitests"
 $STADMIN index-workspace --w wikitests --sync
 

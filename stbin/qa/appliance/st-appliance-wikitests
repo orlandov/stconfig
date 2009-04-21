@@ -1,6 +1,10 @@
 #!/bin/bash
 # @COPYRIGHT@
 
+# uncomment first line of sources.list to get ubuntu dependencies for slapd
+sudo perl -pi -e 's/^#\s+deb http/deb http/' /etc/apt/sources.list
+sudo apt-get update
+
 DA=`sudo st-admin get-default-account | grep  -o $HOSTNAME`
 if [ "$DA"  != '' ]; then
     echo default account matches $DA
