@@ -65,6 +65,7 @@ for my $repo (@repos) {
     }
 }
 
+shell_run("refresh-branch");
 shell_run("set-branch $new_branch");
 
 
