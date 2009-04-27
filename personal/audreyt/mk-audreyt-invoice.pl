@@ -7,14 +7,16 @@ use List::Util 'sum';
 use Number::Format qw(:subs);
 use Socialtext::Resting;
 use DateTime::Duration;
-use Term::ReadPassword;
 
 chomp(my $username = `git config user.email`);
 $username = 'audrey.tang@socialtext.com' if !$username or $username =~ /audreyt/;
 $username = $ENV{ST_USER} || $username;
 
 my $server      = $ENV{ST_SERVER} || 'https://www2.socialtext.net/';
-my $password    = $ENV{ST_PASSWORD} || read_password("Password for $username at $server: ");
+my $password    = $ENV{ST_PASSWORD} || do {
+    require Term::ReadPassword;
+    read_password("Password for $username at $server: ")
+};
 my $hourly_rate = $ENV{ST_HOURLY_RATE} || 90;
 
 my $Rester      = Socialtext::Resting->new(
