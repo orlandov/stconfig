@@ -11,9 +11,11 @@ use Term::ReadPassword;
 
 chomp(my $username = `git config user.email`);
 $username = 'audrey.tang@socialtext.com' if !$username or $username =~ /audreyt/;
-my $server      = 'https://www2.socialtext.net/';
-my $password    = read_password("Password for $username at $server: ");
-my $hourly_rate = 90;
+$username = $ENV{ST_USER} || $username;
+
+my $server      = $ENV{ST_SERVER} || 'https://www2.socialtext.net/';
+my $password    = $ENV{ST_PASSWORD} || read_password("Password for $username at $server: ");
+my $hourly_rate = $ENV{ST_HOURLY_RATE} || 90;
 
 my $Rester      = Socialtext::Resting->new(
     username => $username,
@@ -21,7 +23,7 @@ my $Rester      = Socialtext::Resting->new(
     password => $password,
 );
 
-$Rester->workspace('conversation');
+$Rester->workspace($ENV{ST_WORKSPACE} || 'conversation');
 $| = 1;
 
 # "Week 0" of my time in Socialtext
@@ -64,7 +66,7 @@ for my $wk (@weeks) {
             );
             $d >= $start and $d <= $end;
           }
-    } $Rester->get_taggedpages('audreyt blog');
+    } $Rester->get_taggedpages($ENV{ST_TAG} || 'audreyt blog');
 
     print "| _Dates_ | ";
 
