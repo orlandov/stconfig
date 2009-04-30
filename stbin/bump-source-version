@@ -14,8 +14,10 @@ my $bump;
 my $check = 0;
 my $current;
 my $commit;
+my $want_color = 1;
 GetOptions(
     "c|current" => \$current,
+    "color!" => \$want_color,
     "major" => sub { $bump = 'major' },
     "minor" => sub { $bump = 'minor' },
     "point" => sub { $bump = 'point' },
@@ -103,7 +105,12 @@ sub replace_version {
 sub display {
     my $color = shift;
     my $msg = join('',@_);
-    print color($color), $msg, color('reset'), "\n";
+    if ($want_color) {
+        print color($color), $msg, color('reset'), "\n";
+    }
+    else {
+        print $msg, "\n";
+    }
 }
 
 sub usage {
