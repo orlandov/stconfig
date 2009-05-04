@@ -2,6 +2,7 @@
 use strict;
 use File::Temp;
 use File::Basename;
+use URI::Escape;
 
 BEGIN { $SIG{__WARN__} = sub { 0 } };
 
@@ -89,6 +90,9 @@ close FH;
 
 sub start_test {
     my $name = shift;
+    while (grep { $_ eq $name } @tests) {
+        $name .= "+";
+    }
     push @tests, $name;
     print FH "1..$c\n" if defined $c;
     close FH;
@@ -112,15 +116,15 @@ $fmt->output_fh(\*FH)->silent(1);
 my $harness = TAP::Harness->new({ formatter => $fmt, merge => 1 });
 $harness->runtests( @tests );
 
-$out =~ s/.*<html>\n<head>\n/<html><head><meta http-equiv="Content-Type" content="text\/html; charset=utf-8"/s;
+$out =~ s/.*<html>\n<head>\n/<html><head><meta http-equiv="Content-Type" content="text\/html; charset=utf-8">/s;
 $out =~ s{<link rel="stylesheet" type="text/css" href="file:([^"]+)" />}{
     local $/;
-    open my $fh, '<:utf8', $1;
+    open my $fh, '<:utf8', uri_unescape($1);
     '<style>' . scalar <$fh> . '</style>';
 }eg;
 $out =~ s{<script type="text/javascript" src="file:([^"]+)"></script>}{
     local $/;
-    open my $fh, '<:utf8', $1;
+    open my $fh, '<:utf8', uri_unescape($1);
     '<script type="text/javascript">' . scalar <$fh> . '</script>';
 }eg;
 
