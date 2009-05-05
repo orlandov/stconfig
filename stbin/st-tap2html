@@ -90,6 +90,8 @@ close FH;
 
 sub start_test {
     my $name = shift;
+    $name =~ s/:/-/g if $^O eq 'MSWin32';
+
     while (grep { $_ eq $name } @tests) {
         $name .= "+";
     }
