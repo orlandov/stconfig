@@ -165,6 +165,8 @@ if (@failed) {
     open FAIL, '>:utf8', $failed_file;
     my $fail_section = '';
     foreach my $fail (@failed) {
+        $fail =~ s/\+*$//; # Remove de-dup marks.
+
         if ($fail =~ s/ \(([^)]+)\)$//) {
             if ($fail_section ne $1) {
                 print FAIL "\n\n" if $fail_section;
