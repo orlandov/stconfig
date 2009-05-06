@@ -14,13 +14,21 @@ st-tap2html - Convert Wikitest TAP output to HTML format
 
 Generate HTML output as part of run-wiki-tests:
 
+    # Also writes failed tests to "stdin.failed".
     run-wiki-tests ... | st-tap2html > output.html
 
 Or, as two steps, saving the intermediate output file:
 
+    # First, run the test and capture its output
     run-wiki-tests ... >& testcases.out
-    # Make testcases.html from the output file
+
+    # Then this writes "testcases.html" and "testcases.failed"
     st-tap2html testcases.out
+
+One can also capture the input via stdin redirection:
+
+    # This writes "stdin.html" and "stdin.failed"
+    st-tap2html < testcases.out
 
 =head1 DESCRIPTION
 
@@ -55,20 +63,29 @@ if (!@ARGV and -t STDIN) {
 
 if (@ARGV and -t STDOUT) {
     $output_file = $ARGV[0];
-    $output_file =~ s/(.*)\..*/$1.html/;
+    $output_file =~ s/^(.*)\.[^\/\\]+$/$1.html/
+        or $output_file .= ".html";
+}
+elsif (!@ARGV and -t STDOUT) {
+    $output_file = "stdin.html";
 }
 
 my $input_file = (@ARGV ? $ARGV[0] : '-');
+my $failed_file = (@ARGV ? $ARGV[0] : 'stdin.failed');
+$failed_file =~ s/^(.*)\.[^\/\\]+$/$1.failed/
+    or $failed_file .= ".failed";
 
 my $dir = File::Temp::tempdir( CLEANUP => 1 );
 my @tests;
 my $c = 0;
 my $suffix = '';
+my %seen_test_case;
 while (<>) {
     if (/Loading test plan Test Case: (.*)\.\.\./i
             or
         /comment: STARTING: Test Case: (.*)/i
     ) {
+        $seen_test_case{$1} = 1;
         start_test("$1$suffix");
         $c = 0;
     }
@@ -142,6 +159,26 @@ if ($output_file) {
 else {
     binmode STDOUT, ':utf8';
     select STDOUT;
+}
+my @failed = ($out =~ m{<a class="file" href="#" title="Test failed![^>]*>([^<]+)</a>}g);
+if (@failed) {
+    open FAIL, '>:utf8', $failed_file;
+    my $fail_section = '';
+    foreach my $fail (@failed) {
+        if ($fail =~ s/ \(([^)]+)\)$//) {
+            if ($fail_section ne $1) {
+                print FAIL "\n\n" if $fail_section;
+                print FAIL "$1\n";
+                $fail_section = $1;
+            }
+        }
+
+        if ($seen_test_case{$fail}) {
+            $fail = "Test Case: $fail";
+        }
+
+        print FAIL "* [$fail]\n";
+    }
 }
 
 foreach my $orig (split(/\n/, $out)) {
