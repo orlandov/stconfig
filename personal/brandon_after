@@ -1,6 +1,0 @@
-# env variables
-export EMAIL='Brandon Noard <brandon.noard@socialtext.com>'
-
-# This will let us run wikitests.
-QA_AFTER=$ST_SRC_BASE/stconfig/personal/qa_after
-[ -e $QA_AFTER ] && source $QA_AFTER

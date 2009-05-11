@@ -1,3 +1,0 @@
-#!/bin/bash
-UID=$(id -u)
-tail -f /var/log/nlw.log | grep "\[$UID\]"

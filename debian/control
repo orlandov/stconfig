@@ -8,7 +8,7 @@ Standards-Version: 3.6.1
 Package: stconfig
 Architecture: all
 Suggests: st-dev
-Depends: ${perl:Depends}, libfile-chdir-perl, liberror-perl, libfile-find-rule-perl, zsh
+Depends: ${perl:Depends}, libfile-chdir-perl, liberror-perl, libfile-find-rule-perl, subversion, subversion-tools, build-essential
 Conflicts:
 Description: Socialtext Developer Config. Files
     This package contains a number of developer config files used by
@@ -17,5 +17,5 @@ Description: Socialtext Developer Config. Files
 
 Package: st-dev
 Architecture: all
-Depends: st-all-deps, stconfig, perl-doc, zsh, screen, emacs-nox, vim, zsh, libwww-perl, subversion, svk, exuberant-ctags, perltidy, liberror-perl, brett, cowsay, apache, libsocialtext-resting-utils-perl, build-essential
+Depends: st-all-deps, stconfig, perl-doc, zsh, screen, emacs-nox, vim, zsh, screen, libwww-perl, subversion, svk, exuberant-ctags, perltidy, liberror-perl, brett, cowsay, apache, libsocialtext-resting-utils-perl
 Description: Socialtext Developer Environment

@@ -1,1 +1,1 @@
-source ~/.bashrc
+/home/audreyt/src/st/stconfig/.bash_profile

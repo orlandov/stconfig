@@ -1,7 +1,1 @@
-CAN_HAZ_APPLIANCE=`perl -MSocialtext::AppConfig -e 'print Socialtext::AppConfig->is_appliance' 2>/dev/null`
-if [ "$CAN_HAZ_APPLIANCE" == "1" ]; then
-    source /usr/share/stconfig/.commonrc
-    source /usr/share/stconfig/.aliases-common
-    export PGDATABASE=NLW
-    export PGUSER=nlw
-fi
+/home/audreyt/src/st/stconfig/.appliance-bashrc

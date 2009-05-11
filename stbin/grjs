@@ -1,4 +1,0 @@
-#!/bin/bash
-
-gr $1 base/javascript | grep -v combined
-

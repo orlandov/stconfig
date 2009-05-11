@@ -1,4 +1,0 @@
-#!/usr/bin/perl -w
-use strict;
-my ($file, $line) = split ':', $ARGV[0];
-system 'vim', $file, "+$line";

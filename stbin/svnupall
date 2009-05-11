@@ -1,6 +1,0 @@
-#!/bin/sh
-cd $ST_SRC_BASE
-svnsync
-for co in `/bin/ls -1`; do
-    svn-is-checkout-dir $co && svnup $co
-done

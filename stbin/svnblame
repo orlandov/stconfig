@@ -1,2 +1,0 @@
-#!/bin/sh
-scm blame "$@" | vim-pager +'set ft=perl'

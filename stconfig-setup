@@ -51,7 +51,6 @@ sub all_files {
         .
         ..
         .svn
-        .git
         stconfig-setup
         socialtext.vim
         Makefile

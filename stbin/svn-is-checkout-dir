@@ -1,3 +1,0 @@
-#!/bin/sh
-scm info $@ >/dev/null 2>&1 || exit 1;
-exit 0;

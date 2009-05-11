@@ -1,2 +1,0 @@
-#!/bin/sh
-make all install && rm -f Makefile.old

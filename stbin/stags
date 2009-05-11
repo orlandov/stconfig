@@ -1,7 +1,0 @@
-#!/usr/bin/perl -ln
-# This is a helper for the Stag and Sstag commands defined in perl.vim.
-#
-# It emits all the tags defined under the 'Socialtext::' namespace in the tags
-# file on stdin.
-
-print $1 if /^Socialtext::(\S+)\s.*$/;

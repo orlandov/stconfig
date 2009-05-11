@@ -1,6 +1,0 @@
-#!/bin/sh
-if [ "$SVN_COMMAND" = "svk" ]; then
-    scm status
-else
-    scm status -u
-fi

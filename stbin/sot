@@ -1,9 +1,0 @@
-#!/bin/sh
-
-# This should produce the date in SOT.
-#
-# See also
-#
-#   https://www2.socialtext.net/corp/index.cgi?SocialtextOfficialTime
-
-TZ=US/Pacific date

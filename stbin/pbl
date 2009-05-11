@@ -1,2 +1,0 @@
-#!/bin/sh
-perl Build.PL install_base=~/local && make && make install
