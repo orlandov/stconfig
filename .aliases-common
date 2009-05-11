@@ -1,1 +1,275 @@
-/home/audreyt/src/st/stconfig/.aliases-common
+#!/bin/bash
+
+alias screen='screen -U' # force unicode screens
+
+alias ll='ls -l'
+alias la='ls -la'
+alias RM='rm -rf' # for Mr. dot Net
+alias perlsw='perl -Mstrict -Mwarnings'
+alias perldd='perl -MData::Dumper'
+alias GETf='GET -UseS'
+alias POSTf='POST -UseS'
+alias HEADf='HEAD -UseS'
+alias rc="rcontract-create"
+alias rq='stedit -w dev-tasks "Release Queue"'
+alias i=clear
+
+alias ..='cd ..'
+alias ..1='cd ..'
+alias ..2='cd ../..'
+alias ..3='cd ../../..'
+alias ..4='cd ../../../..'
+alias ..5='cd ../../../../..'
+alias ..6='cd ../../../../../..'
+alias ..6='cd ../../../../../../..'
+alias ..7='cd ../../../../../../../..'
+alias ..8='cd ../../../../../../../../..'
+alias ..9='cd ../../../../../../../../../..'
+
+alias agu='sudo apt-get update'
+alias agdu='sudo apt-get update; sudo apt-get dist-upgrade'
+alias agi='sudo apt-get update; sudo apt-get install'
+alias acs='apt-cache search'
+alias acsh='apt-cache show'
+
+alias rb='refresh-branch'
+alias fdefs='fresh-dev-env-from-scratch'
+
+if [ -d $HOME/stbin ]; then
+    for cmd in `find $HOME/stbin/ -name 'svn*'`; do
+        svn_cmd=`basename $cmd`
+        svk_cmd=`echo $svn_cmd | sed s/svn/svk/`
+        alias $svk_cmd=$svn_cmd
+    done
+fi
+
+# Extract fields from output
+f() {
+    N=$1
+    shift;
+    awk $@ "{print \$${N:-1}}";
+}
+
+abs_path()  { perl -MCwd -le "print Cwd::abs_path(shift)" $1; }
+scmcd()     { cd $1; scm up; scm status; }
+kiss()      { command kiss "$@";      rehash; }
+conceive()  { command conceive "$@";  rehash; }
+aginstall() { command aginstall "$@"; rehash; }
+sb()        { set-branch "$@"; cdnlw; }
+
+# Check for GNU before aliasing:
+ls --version > /dev/null 2>&1 && alias ls='ls --classify --color=auto'
+echo x | (grep x --color >/dev/null 2>&1) && alias grep='grep --color=auto'
+
+cdnlw()   { cd `abs_path $ST_CURRENT/nlw`; }
+CDnlw()   { scmcd `abs_path $ST_CURRENT/nlw`; }
+cdtrunk() { cd $ST_TRUNK; }
+CDtrunk() { scmcd $ST_TRUNK; }
+cdskin()  { cd `abs_path $ST_CURRENT/nlw/share/skin`; }
+CDskin()  { scmcd `abs_path $ST_CURRENT/nlw/share/skin`; }
+cds2()    { cd `abs_path $ST_CURRENT/nlw/share/skin/s2`; }
+CDs2()    { scmcd `abs_path $ST_CURRENT/nlw/share/skin/s2`; }
+cds3()    { cd `abs_path $ST_CURRENT/nlw/share/skin/s3`; }
+CDs3()    { scmcd `abs_path $ST_CURRENT/nlw/share/skin/s3`; }
+cdjs()    { cd `abs_path $ST_CURRENT/nlw/share/skin/s2/javascript`; }
+CDjs()    { scmcd `abs_path $ST_CURRENT/nlw/share/skin/s2/javascript`; }
+cdjs3()   { cd `abs_path $ST_CURRENT/nlw/share/skin/s3/javascript`; }
+CDjs3()   { scmcd `abs_path $ST_CURRENT/nlw/share/skin/s3/javascript`; }
+cdjstest() { cd `abs_path $ST_CURRENT/nlw/share/skin/js-test`; }
+CDjstest() { scmcd `abs_path $ST_CURRENT/nlw/share/skin/js-test`; }
+cdwikiwyg() { cd `abs_path $ST_CURRENT/nlw/share/skin/wikiwyg/javascript`; }
+CDwikiwyg() { scmcd `abs_path $ST_CURRENT/nlw/share/skin/wikiwyg/javascript`; }
+cdcur()   { cd `abs_path $ST_CURRENT`; }
+CDcur()   { scmcd `abs_path $ST_CURRENT`; }
+cdcfg()   { cd `abs_path $ST_CURRENT/../stconfig`; }
+CDcfg()   { scmcd `abs_path $ST_CURRENT/../stconfig` && ./stconfig-setup; }
+cdcrp()   { cd `abs_path $ST_CURRENT/../clients/rest/perl`; }
+cdrpt()   { cd `abs_path $ST_CURRENT/socialtext-reports`; }
+cdapp()   { cd `abs_path $ST_CURRENT/appliance`; }
+cdcon()   { cd `abs_path $ST_CURRENT/appliance/libsocialtext-appliance-perl`; }
+cdctrl()  { cd `abs_path $ST_CURRENT/control`; }
+cdskins()  { cd `abs_path $ST_CURRENT/socialtext-skins`; }
+cdplug() { cd `abs_path $ST_CURRENT/plugins`; }
+cdsc() { cd `abs_path $ST_CURRENT/plugins/socialcalc`; }
+cdppl() { cd `abs_path $ST_CURRENT/plugins/people`; }
+cdsig() { cd `abs_path $ST_CURRENT/plugins/signals`; }
+cdwid() { cd `abs_path $ST_CURRENT/plugins/widgets`; }
+cdsub() { cd `abs_path $ST_CURRENT/submodules`; }
+
+MAC_FILE="~/.nlw/etc/Socialtext/MAC.secret"
+alias muckmac="rm $MAC_FILE; echo bemucked > $MAC_FILE"
+alias accessd="cd /var/log/apache-perl/; ls"
+alias vv='vim ~/.vimrc'
+alias tl='test-less'
+alias tlp='test-less --prove'
+alias dict='/usr/bin/dict -dall'
+alias pwdtitle='screentitle "$(basename $(pwd))/"';
+cd()    { builtin cd "$@"; pwdtitle; }
+pushd() { builtin pushd "$@"; pwdtitle; }
+popd()  { builtin popd; pwdtitle; }
+vim()   { command vim "$@"; pwdtitle; }
+alias viml='vim !! -l'
+alias tail=multitail
+
+# stedit aliases
+alias dgedit='stedit -p -w dev-guide'
+alias dtedit='stedit -w dev-tasks'
+
+# wikrad aliases
+alias dgrad='w2rad -w dev-guide'
+alias dtrad='w2rad -w dev-tasks'
+alias iterad='dtrad -l "current iteration"'
+alias convrad='w2rad -w conversation'
+alias stprad='w2rad -w socialpedia'
+alias ves='dtrad "Zircon VE Assignment"'
+alias toprad="wikrad -s http://$(hostname):$((20000+$UID)) -w admin -u devnull1@socialtext.com -p d3vnu11l"
+
+##############
+# GIT Section
+##############
+alias gst='git status'
+alias gstall='st-git-all -status'
+alias gd='git diff'
+alias gdall='st-git-all diff'
+alias gdp='gd | vim-pager'
+alias gdc='git diff --cached'
+alias gdcp='gdc | vim-pager'
+alias ga='git add'
+alias gau='git add -u'
+alias gco='git checkout'
+alias gci='git commit -v'
+alias gcim='git commit -v -m'
+alias gcia='git commit -v -a'
+alias gciam='git commit -v -a -m'
+alias gl='git log'
+alias glol='git log --pretty=oneline'
+alias glop='git log -p -1'
+alias guppy='gup && gpu'
+alias gls='git ls-files --exclude-standard'
+alias gcp='git cherry-pick -x'
+alias gunpulled='gunpushed --st-reverse'
+alias gunpulled-all='gunpushed-all --st-reverse'
+alias gunpulledall='gunpushed-all --st-reverse'
+alias grh='git reset --hard HEAD'
+alias grh-all='st-git-all reset --hard HEAD'
+alias grhall='st-git-all reset --hard HEAD'
+
+provelog() { NLW_APPCONFIG=syslog_level=debug prove "$@"; }
+
+stfreshen() {
+    CDcur
+    cdnlw
+    ctags -R .. &
+    dev-bin/fresh-dev-env-from-scratch
+    muckmac
+    prove -lv `find t/ -name '*.t' | perl -le '@x=<>; chomp(@x); print "$x[int(rand(@x))] $x[int(rand(@x))]"'`
+    #t/page.t t/live/mega.t # TODO: make this random
+}
+
+# Handy for making sense of failing data-oriented tests.
+tdiff() {
+    prove -lv "$@" \
+    | perl -ne 'print if /^not ok/ or s/^# //' \
+    | vim-pager +'set filetype=diff'
+}
+
+ppout() {
+    prefix=/tmp/nlw-postprocess-
+    if [ -d "$prefix$(id -u www-data)" ]; then
+        dir="$prefix$(id -u www-data)"
+    elif [ -d "$prefix$(id -u)" ]; then
+        dir="$prefix$(id -u)"
+    else
+        echo "Can't find any postprocess output."
+        return
+    fi
+
+    if [ "$2" = 'last' ]; then
+        builtin pushd $dir
+        2="$(ls -t | head -1)"
+        builtin popd
+        if [ "$2" = '' ]; then
+            echo "No entries; hence no last entry."
+            return
+        fi
+    fi
+
+    case "$1" in
+        (cd)
+            cd "$dir"
+            ;;
+        (ls)
+            ls -rt "$dir/$2"
+            ;;
+        (echo)
+            echo "$dir/$2"
+            ;;
+        (cat)
+            if [ "$2" = '' ]; then
+                _ppout_usage
+            else
+                cat "$dir/$2"
+            fi
+            ;;
+        (page)
+            if [ "$2" = '' ]; then
+                _ppout_usage
+            else
+                ${PAGER:-less} "$dir/$2"
+            fi
+            ;;
+        (edit)
+            if [ "$2" = '' ]; then
+                _ppout_usage
+            else
+                ${EDITOR:-vi} "$dir/$2"
+            fi
+            ;;
+        (rm)
+            if [ "$2" = '' ]; then
+                rm -f "$dir/"*
+            else
+                rm -f "$dir/$2"
+            fi
+            ;;
+         (*)
+             _ppout_usage
+             ;;
+    esac
+}
+
+set-skin () {
+    NAME=$1 
+    WS=${2:-admin}
+    set -x
+    st-admin set-workspace-config --workspace $WS skin_name $NAME
+    st-admin set-workspace-config --workspace $WS customjs_name $NAME
+    st-admin set-workspace-config --workspace $WS cascade_css f
+    set +x
+}
+
+
+_ppout_usage() {
+    cat <<'EOT'
+ppout - Examine postprocess output.
+
+USAGE
+
+    ppout cd
+    ppout ls [OUTFILE]
+    ppout cat OUTFILE
+    ppout page OUTFILE
+    ppout edit OUTFILE
+    ppout rm [OUTFILE]    - if OUTFILE is omitted, removes all output
+
+OUTFILE can be 'last' which will manipulate the most recent file in the
+directory instead.
+EOT
+}
+
+function jhc() {
+    when=${*:-now}
+    wikedit -w stdev -temp "JHC Standup Template" "JHC Standup, `date -d $when +%Y-%m-%d`"
+}
+
+

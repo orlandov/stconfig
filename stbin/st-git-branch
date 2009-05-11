@@ -1,0 +1,58 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Term::ANSIColor 'color';
+
+my $base = $ENV{ST_SRC_BASE} . '/socialtext';
+
+my @all_repos = split /\s+/, `st-repo-list`;
+chomp @all_repos;
+my %all_repos = map { $_ => 1 } @all_repos;
+my %repos = map { $_ => (($_ eq 'socialtext') ? "$base" : "$base/$_") } @all_repos;
+
+my %branch_repo;
+
+while (my ($repo, $path) = each %repos) {
+    local $ENV{GIT_DIR} = "$path/.git";
+    my $ref = `git symbolic-ref -q HEAD 2>/dev/null`;
+    chomp $ref;
+    next unless $ref;
+    (my $branch = $ref) =~ s#refs/heads/##;
+    push @{$branch_repo{$branch}}, $repo;
+    delete $all_repos{$repo};
+}
+
+
+if (%all_repos) {
+    $branch_repo{''} ||= [];
+    push @{$branch_repo{''}}, keys %all_repos;
+}
+
+if (keys %branch_repo == 1) {
+    color_print('blue',keys %branch_repo);
+    print ': ';
+    color_print('green','all');
+    print "\n";
+}
+else {
+    foreach my $branch (sort keys %branch_repo) {
+        if (!$branch) {
+            color_print('red','no-branch');
+        }
+        else {
+            color_print('blue',$branch);
+        }
+
+        print ': ';
+        color_print('red', join ' ',@{$branch_repo{$branch}});
+        print "\n";
+    }
+}
+
+exit;
+
+sub color_print {
+    my $color = shift;
+    my $msg = shift;
+    print color($color), $msg, color('reset');
+}

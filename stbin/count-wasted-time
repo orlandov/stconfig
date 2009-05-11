@@ -1,0 +1,40 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Getopt::Long;
+use Socialtext::BuildUtils qw/notify_via_irc/;
+
+my $reset = 0;
+my $bob   = 0;
+GetOptions(
+    'r|reset' => \$reset,
+    'bob'     => \$bob,
+);
+
+my $log = '/var/log/wasted-time.log';
+open(my $fh, $log) or die "Can't open $log: $!";
+my %totals;
+my $total = 0;
+while (<$fh>) {
+    my ($user, $time, $reason) = m/^(\w+) - (\d+)(?: - (.+))?/;
+    $totals{$user} += $time;
+    $total += $time;
+}
+close $fh;
+
+if ($total) {
+    my $individuals = join ', ', map { "$_=$totals{$_}s" } keys %totals;
+    my $msg = sprintf 'Time wasted waiting for SVK recently: %s seconds (%s)',
+        $total, $individuals;
+    if ($bob) {
+        notify_via_irc("log: $msg");
+    }
+    else {
+        print "$msg\n";
+    }
+}
+
+if ($reset) {
+    open(my $fh2, ">$log") or die "Can't open $log: $!";
+    close $fh2 or die "Can't write to $log: $!";
+}

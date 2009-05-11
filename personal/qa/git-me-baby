@@ -1,0 +1,39 @@
+#!/bin/bash
+
+echo "    User qa1 must be configured to use git user stqa..."
+echo "    Borrowing the car keys from qa1..."
+sudo cp ~qa1/.ssh/id_rsa $HOME/.ssh
+sudo cp ~qa1/.ssh/id_rsa.pub $HOME/.ssh
+sudo chown $USER.$USER $HOME/.ssh/id_rsa* 
+
+echo "    Tuning up your git config..."
+git config --global user.name "stqa"
+git config --global user.email devnull@socialtext.com
+
+
+
+echo "    Trying to stop your servers if you have any..."
+# if there is a current env, put the brakes on
+$ST_CURRENT/nlw/dev-bin/nlwctl stop
+
+echo "    Cleaning out your old source tree..."
+rm -rf $HOME/src/st/*    
+cd $HOME/src/st
+
+
+echo "    Bootstrapping you from github socialtext/stconfig"
+git clone git://github.com/socialtext/stconfig.git
+
+$HOME/src/st/stconfig/stconfig-setup
+$HOME/src/st/stconfig/stbin/git-std-cfg
+
+
+# now copy master and do a sb
+cp -a ~qa1/src/st/master $HOME/src/st/
+# ln -s $HOME/src/st/master $HOME/src/st/current # breaks sb
+ln -s master current
+set-branch master
+
+
+# finally try to freshdev
+$ST_CURRENT/nlw/dev-bin/fresh-dev-env-from-scratch

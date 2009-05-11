@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# osascript ~/bin/set-size.scpt $*
+
+if [ "$1" == "" ]; then
+    echo "USAGE: set-size <cols> <rows>"
+    exit -1
+fi
+
+exec osascript - $* <<EOF
+on run argv
+        tell application "Terminal"
+                activate
+                with timeout of 1800 seconds
+                        tell front window
+                                set number of columns to item 1 of argv
+                                set number of rows to item 2 of argv
+                        end tell
+                end timeout
+        end tell
+end run
+EOF

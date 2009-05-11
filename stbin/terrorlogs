@@ -1,0 +1,2 @@
+#!/bin/sh
+exec myerrlogs "$@" $ST_CURRENT/nlw/t/tmp/log

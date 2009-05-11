@@ -1,0 +1,7 @@
+#!/bin/sh -ve
+[ ! -z "$1" ] # must give a name of the new script
+cd $ST_CURRENT/stconfig/stbin
+[ ! -e $1 ] # shouldn't exist beforehand
+echo -e "#!/usr/bin/perl\nuse strict;\nuse warnings;\n\n" > $1
+kiss $1
+svn add $1

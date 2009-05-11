@@ -1,0 +1,11 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+my $current_symlink = "$ENV{ST_SRC_BASE}/current";
+if (-l $current_symlink) {
+    my $branch = readlink($current_symlink);
+    $branch =~ s#.+/##;
+    print "$branch\n";
+}
+exit;

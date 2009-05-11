@@ -1,0 +1,141 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Getopt::Long;
+use lib "$ENV{ST_CURRENT}/nlw/lib";
+use Socialtext::System qw/shell_run/;
+
+my $ve_host = $ENV{ST_VE_HOST} || 'zircon.socialtext.net';
+my $ve_name = $ENV{ST_VE_NAME};
+my $repo;
+my $upgrade_to;
+my $plugins;
+my $apt_server = $ENV{ST_APT} || 'https://apt.socialtext.net';
+my $arch = 'amd64';
+my $wipe_it = 0;
+my ($test_data, $test_data_only);
+GetOptions(
+    'v|ve-name=s' => \$ve_name,
+    'r|repo=s'    => \$repo,
+    'u|upgrade-to=s' => \$upgrade_to,
+    'p|plugins'   => \$plugins,
+    't|test-data' => \$test_data,
+    'a|arch=s' => \$arch,
+    'w|wipe' => \$wipe_it,
+    'test-data-only' => \$test_data_only,
+) or usage ();
+
+if ($test_data_only) {
+    install_test_data();
+    exit 0;
+}
+
+usage('repo or upgrade-to is mandatory!') unless $repo or $upgrade_to;
+usage('ve-name is mandatory!') unless $ve_name;
+
+if ($ve_name =~ m/^qa\d$/) {
+    $ve_host =~ s/^zircon/willemite/;
+}
+
+if ($upgrade_to) {
+    exec_on_ve( 
+        qq{echo "# deb $apt_server/ubuntu dapper main universe" > /etc/apt/sources.list},
+        qq{echo "deb $apt_server/ubuntu dapper-security main universe" >> /etc/apt/sources.list},
+        qq{echo "deb $apt_server/socialtext stqa main alien" >> /etc/apt/sources.list},
+        qq{echo "deb $apt_server/socialtext ops main alien" >> /etc/apt/sources.list},
+        qq{echo "deb $apt_server/socialtext $upgrade_to main alien" >> /etc/apt/sources.list},
+        qq{perl -pi -e "s/upgrade_path: \\w+/upgrade_path: no-such-path/" }
+          . '/etc/socialtext/appliance.conf',
+        'st-appliance-update',
+    );
+}
+else {
+    my $ssh = "ssh $ve_host";
+    if ($wipe_it) {
+        eval {
+            shell_run(qq{$ssh "sudo setup-qa-ve wipe --ve $ve_name"});
+        };
+        warn $@ if $@;
+    }
+    eval {
+        die "cannot rebuild when wiping\n" if $wipe_it;
+        shell_run(qq{$ssh "sudo setup-qa-ve rebuild --arch $arch --ve $ve_name --repo $repo"});
+    };
+    if ($@) {
+        shell_run(qq{$ssh "sudo setup-qa-ve create --arch $arch --ve $ve_name --repo $repo"});
+    }
+
+    # Runs as root on the VE
+    exec_on_ve( 
+        'apt-get update',
+        'apt-get install stconfig --yes',
+        qq{echo "$ENV{USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers},
+        'touch /etc/socialtext/reports-test',
+        # Set up stconfig for the root user
+        q{su - -c "cd /root; rm .bashrc; stconfig-setup"},
+        qq{su - $ENV{USER} -c "rm .bashrc; stconfig-setup"},
+        # Set up local backups
+        q{perl -pi -e "s#^local_archivedir: .+#local_archivedir: /tmp/backup#" /etc/socialtext/appliance.conf},
+        'mkdir /tmp/backup',
+    );
+}
+
+install_test_data() if $test_data;
+eval { run_tests() }; warn $@ if $@;
+install_plugins() if $plugins;
+
+exit;
+
+sub run_tests {
+    my $flag = $upgrade_to ? '--upgrade' : '--install';
+    exec_on_ve(<<EOT);
+if [ -e /usr/sbin/st-appliance-tests ]; then 
+    st-appliance-tests $flag
+fi
+EOT
+}
+
+sub usage {
+    my $msg = shift ||'';
+    die <<EOT;
+$msg
+
+USAGE: $0 <opts> command
+
+Options:
+  -v --ve-name    Name of the VE to operate on
+  -r --repo       Name of the debian repo to install
+  -u --upgrade-to Name of the repo to upgrade the VE to.
+  -p --plugins    plugins should be installed
+  -t --test-data  create devnull1 user
+  -a --arch       CPU architecture (amd64 (default) or i386)
+  -w --wipe       Wipe the VE clean first.
+  
+Passwordless SSH
+  If you'd like an SSH key set up on the VE, commit a public 
+  ssh key to stconfig/personal/<your username>/pub.key
+EOT
+}
+
+sub exec_on_ve {
+    my $cmd = join '; ', @_;
+    $cmd =~ s/([^\\])"/$1\\"/g;
+    shell_run(qq{ssh $ve_host "sudo vzctl exec $ve_name '$cmd'"});
+}
+
+sub install_plugins {
+    exec_on_ve( 
+        'st-appliance-install-plugin people dashboard socialcalc agile',
+        'st-admin enable-plugin --all-accounts --plugin people',
+    );
+}
+
+sub install_test_data {
+    my $email = '--email devnull1@socialtext.com';
+    exec_on_ve( 
+        "st-admin create-user $email --password d3vnu11l",
+        "st-admin add-workspace-admin $email --workspace admin",
+        "st-admin give-accounts-admin $email",
+        "st-admin give-system-admin $email",
+    );
+}

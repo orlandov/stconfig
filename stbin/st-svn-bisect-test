@@ -1,0 +1,147 @@
+#!/usr/bin/perl
+$|=1;
+
+use strict;
+use warnings;
+use POSIX qw(floor);
+use Term::ANSIColor;
+use Getopt::Long;
+use Pod::Usage;
+
+###############################################################################
+# Read in our command line arguments.
+my ($help, $man);
+my $verbose;
+my $revision;
+GetOptions(
+    'revision=s'    => \$revision,
+    'verbose'       => \$verbose,
+    'help|?'        => \$help,
+    'man'           => \$man,
+) || pod2usage(1);
+pod2usage(1) if ($help);
+pod2usage( -exitstatus=>0, -verbose=>2 ) if ($man);
+
+# required argument: revision number(s) to work with
+pod2usage(1) unless ($revision);
+
+# required argument: unit test to execute
+my $test = shift @ARGV;
+pod2usage(1) unless ($test);
+
+###############################################################################
+# Extract the start/end revision numbers.  If no end revision has been given,
+# use 'HEAD'.
+my ($start_rev, $end_rev) = split /:/, $revision;
+unless ($end_rev) {
+    # no idea what the ending rev is; use "HEAD".
+    color_verbose('green', "no end revision provided, determining 'HEAD'");
+    my @output = grep {/(?:to|at) revision/i} `svn update`;
+    ($end_rev) = ($output[0] =~ /revision (\d+)/);
+}
+color_status('green', "Bisecting -r$start_rev\:$end_rev to find failing $test");
+
+###############################################################################
+# Bisect and test, until we figure out the exact revision that things went
+# bad on.
+my $current = midpoint( $start_rev, $end_rev );
+while (($current != $start_rev) && ($current != $end_rev)) {
+    # update to the midpoint
+    color_status('green', "svn update -r$current");
+    `svn update -r$current`;
+
+    # run the test
+    my $cmd = $verbose
+        ? "prove -lv $test"
+        : "prove -l $test >/dev/null 2>/dev/null";
+    my $rc = system($cmd );
+    $rc >>= 8;
+    if ($rc) {
+        color_status('red', '... failed');
+        $end_rev = $current;
+    }
+    else {
+        color_status('green', '... successful');
+        $start_rev = $current;
+    }
+
+    # reset current, and try again
+    $current = midpoint($start_rev, $end_rev);
+}
+
+###############################################################################
+# Done; output results
+color_status( 'bold green', "Done bisecting" );
+color_status( 'bold red', "... $test fails as of r$end_rev" );
+
+
+
+
+sub midpoint {
+    my ($low, $high) = @_;
+    my $mid = floor(($low + $high) / 2);
+    return $mid;
+}
+
+sub color_verbose {
+    color_status(@_) if $verbose;
+}
+
+sub color_status {
+    my $color = shift;
+    my $msg   = join('', @_);
+    print color($color), $msg, color('reset'), "\n";
+}
+
+=head1 NAME
+
+st-svn-bisect-test - Bisect (using SVN) to find out when a unit test failed
+
+=head1 SYNOPSIS
+
+  st-svn-bisect-test [options] -r <start:end> <unit-test>
+
+  Options:
+    --revision <start:end>  Revisions to bisect between
+    --verbose               Verbose output
+    --help/-?               Brief help message
+    --man                   Full documentation
+
+  Example:
+    st-svn-bisect-test -r 10200:10300 t/Socialtext/Syndicate/Atom.t
+
+=head1 DESCRIPTION
+
+C<st-svn-bisect-test> helps to find out what revision a unit test started
+failing at.  Give it a range of revisions to work against and it'll keep
+bisecting and re-running the test until it can determine the exact revision
+that the test started to fail at.
+
+=head1 OPTIONS
+
+=over
+
+=item B<--revision E<lt>start:endE<gt>>
+
+Specifies the "start" and "end" revisions to bisect between.  If no "end"
+revision is given, we update to HEAD and treat that as the end point.
+
+=item B<--verbose>
+
+Displays verbose output, including the actual output from running the unit test.
+
+=item B<--help/-?>
+
+Displays a brief help message.
+
+=item B<--man>
+
+Displays the full documentation.
+
+=back
+
+=head1 AUTHOR
+
+Graham TerMarsch <graham.termarsch@socialtext.com>
+
+=cut

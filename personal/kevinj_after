@@ -1,0 +1,13 @@
+#!/usr/bin/zsh
+
+HOSTNAME=`hostname`
+if [ "$HOSTNAME" = "topaz.socialtext.net" ]; then
+    keychain $HOME/.ssh/id_dsa
+    source $HOME/.keychain/topaz.socialtext.net-sh
+fi
+
+export PATH=/usr/local/git/bin:$PATH
+
+if [ -f /sw/bin/init.sh ]; then
+    source /sw/bin/init.sh
+fi

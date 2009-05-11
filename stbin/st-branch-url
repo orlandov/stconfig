@@ -1,0 +1,17 @@
+#!/bin/sh
+set -e
+BRANCH=$1
+
+echo "this tool is broken until someone ports it to git\n";
+exit 1
+
+if [ -z "$BRANCH" ]; then
+    echo "Usage: $0 branch-name (or 'trunk') "
+    exit 1
+fi
+
+if [ "$BRANCH" = "trunk" ]; then
+    echo "$ST_CODE_REPO/trunk"
+else
+    echo "$ST_CODE_REPO/branches/$BRANCH"
+fi

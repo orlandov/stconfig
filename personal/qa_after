@@ -1,0 +1,140 @@
+#!/bin/bash
+
+if [ -e /etc/socialtext/socialtext.conf ]; then
+
+   # aliases for an appliance
+    alias sww='sudo -u www-data '
+    alias swa='sudo -u www-data st-admin '
+    alias cdwt='cd /usr/share/nlw/workspaces/wikitests'
+    alias cdappwt='cd /usr/share/stconfig/stbin/qa/appliance'
+    alias grnok="grep  -C 6 'not ok' testcases.out"
+    alias grnokk="grep 'not ok' testcases.out"
+    alias grtc="grep 'Loading test plan\|COMPLETED' testcases.out"
+    alias ttc='tail -f testcases.out'
+    alias findwikis='ls /var/www/socialtext/data/'
+    alias restartme='sudo /etc/init.d/apache2 stop; sudo /etc/init.d/apache-perl stop; sleep 5; sudo /etc/init.d/apache-perl start; sudo /etc/init.d/apache2  start;'
+    alias ceqread='/usr/bin/ceq-read'
+    alias ceqstat='/usr/bin/ceq-stat'
+    alias ceqrm='/usr/bin/ceq-rm'
+    alias cdskin='cd /usr/share/nlw/skin'
+    alias cdplugins='cd /usr/share/nlw/plugins'
+    alias noplugins='sudo /etc/init.d/apache-perl stop; sudo apt-get remove --purge  socialtext-plugin-people socialtext-plugin-gadgets; sudo /etc/init.d/apache-perl start'
+
+    SETSEL='/usr/share/stconfig/stbin/qa/appliance/setup-selenium'
+    alias setsel="source $SETSEL"
+
+    RWT='/usr/share/stconfig/stbin/run-wiki-tests'
+
+    alias xwt='export ST_SKIN_NAME='\''s3'\''; export WIKIEMAIL=$HOSTNAME; sudo -u www-data $RWT --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-server http://$HOSTNAME --test-server http://$HOSTNAME --plan-page  '
+
+    alias xlwt='export ST_SKIN_NAME='\''s3'\''; export WIKIEMAIL=$HOSTNAME; sudo -u www-data $RWT  --no-maximize --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-server http://$HOSTNAME --test-server http://$HOSTNAME  0 --plan-page  '
+
+    tapout() {
+        st-tap2html $1.out
+        sudo cp $1.html /usr/share/nlw/
+    }
+
+else
+
+    # aliases for a dev env
+    alias sta='$ST_CURRENT/nlw/bin/st-admin '
+    alias freshdev='~/personal/qa/tests-to-tarballs.bash; $ST_CURRENT/nlw/dev-bin/fresh-dev-env-from-scratch; $ST_CURRENT/nlw/bin/ceq-rm /.+/; $ST_CURRENT/nlw/bin/st-config set benchmark_mode 1'
+    alias tests-from-tarballs='~/personal/qa/tests-from-tarballs.bash'
+    alias tests-to-tarballs='~/personal/qa/tests-to-tarballs.bash'
+    alias stopme='$ST_CURRENT/nlw/dev-bin/nlwctl stop'
+    alias startme='$ST_CURRENT/nlw/dev-bin/nlwctl start'
+    alias restartme='$ST_CURRENT/nlw/dev-bin/nlwctl restart'
+    alias ceqread='$ST_CURRENT/nlw/bin/ceq-read'
+    alias ceqstat='$ST_CURRENT/nlw/bin/ceq-stat'
+    alias ceqrm='$ST_CURRENT/nlw/bin/ceq-rm'
+    alias findceq='ps x  | grep ceqlotron | grep -v grep'
+    alias findwikis='ls ~/.nlw/root/data/'
+
+    alias cdroot='cd ~/.nlw/root'
+    alias cddata='cd ~/.nlw/root/data'
+    alias cdconf='cd ~/.nlw/etc/socialtext'
+    alias cdlog='cd ~/.nlw/log'
+    alias cdfonts='cd $ST_CURRENT/nlw/share/fonts'
+    alias cdwidgets='cd $ST_CURRENT/nlw/share/widgets'
+    alias cdpers='cd ~/personal'
+    alias cdqa='cd ~/personal/qa'
+    alias cdstbin='cd ~/stbin'
+    alias cdappwt='cd ~/stbin/qa/appliance'
+    alias cdwt='cd $ST_CURRENT/nlw/share/workspaces/wikitests'
+    alias cdst='cd $ST_SRC_BASE'
+    alias cdshare='cd $ST_CURRENT/nlw/share'
+    alias cdndb='cd $ST_CURRENT/nlw/dev-bin'
+    alias cdnb='cd $ST_CURRENT/nlw/bin'
+    
+    # aliases to run wikitests
+    RWT=$ST_SRC_BASE/stconfig/personal/qa/run-wiki-tests.bash
+
+    alias rwt="export ST_SKIN_NAME='s3'; $RWT $1 $2 $3"
+    alias xwt="export ST_SKIN_NAME='s3'; run-wiki-tests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page  "
+    alias xlwt="export ST_SKIN_NAME='s3'; run-wiki-tests --no-maximize --test-username devnull3 --test-password ldapd3v  --test-email devnull3@socialtext.com  --timeout 60000 --plan-page  "
+
+    SETSEL=$ST_SRC_BASE/stconfig/personal/qa/setup-selenium
+    alias setsel="source $SETSEL"
+
+    # aliases to evaluate wikitests
+    alias grnok="grep  -C 6 'not ok' testcases.out"
+    alias grnokk="grep 'not ok' testcases.out"
+    alias grtc="grep 'Loading test plan\|COMPLETED' testcases.out"
+    alias ttc='tail -f testcases.out'
+
+    # aliases to find out what's running
+    alias psken='pstree -aAhlnp kenpier'
+    alias psqa1='pstree -aAhlnp qa1'
+    alias psqa2='pstree -aAhlnp qa2'
+    alias psqa3='pstree -aAhlnp qa3'
+    alias psqa4='pstree -aAhlnp qa4'
+    alias psqa5='pstree -aAhlnp qa5'
+    alias psqa6='pstree -aAhlnp qa6'
+    alias psqa7='pstree -aAhlnp qa7'
+    alias psqa8='pstree -aAhlnp qa8'
+    alias psqa9='pstree -aAhlnp qa9'
+    alias psqa10='pstree -aAhlnp qa10'
+    alias psqa11='pstree -aAhlnp qa11'
+    alias psqa12='pstree -aAhlnp qa12'
+    alias pssel='pstree -aAhlnp selenium'
+    alias pschris='pstree -aAhlnp cmcmahon'
+    alias psrick='pstree -aAhlnp rick'
+    alias psshahed='pstree -aAhlnp shahed'
+    alias psmatt='pstree -aAhlnp mheusser'
+
+    # functions
+
+    tapout() {
+        st-tap2html $1.out
+        cp $1.html $ST_CURRENT/nlw/share/
+    }
+
+    branches() { 
+        WDD=$PWD
+        for i in `cat $ST_SRC_BASE/stconfig/personal/qa/qausers` ; do
+            echo $i;
+            cd /home/$i/src/st/current;
+            git branch | grep "*";
+        done;
+        cd $WDD
+    }
+    
+    sb()        { set-branch $1; cdnlw; cd ..; }
+
+    alias brqa='branches'
+    alias ffx='ps auxww | grep firefox'
+    alias fsel='ps auxww | grep selenium'
+
+    export SVN_COMMAND='svn'
+
+    if [ -e /etc/bash_completion.d/socialtext ]; then
+        source /etc/bash_completion.d/socialtext 
+    fi
+
+    # git prompt
+    COLOR_BRANCH=""
+    COLOR_REPO=""
+    COLOR_WORKDIR=""
+    export PROMPT_COMMAND=_git_prompt_color
+
+fi

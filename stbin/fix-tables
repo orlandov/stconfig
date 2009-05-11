@@ -1,0 +1,93 @@
+#!/usr/bin/env perl
+use diagnostics;
+no warnings 'uninitialized';
+use strict;
+
+# Reformat a Socialtext wiki page so the tables look better in a text edtior.
+#
+# TODO: multiline cells
+
+sub tuple_zip2 (\@\@);
+
+use List::Util qw( max reduce );
+use List::MoreUtils qw( after natatime zip part );
+
+our ( $a, $b );
+
+my $in_table = 0;
+my @table_lines = ();
+
+while (<>) {
+    if ($in_table) {
+        if (/^\s*$/) {
+            $in_table = 0;
+            print fix_table(@table_lines);
+            @table_lines = ();
+            print;
+        } else {
+            push @table_lines, $_;
+        }
+    } elsif (/^\|/) {
+        $in_table = 1;
+        push @table_lines, $_;
+    } else {
+        print;
+    }
+}
+
+print fix_table(@table_lines) if $in_table;
+
+# Given a list of lines from a table, return a prettier version.
+sub fix_table {
+    my @rows = rows(@_);
+    return format_rows( [@rows], [ widths(@rows) ] );
+}
+
+# Given a ref to the rows and a ref to the width for each column, return a
+# neatly formatted list of lines for the table.
+sub format_rows {
+    my @rows   = @{ shift() };
+    my @widths = @{ shift() };
+
+        my $format_cell = sub { sprintf '%-*.*s', $_->[0], $_->[0], $_->[1] };
+        my $format_row = sub {
+            '| ' . 
+            ( join ' | ', map $format_cell->(), tuple_zip2 @widths, @$_ )
+            . " |\n";
+        };
+    return map $format_row->(), @rows;
+}
+
+# Extract rows of cells from the table.
+sub rows {
+        my $split_columns = sub { [ split /\s*\|\s*/ ] };
+        my $skip_first    = sub { [ @$_[ 1 .. $#$_ ] ] };
+    my @rows = map &$skip_first, map &$split_columns, @_;
+}
+
+# Given the rows of cells, return the list of column widths for the table.
+sub widths {
+    my @rows = @_;
+
+    my $max_idx = 0;
+    for my $row (@rows) {
+        $max_idx = $#$row if $#$row > $max_idx;
+    }
+
+    my @columns = map {
+        my $n = $_;
+        [ map { $_->[$n] } @rows ];
+    } 0 .. $max_idx;
+
+    my $max_width = sub {
+        reduce { max $a, $b } map {length} @$_;
+    };
+    return map &$max_width, @columns;
+}
+
+# More like Haskell's zip:  returns a tuple (listref, really) for each pair of
+# members from list 1 and list 2, respectively.
+sub tuple_zip2 (\@\@) {
+    my $i = 0;
+    my @it = part { int ($i++/2) } zip @{$_[0]}, @{$_[1]};
+}

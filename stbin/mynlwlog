@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+LOG="/var/log/syslog"
+
+if [ -r "$LOG" ]; then
+    tail -f "$LOG" | grep $UID
+else
+    echo "Can not read $LOG"
+    exit 1
+fi

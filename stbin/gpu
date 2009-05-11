@@ -1,0 +1,12 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+my $local_ref = `git symbolic-ref -q HEAD 2>/dev/null`;
+chomp $local_ref;
+die "no current branch?!\n" unless $local_ref;
+(my $local_branch = $local_ref) =~ s#refs/heads/##;
+
+my @cmd = (qw(git push origin), $local_branch, @ARGV);
+warn "+ " . join(' ', map { "'$_'" } @cmd) . "\n";
+exec @cmd;

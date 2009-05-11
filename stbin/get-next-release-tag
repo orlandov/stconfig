@@ -1,0 +1,21 @@
+#!/bin/sh
+set -e
+
+TAG_PREFIX=$1
+VERSION=$2
+TAG_N=${3:-"1"}  # Don't ever pass this by hand, for internal use only.
+
+if [ -z "$TAG_PREFIX" ] || [ -z "$VERSION" ]; then
+    echo "Usage: $0 tag_prefix version"
+    exit 1
+fi
+
+TAG="$TAG_PREFIX-$VERSION-$TAG_N"
+SVN_PATH="$ST_CODE_REPO/tags/$TAG"
+
+# See if $TAG exists, if it does recall this program with $TAG_N incremented.
+if svn -q log --stop-on-copy $SVN_PATH >/dev/null 2>/dev/null; then
+    exec $0 $TAG_PREFIX $VERSION $(($TAG_N + 1))  # Never returns
+fi
+
+echo $TAG

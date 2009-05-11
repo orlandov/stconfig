@@ -1,0 +1,7 @@
+echo ################
+echo qa users need their ssh keys set up for this script to work
+echo ###############
+for i in `cat qausers` ; do 
+echo $i ;
+cd /home/$i/src/st/stconfig ; sudo -u $i git pull --rebase  ; done ;
+

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo "socialtext control appliance socialtext-reports socialtext-skins plugins socialpoint"

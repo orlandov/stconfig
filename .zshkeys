@@ -1,1 +1,41 @@
-/home/audreyt/src/st/stconfig/.zshkeys
+# vi-keys, but with bindings to make it more intuitive for emacs people:
+bindkey -v
+bindkey "^P" up-line-or-history
+bindkey "^N" down-line-or-history
+bindkey "^K" vi-change-eol
+bindkey "^R" history-incremental-search-backward
+# These work in rking's linux+xterm+ssh setup, but they're still experimental:
+bindkey "^[[1~" vi-beginning-of-line   # Home
+bindkey "^[[4~" vi-end-of-line         # End
+bindkey "^[[2~" beep                   # Insert
+bindkey "^[[3~" delete-char            # Del
+bindkey "^[[A" up-line-or-history      # Up
+bindkey "^[[B" down-line-or-history    # Down
+bindkey "^R" history-incremental-search-backward
+
+# Add the local compfuncs directory for other completion libraries like _git
+fpath=( $HOME/.zsh/compfuncs $fpath )
+
+# Semi-voodoo, but enables <Esc>v to use vim to edit a command:
+autoload edit-command-line; zle -N edit-command-line
+autoload -U compinit; compinit
+bindkey -M vicmd v edit-command-line
+
+# Load the git prompt theme system
+autoload -U promptinit
+promptinit
+# Use the wunjo prompt theme
+#prompt wunjo
+
+# XXX deprecated way - should be like in zshcompwid(1)
+compctl -/ -g '*~(CVS|.svn)(/)' cd
+compctl -g \
+    '(.*|*~*.class~*.o~*.a~*.tar~*.gz~*.Z~*.rpm~*.gif~*.jpg~*.png~*.zip~*.jar)~.svn'\
+    vim
+
+fignore=(.o \~ .swp CVS .git)
+zmodload zsh/complist
+
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' squeeze-slashes true

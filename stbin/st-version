@@ -1,0 +1,10 @@
+#!/bin/sh
+BRANCH=$1
+
+if [ -z "$BRANCH" ]; then
+    echo "Usage: $0 branch-name (or 'master')"
+    exit 1
+fi
+
+git co $BRANCH > /dev/null 2>&1
+cat lib/Socialtext.pm | grep 'our.*$VERSION' | sed -e 's/[^\.0-9]//g'

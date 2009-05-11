@@ -1,0 +1,17 @@
+#!/bin/bash
+
+remote_br=$1
+local_br=$2
+
+if [ -z "$local" ]; then
+    local_br="$remote_br-`date +%s`"
+fi
+
+cd $ST_SRC_BASE/current
+
+if [ -f ".git/refs/heads/$local_br" ]; then
+    echo "You already have a branch called $local_br"
+    exit 1;
+fi
+
+st-git-all checkout -b $local_br --track origin/$remote_br

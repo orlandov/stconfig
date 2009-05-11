@@ -1,0 +1,19 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+my $base = $ENV{ST_SRC_BASE} . '/socialtext';
+
+my @repos = split /\s+/, `st-repo-list`;
+chomp @repos;
+my %repos = map { $_ => (($_ eq 'socialtext') ? "$base" : "$base/$_") } @repos;
+
+my $exit_total = 0;
+foreach my $repo (@repos) {
+    my $path = $repos{$repo};
+    local $ENV{GIT_DIR} = "$path/.git";
+    print "$repo: # ";
+    system("gunpushed", @ARGV);
+    $exit_total |= ($?>>8);
+}
+exit $exit_total;

@@ -1,0 +1,37 @@
+#!/usr/bin/perl -w
+use strict;
+
+die "promptconv requres two arguments: the 'from' encoding (which is probably cp1251), and a filename"
+  if @ARGV != 2;
+
+my $enc  = shift;
+my $file = shift;
+
+die "must be in the same dir as the file to be transcoded (for now)"
+  if $file =~ m{/};
+$file = readlink $file if -l $file;
+my ($uid, $original_atime, $original_mtime) = (stat $file)[4,8,9];
+
+die "promptconv must be run as the same user that owns the data (you are $<, but the file is $uid)\n"
+  unless $< == $uid;
+
+0 == system("iconv -f$enc $file > /tmp/$file") or die $!;
+
+if (system("diff -u $file /tmp/$file")) {
+    $| = 1;
+    print "You like? ";
+    my $answer = lc(<STDIN>);
+    chomp($answer);
+    if ('y' eq $answer) {
+        0 == system "cp /tmp/$file $file\n" or die $!;
+        utime $original_atime, $original_mtime, $file or die $!;
+    }
+    else {
+        print "Doing nothing because you answered '$answer'\n";
+    }
+}
+else {
+    print "Weird - no diffs\n";
+}
+
+unlink "/tmp/$file" or die $!;

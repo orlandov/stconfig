@@ -1,0 +1,139 @@
+#!/usr/bin/perl
+use warnings;
+use strict;
+
+use Getopt::Long;
+use Term::ANSIColor;
+use lib "$ENV{ST_SRC_BASE}/current/nlw/lib";
+use Socialtext::System qw/shell_run/;
+use Fatal qw(:void open rename);
+
+my %BUMP_POS = ( major => 0, minor => 1, point => 2, bugfix => 3 );
+my $basedir = $ENV{ST_SRC_BASE};
+my $bump;
+my $check = 0;
+my $current;
+my $commit;
+my $want_color = 1;
+GetOptions(
+    "c|current" => \$current,
+    "color!" => \$want_color,
+    "major" => sub { $bump = 'major' },
+    "minor" => sub { $bump = 'minor' },
+    "point" => sub { $bump = 'point' },
+    "bugfix" => sub { $bump = 'bugfix' },
+    'commit' => \$commit,
+    "help" => \&usage,
+    "check!" => \$check,
+) or usage();
+
+my $branch       = shift || 'current';
+my $VERSION_FILE = "lib/Socialtext.pm";
+
+usage() unless $bump;
+
+chdir "$basedir/socialtext/nlw"
+    or die "Can't chdir into $basedir/socialtext/nlw: $!";
+
+display('green', "Bumping '$bump' in '$branch'");
+
+my $cur_ver = get_current_version($VERSION_FILE);
+display('yellow', "Cur Version: ", $cur_ver);
+my $bumped_ver = bump_version($cur_ver, $bump);
+display('yellow', "Bumped Version: ", $bumped_ver);
+
+exit 0 if $check;
+
+replace_version($cur_ver => $bumped_ver, $VERSION_FILE);
+
+if ($commit) {
+    display('green', "Committing new $VERSION_FILE");
+    shell_run("git add $VERSION_FILE");
+    shell_run("git commit -m '$bump version bump' $VERSION_FILE");
+}
+
+display('bold green', "Done!");
+
+####
+
+sub get_current_version {
+    my $file = shift;
+    open my $ver_file, '<', $file;
+    (my $ver_line) = grep /our \$VERSION =.+?(\d+\.\d+\.\d+\.\d+)/, <$ver_file>;
+    close $ver_file;
+    die "couldn't find version number in $file"
+        unless $ver_line;
+    (my $cur_ver_num) = ($ver_line =~ /(\d+\.\d+\.\d+\.\d+)/);
+    die "couldn't find version number in $file"
+        unless $cur_ver_num;
+    return $cur_ver_num;
+}
+
+sub bump_version {
+    my ($cur_ver, $bump) = @_;
+    my @parts = split(m#\.#,$cur_ver,4);
+    my $pos = $BUMP_POS{$bump};
+
+    $#parts = $pos; # chomp
+    $parts[-1] += 1;
+    @parts = (@parts, 0,0,0,0)[0 .. 3]; # zero fill
+
+    my $bumped_ver = join('.',@parts);
+    return $bumped_ver;
+}
+
+sub replace_version {
+    my ($old_ver, $new_ver, $file) = @_;
+
+    display('blue', "Editing $file ...");
+
+    open my $in, '<', $file;
+    open my $out, '>', "$file.tmp";
+
+    while (my $line = <$in>) {
+        $line =~ s/\Q$old_ver\E/$new_ver/g;
+        print $out $line;
+    }
+
+    close $in;
+    close $out;
+
+    rename $file => "$file.bak";
+    rename "$file.tmp" => $file;
+}
+
+sub display {
+    my $color = shift;
+    my $msg = join('',@_);
+    if ($want_color) {
+        print color($color), $msg, color('reset'), "\n";
+    }
+    else {
+        print $msg, "\n";
+    }
+}
+
+sub usage {
+    my $cur_ver = get_current_version(
+        $VERSION_FILE || "$basedir/current/nlw/lib/Socialtext.pm"
+    );
+    my $major = bump_version($cur_ver, 'major');
+    my $minor = bump_version($cur_ver, 'minor');
+    my $point = bump_version($cur_ver, 'point');
+    my $bugfix = bump_version($cur_ver, 'bugfix');
+    print STDERR <<"EUSAGE";
+USAGE: $0 (type) [--check] branchname
+Options:
+    --help      Show this message
+    --check     Show the ver change but don't do anything
+    (type)      One of --major, --minor, --point, or --bugfix (the default)
+        Example: 
+            if the current version is $cur_ver then
+            ... after --major:  $major
+            ... after --minor:  $minor
+            ... after --point:  $point
+            ... after --bugfix: $bugfix
+    branchname  A branch name under ~/src/st 
+EUSAGE
+    exit 1;
+}

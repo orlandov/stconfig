@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# if given a directory name, update it
+if [[ ! -z "$1" && -d "$1" && -d "$1/.git" ]]; then
+    cd $1
+    rm -rf .git/hooks
+    ln -s /usr/share/git-core/templates/hooks .git/hooks
+    exit 0
+fi
+
+# otherwise, update the st-repo-list directories
+for r in `st-repo-list`; do
+    cd $ST_SRC_BASE
+    cd `readlink $ST_CURRENT`
+
+    if [[ "$r" != 'socialtext' ]]; then 
+        cd $r
+    fi
+
+    rm -rf .git/hooks
+    ln -s /usr/share/git-core/templates/hooks .git/hooks
+done

@@ -1,0 +1,86 @@
+#!/usr/bin/perl
+use strict;
+use URI;
+use URI::Escape;
+use LWP::UserAgent;
+use HTTP::Request::Common qw(GET POST);
+use JSON::XS qw(decode_json encode_json);
+use Getopt::Long;
+
+=head1 NAME
+
+st-tutorbot - Tutor bot 
+
+=head1 SYNOPSIS
+
+    st-tutorbot --user cpan@audreyt.org --password PASSWORD
+                --server https://www2.socialtext.net \
+                --workspace tutorbot --page tutorbot \
+                --interval 3600
+
+=head1 DESCRIPTION
+
+This bot reads a list of lines from a given workspace page, then send one
+sentence every I<interval> via Socialtext Signals.
+
+The list of lines can be modified at any time; the bot moves from one line
+to next, restarting from the top when it reached the end of page.
+
+=head1 AUTHORS
+
+Adina Levin, Audrey Tang
+
+=cut
+
+my $user = 'cpan@audreyt.org';
+my $password;
+my $server = 'https://www2.socialtext.net/';
+my $interval = 3600;
+my $workspace = 'tutorbot';
+my $page = 'tutorbot';
+
+GetOptions(
+    "interval=i"  => \$interval,
+    "user=s"      => \$user,
+    "password=s"  => \$password,
+    "server=s"    => \$server,
+    "workspace=s" => \$workspace,
+    "page=s"      => \$page,
+);
+
+if (!$password) {
+    exec(perldoc => $0);
+}
+
+my $ua = LWP::UserAgent->new(
+    requests_redirectable => [ 'GET', 'POST' ],
+);
+
+my $signals_uri = URI->new($server);
+$signals_uri->userinfo(uri_escape($user) . ':' . uri_escape($password));
+$signals_uri->path('/data/signals');
+
+my $workspace_uri = $signals_uri->clone;
+$workspace_uri->path("/data/workspaces/$workspace/pages/$page");
+
+my $r_post = HTTP::Request->new('POST', $signals_uri);
+$r_post->header( 'Content-Type', 'application/json' );
+my @database = <DATA>;
+chomp @database;
+
+my $r_get = HTTP::Request->new('GET', $workspace_uri);
+$r_get->header( 'Accept', 'text/x.socialtext-wiki' );
+
+my $i = 0;
+while (1) {
+    my @lines = grep { length($_) <= 140 } split(/\s*\n+\s*/, $ua->request($r_get)->content);
+    $i = 0 if $i > $#lines;
+    my $hint = $lines[$i++];
+
+    print $hint, "\n";
+    $r_post->content(encode_json( { signal => $hint } ));
+    $ua->request($r_post);
+    sleep $interval;
+}
+
+# @AdinaLevin Hi! I've got some helpful hits for using Socialext with your colleagues. I'll send a tip every day till you say "@tutorbot off".

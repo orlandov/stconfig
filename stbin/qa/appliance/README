@@ -1,0 +1,56 @@
+INSTALLING WIKITESTS ON AN APPLIANCE
+
+'sudo apt-get update'  might be necessary to get the latest versions of packages
+
+The wikitest infrastructure is part of the stconfig package in the stqa archive.
+Install it on an appliance using 
+
+'sudo apt-get install stconfig'
+
+This will install files in /usr/share/nlw/stconfig/stbin/qa/appliance.
+
+The wikitests are in a branch-specific tarball (wikitests.1.tar.gz) checked in to a branch by a developer/tester.
+Install it on an appliance using
+
+'sudo apt-get install st-static-files-wikitests'
+
+This will install files in /usr/share/nlw/workspaces/wikitests.
+
+RUNNING WIKITESTS ON AN APPLIANCE
+
+Execute 'source /usr/share/stconfig/personal/qa_after' to get required aliases.
+
+Execute 'cdappwt' to cd to /usr/share/stconfig/stbin/qa/appliance.
+
+Execute './st-appliance-wikitests' to set up an appliance for wikitests.  You will need sudo.
+    
+alias xwt will eXecute WikiTests from the local wikitest wiki as the wikitester default user.  For example:
+  xwt all_appliance_testcases >& testcases.out &
+
+To execute wikitests as the LDAP user, do this first:
+  xwt enable_ldap
+
+Then use:
+  xlwt ....
+
+in place of xwt.
+  
+----
+
+HOWTO: observe wikitests running on a custom Selenium platform
+
+Pick a port number (e.g. 5321) and run Selenium 1.0 or later using that port on your Selenium platform. Build an ssh tunnel from your Selenium platform to your appliance:
+e.g. 'ssh -R 5321:localhost:5321 qa3.socialtext.net' from your Linux or Mac OSX box, or use Putty to build the tunnel from a Windows box, using port 5321.
+
+in the shell that comes up on your Selenium platform:
+
+'cd /usr/share/stconfig/stbin/qa/appliance'
+'source ./setup-selenium PORT BROWSER SERVER_PLATFORM'
+examples:
+    source ./setup-selenium 5321 firefox linux
+    source ./setup-selenium 5321 iexplore windows
+    source ./setup-selenium 5321 safari osx
+
+
+More information on running wikitests can be found at www2.socialtext.net/regression-test
+

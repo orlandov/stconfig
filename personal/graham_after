@@ -1,0 +1,20 @@
+# aliases
+alias dir='ls -l'
+alias cls='clear'
+
+# editor/pager
+export EDITOR=vim
+export PAGER=less
+
+# add personal Perl stuff to @INC and $PATH
+export PERL5LIB=/home/graham/perl/lib/perl5/`perl -MConfig -e 'print $Config{archname}'`:/home/graham/perl/share/perl/`perl -MConfig -e 'print $Config{version}'`
+export PATH=/home/graham/perl/bin:$PATH
+
+# colourized prompt
+COLOR_BRANCH='\[\033[1;32m\]'
+COLOR_WORKDIR='\[\033[1;32m\]'
+COLOR_REPO='\[\033[1;31m\]'
+PROMPT_COMMAND=_git_prompt_color
+
+# so dh_make_perl knows who I am
+EMAIL='Graham TerMarsch <graham.termarsch@socialtext.com>'

@@ -1,0 +1,3 @@
+#!/bin/sh
+sudo apt-get update
+if [ "x$1" != "x" ]; then sudo apt-get upgrade; fi

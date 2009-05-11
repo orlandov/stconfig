@@ -1,1 +1,2 @@
-/home/audreyt/src/st/stconfig/.gitignore
+.*.sw[a-z]
+*.js.gz

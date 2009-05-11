@@ -1,0 +1,4 @@
+#!/bin/sh
+if [ "$SVN_COMMAND" = "svk" ]; then
+    svk sync -a $@
+fi

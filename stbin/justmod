@@ -1,0 +1,2 @@
+#!/bin/sh
+vim `perldoc -l "$@" | grep -v '^#'`

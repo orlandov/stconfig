@@ -1,0 +1,2 @@
+#!/bin/sh
+w3m http://www.google.com/search?q="$*"

@@ -1,0 +1,4 @@
+#!/bin/sh -e
+test -d ~/src/scrap || mkdir $_
+cd $_
+kiss perl

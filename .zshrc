@@ -1,1 +1,4 @@
-/home/audreyt/src/st/stconfig/.zshrc
+source ~/.zaliases
+source ~/.zshkeys
+source ~/.zprompt
+[ -e ~/.stconfig-after ] && source ~/.stconfig-after

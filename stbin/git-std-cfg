@@ -1,0 +1,14 @@
+#!/bin/sh
+gcfg='git config --global'
+$gcfg core.excludesfile ~/src/st/stconfig/.gitignore
+$gcfg color.ui auto
+$gcfg core.pager 'less -FXRS' # -R allows colors
+
+# alias "co" to mean "checkout"
+$gcfg alias.co checkout
+$gcfg alias.ci commit
+$gcfg alias.st status
+$gcfg alias.re reset
+
+$gcfg alias.ls 'ls-files --exclude-standard'
+$gcfg alias.lm 'ls-files --exclude-standard -m'

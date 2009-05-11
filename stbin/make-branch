@@ -1,0 +1,97 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Socialtext::Resting::Getopt qw/get_rester/;
+use Term::ANSIColor;
+use lib "$ENV{ST_SRC_BASE}/current/nlw/lib";
+use Socialtext::System qw/shell_run/;
+use Getopt::Long;
+use File::Temp qw(tempdir);
+use Cwd;
+use File::chdir;
+
+
+
+my $source_base = $ENV{ST_SRC_BASE} || "$ENV{HOME}/src/st";
+my $svk_mirror_base = '//mirror';
+my %repo_names = map { $_ => 1 } split /\s+/, qx(st-repo-list);
+
+# Check that we have a git socialtext checkout, so we can archive files from it
+my $MASTER_BASE = "$ENV{ST_SRC_BASE}/socialtext";
+unless (-d "$MASTER_BASE/.git") {
+    die "Can't find a git socialtext checkout!";
+}
+
+my $r = get_rester();
+
+my %opts;
+GetOptions( \%opts,
+    'no-rc',
+    'from=s',
+    'force',
+    'repo=s',
+) or usage();
+
+$opts{repo} ||= 'all';
+$opts{repo} = join(',', keys %repo_names) if $opts{repo} =~ m/^all$/i;
+my @repos = split ',', $opts{repo};
+for my $r (@repos) {
+    usage("$r is not a valid repository") unless $repo_names{$r};
+}
+
+my $git_from = $opts{from} || 'master';
+my $new_branch = shift;
+usage() unless $new_branch;
+
+for my $repo (@repos) {
+    color_print('magenta', "Creating $new_branch in $repo repository.\n");
+
+    # Clone the repo to a temp dir
+    # We clone from a local master so it's fast, instead of cloning github
+    my $git_temp = tempdir( CLEANUP => 1 );
+    my $from_git_dir = $MASTER_BASE;
+    $from_git_dir .= "/$repo" unless $repo eq 'socialtext';
+
+    {
+        # TODO: this is shared code with set-branch, Refactor it
+        local $CWD = $git_temp;
+        shell_run("git clone --shared $from_git_dir $repo");
+        $CWD .= "/$repo";
+        shell_run("git remote rm origin");
+        shell_run("git remote add origin $ENV{ST_GIT}/$repo.git");
+        shell_run("git fetch");
+        shell_run("git checkout -b $new_branch origin/$git_from");
+        shell_run("git push origin $new_branch");
+    }
+}
+
+shell_run("refresh-branch");
+shell_run("set-branch $new_branch");
+
+
+color_print('bold green', "\nAll done creating branch $new_branch!\n");
+exit;
+
+sub usage {
+    my $msg = shift || '';
+    my $valid_repos = join(',', keys %repo_names);
+    color_print('bold red', $msg);
+    color_print('yellow', <<EOT);
+
+$0 [rester options] [options] new-branch-name
+
+options:
+  --no-rc   Don't create a release contract
+  --from    Branch to copy from (Default: master)
+  --force   Continue even if branches already exist
+  --repo    The repositories to create the branch in:
+            $valid_repos OR all
+EOT
+    exit -1;
+}
+
+sub color_print {
+    my $color = shift;
+    my $msg = shift;
+    print color($color), $msg, color('reset');
+}

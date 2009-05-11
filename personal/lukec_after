@@ -1,0 +1,38 @@
+alias ssh='ssh -A'
+set -o vi
+
+export TD=lukecloss@jervis.textdrive.com
+export VHS='thehackery.ca -p2249'
+export ST_VE_NAME=dev4
+
+function corpblog {
+    convrad -l "luke's blog"
+}
+function blog {
+    wikrad -l "Luke's Dev Log"
+}
+
+alias lukerad='wikrad -w lukec'
+alias sprv='stci-prove -p -v'
+
+# git aliases
+alias ga='git-add'
+alias gb='git-branch'
+alias gd='git-diff'
+alias gdc='git-diff --cached'
+alias gl='git-log'
+alias gam='git-ls-files -m | xargs git-add'
+alias gst='git-status'
+alias gci='git-commit'
+alias gco='git-checkout'
+
+# Always keep my latest ssh details, so I can source later
+env | grep SSH | perl -lne 'chomp; m/^(\w+)=(.+)$/; print qq{export $1="$2"}' > ~/.latest-ssh-rc;
+
+# For ssh keychain
+KEYCHAIN=/home/lukec/.keychain/`hostname`-sh
+if [ -e $KEYCHAIN ]; then
+    source $KEYCHAIN
+fi
+
+export PROMPT_COMMAND=_git_prompt_color

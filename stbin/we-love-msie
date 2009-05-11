@@ -1,0 +1,5 @@
+#!/bin/sh -ve
+# useful for debugging those dumb fileless error messages that msie gives.
+for n in "$@"; do
+    perl -pli -e 'print "// msie is our friend." if $. == 1' $n
+done

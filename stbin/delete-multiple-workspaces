@@ -1,0 +1,7 @@
+#!/bin/bash
+
+filename=$1
+
+for ws in `< $filename`; do
+    st-admin delete-workspace --workspace $ws
+done;

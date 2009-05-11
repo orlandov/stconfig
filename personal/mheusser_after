@@ -1,0 +1,2 @@
+source $ST_SRC_BASE/stconfig/personal/qa_after
+PROMPT_COMMAND=_git_prompt_color

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+alias fdefs='fresh-dev-env-from-scratch'
+alias run-all-wikitests='for t in `find -L t/wikitests/ -name "*.wiki"`; do echo $t; run-wiki-tests -f $t 2>&1 | grep "not ok"; done'
+
+MOD_GLYPH="⚡"
+STATE_GLYPH="⚠ "
+PROMPT_COMMAND=_git_prompt_color
+
+# enable local perl5 dir. Thanks, http://search.cpan.org/~apeiron/local-lib/
+export MODULEBUILDRC="/home/stash/perl5/.modulebuildrc"
+export PERL_MM_OPT="INSTALL_BASE=/home/stash/perl5"
+export PERL5LIB="/home/stash/perl5/lib/perl5:/home/stash/perl5/lib/perl5/x86_64-linux-gnu-thread-multi"
+export PATH="/home/stash/perl5/bin:$PATH"
+
+alias gun='git reset HEAD'
+
+# for deb-helper tools
+EMAIL="Jeremy Stashewsky <jeremy.stashewsky@socialtext.com>"
+
+export NYTPROF="file=/home/stash/nytprof/nytp.out"
