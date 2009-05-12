@@ -99,6 +99,7 @@ cdsub() { cd `abs_path $ST_CURRENT/submodules`; }
 MAC_FILE="~/.nlw/etc/Socialtext/MAC.secret"
 alias muckmac="rm $MAC_FILE; echo bemucked > $MAC_FILE"
 alias accessd="cd /var/log/apache-perl/; ls"
+alias ape='myerrlogs -1e'
 alias vv='vim ~/.vimrc'
 alias tl='test-less'
 alias tlp='test-less --prove'
