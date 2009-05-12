@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [[ -z "$SUDO_USER" ]]; then
+    echo "This script must be run under sudo" >&2
+    exit 1
+fi
+
+if [[ "$USER" != "postgres" ]]; then
+    echo "This script must be run as postgres" >&2
+    exit 1
+fi
+
+echo -n "killing postgress backends for $SUDO_USER... "
+
+pids=`psql -U postgres template1 -t -c "select procpid from pg_stat_activity WHERE datname like '%_$SUDO_USER' AND procpid <> pg_backend_pid()"`
+
+term=`kill -l SIGTERM`
+for p in $pids; do
+    echo -n " $p "
+    kill -$term $p
+done
+
+echo " done"
