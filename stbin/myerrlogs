@@ -3,12 +3,20 @@
 # USAGE myerrlogs [-1|-2] [DIRECTORY]
 #
 #   -1      Only apache-perl logs
+#   -1e     Only apache-perl error logs
 #   -2      Only apache2 logs
 #   DEFAULT Everything
 #
 #   DIRECTORY defaults to ~/.nlw/log
 
+logprefix=''
+
 case "$1" in
+    (-1e)
+        subdir='apache-perl'
+        logprefix='nlw-error'
+        shift
+        ;;
     (-1)
         subdir='apache-perl'
         shift
@@ -24,4 +32,4 @@ esac
 
 dir=${1:-~/.nlw/log}
 
-eval exec colorizelogs "$dir/$subdir/*.log"
+eval exec colorizelogs "$dir/$subdir/$logprefix*.log"
