@@ -95,6 +95,7 @@ cdppl() { cd `abs_path $ST_CURRENT/plugins/people`; }
 cdsig() { cd `abs_path $ST_CURRENT/plugins/signals`; }
 cdwid() { cd `abs_path $ST_CURRENT/plugins/widgets`; }
 cdsub() { cd `abs_path $ST_CURRENT/submodules`; }
+bob() { wget -q -O /dev/null "https://irc.socialtext.net:450/bob/$1"; }
 
 MAC_FILE="~/.nlw/etc/Socialtext/MAC.secret"
 alias muckmac="rm $MAC_FILE; echo bemucked > $MAC_FILE"
