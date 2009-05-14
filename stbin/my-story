@@ -28,6 +28,9 @@ for my $story_name (@in_dev) {
         if (ref($text) eq 'HASH') {
             $details_table = $wo->{details}{text}{table};
         }
+        elsif (ref($text) eq 'ARRAY') {
+            $details_table = $text;
+        }
         else {
             $details_table = $wo->{details}{items};
         }
